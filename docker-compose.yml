@@ -5,8 +5,46 @@ services:
       context: './'
     ports:
       - '8080:8080'
+    depends_on:
+      - 'thream-database'
+      - 'thream-maildev'
     volumes:
       - './:/app'
       - '/app/node_modules'
       - '/app/build'
+    environment:
+      WAIT_HOSTS: 'thream-database:3306'
     container_name: 'thream-api'
+
+  thream-phpmyadmin:
+    image: 'phpmyadmin/phpmyadmin:5.0.2'
+    environment:
+      PMA_HOST: 'thream-database'
+      PMA_USER: 'root'
+      PMA_PASSWORD: 'password'
+    ports:
+      - '8000:80'
+    depends_on:
+      - 'thream-database'
+    container_name: 'thream-phpmyadmin'
+
+  thream-database:
+    image: 'mysql:5.7'
+    command: '--default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_DATABASE: 'thream'
+    ports:
+      - '3306:3306'
+    volumes:
+      - 'database-volume:/var/lib/mysql'
+    container_name: 'thream-database'
+
+  thream-maildev:
+    image: 'maildev/maildev:1.1.0'
+    ports:
+      - '1080:80'
+    container_name: 'thream-maildev'
+
+volumes:
+  database-volume:

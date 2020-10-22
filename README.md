@@ -38,6 +38,8 @@ cd api
 npm install
 ```
 
+You will need to configure the environment variables by creating an .env file at the root of the project (see `.env.example`).
+
 ### Usage (development environment)
 
 #### With [docker](https://www.docker.com/)
@@ -50,6 +52,9 @@ docker-compose up --build
 **Services started :**
 
 - API : `http://localhost:8080`
+- [phpmyadmin](https://www.phpmyadmin.net/) : `http://localhost:8000`
+- [MailDev](https://maildev.github.io/maildev/) : `http://localhost:1080`
+- [MySQL database](https://www.mysql.com/) (with PORT 3006)
 
 #### Without docker
 

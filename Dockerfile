@@ -7,4 +7,8 @@ RUN npm install
 COPY ./ ./
 RUN npm run build
 
-CMD ["npm", "run", "dev"]
+# docker-compose-wait
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.7.3/wait /wait
+RUN chmod +x /wait
+
+CMD /wait && npm run dev

@@ -9,4 +9,11 @@ describe('app', () => {
       .send()
       .expect(404)
   })
+
+  it('returns a 200 success code for public users images', async () => {
+    return await request(app)
+      .get('/images/users/default.png')
+      .send()
+      .expect(200)
+  })
 })

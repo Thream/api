@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
+import { Model, BuildOptions } from 'sequelize/types'
 
 export type ErrorsMessageArray = Array<{ message: string, field?: string }>
 
@@ -11,3 +12,6 @@ export interface RequestHandlerObject {
   res: Response
   next: NextFunction
 }
+
+export type SequelizeModelInstance = typeof Model &
+  (new (values?: object, options?: BuildOptions) => Model)

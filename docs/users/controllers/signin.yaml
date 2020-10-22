@@ -1,0 +1,29 @@
+/users/signin:
+  post:
+    tags:
+      - 'users'
+    summary: 'Signin the user'
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: 'object'
+            properties:
+              email:
+                type: 'string'
+                format: 'email'
+              password:
+                type: 'string'
+                format: 'password'
+                example: 'password'
+            required:
+              - 'email'
+              - 'password'
+    responses:
+      allOf:
+        - $ref: '#/definitions/BadRequestError'
+        - '200':
+            content:
+              application/json:
+                schema:
+                  $ref: '#/definitions/RefreshTokenResponse'
