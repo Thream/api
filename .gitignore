@@ -16,12 +16,14 @@
 .env.test.local
 .env.production.locals
 
-# misc
-.vscode
-.DS_Store
+# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# misc
+.vscode
+.DS_Store
 /public/images
 /tmp
 /temp
