@@ -17,6 +17,8 @@ Thream's application programming interface to stay close with your friends and c
 
 See [Thream/website](https://github.com/Thream/website/) for visual overview of the features of the project.
 
+This project was bootstrapped with [create-fullstack-app](https://github.com/Divlo/create-fullstack-app).
+
 ## ⚙️ Getting Started
 
 ### Prerequisites
