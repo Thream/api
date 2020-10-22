@@ -66,6 +66,7 @@
     "test": "jest",
     "test:watchAll": "jest --watchAll",
     "test:clearCache": "jest --clearCache",
+    "postinstall": "node ./scripts/postinstall.js",
     "prepare": "npm run build"
   },
   "dependencies": {
