@@ -3,7 +3,7 @@ import { Request, Response, Router } from 'express'
 import { authenticateUser } from '../../middlewares/authenticateUser'
 import Guild from '../../models/Guild'
 import Member from '../../models/Member'
-import { socket } from '../../utils/config/socket'
+import { emitToMembers } from '../../utils/config/socket'
 import { ForbiddenError } from '../../utils/errors/ForbiddenError'
 import { NotFoundError } from '../../utils/errors/NotFoundError'
 
@@ -28,7 +28,12 @@ deleteByIdGuildsRouter.delete(
 
     const deletedGuildId = member.guild.id
     await member.guild.destroy()
-    socket.io?.emit('guilds', { action: 'delete', deletedGuildId })
+
+    emitToMembers({
+      event: 'guilds',
+      guildId: member.guildId,
+      payload: { action: 'delete', deletedGuildId }
+    })
     return res.status(200).json({ deletedGuildId })
   }
 )

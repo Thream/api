@@ -6,7 +6,7 @@ import { validateRequest } from '../../middlewares/validateRequest'
 import Channel from '../../models/Channel'
 import Member from '../../models/Member'
 import { commonErrorsMessages } from '../../utils/config/constants'
-import { socket } from '../../utils/config/socket'
+import { emitToMembers } from '../../utils/config/socket'
 import { ForbiddenError } from '../../utils/errors/ForbiddenError'
 import { NotFoundError } from '../../utils/errors/NotFoundError'
 
@@ -85,7 +85,12 @@ putByIdChannelsRouter.put(
     }
 
     await channel.save()
-    socket.io?.emit('channels', { action: 'update', channel })
+
+    emitToMembers({
+      event: 'channels',
+      guildId: channel.guildId,
+      payload: { action: 'update', channel }
+    })
     return res.status(200).json({ channel })
   }
 )

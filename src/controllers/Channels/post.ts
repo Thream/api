@@ -6,7 +6,7 @@ import { validateRequest } from '../../middlewares/validateRequest'
 import Channel from '../../models/Channel'
 import Member from '../../models/Member'
 import { commonErrorsMessages } from '../../utils/config/constants'
-import { socket } from '../../utils/config/socket'
+import { emitToMembers } from '../../utils/config/socket'
 import { ForbiddenError } from '../../utils/errors/ForbiddenError'
 import { NotFoundError } from '../../utils/errors/NotFoundError'
 
@@ -67,7 +67,11 @@ postChannelsRouter.post(
       guildId: member.guildId
     })
 
-    socket.io?.emit('channels', { action: 'create', channel })
+    emitToMembers({
+      event: 'channels',
+      guildId: member.guildId,
+      payload: { action: 'create', channel }
+    })
     return res.status(201).json({ channel })
   }
 )

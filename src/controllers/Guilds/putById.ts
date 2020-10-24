@@ -14,7 +14,7 @@ import {
   guildsIconPath,
   imageFileUploadOptions
 } from '../../utils/config/constants'
-import { socket } from '../../utils/config/socket'
+import { emitToMembers } from '../../utils/config/socket'
 import { alreadyUsedValidation } from '../../utils/database/alreadyUsedValidation'
 import { ForbiddenError } from '../../utils/errors/ForbiddenError'
 import { NotFoundError } from '../../utils/errors/NotFoundError'
@@ -113,7 +113,11 @@ putByIdGuildsRouter.put(
     guild.publicInvitation = invitation != null ? invitation.value : null
     delete guild.invitations
 
-    socket.io?.emit('guilds', { action: 'update', guild })
+    emitToMembers({
+      event: 'guilds',
+      guildId: guild.id,
+      payload: { action: 'update', guild }
+    })
     return res.status(200).json({ guild })
   }
 )

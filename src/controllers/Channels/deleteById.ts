@@ -3,7 +3,7 @@ import { Request, Response, Router } from 'express'
 import { authenticateUser } from '../../middlewares/authenticateUser'
 import Channel from '../../models/Channel'
 import Member from '../../models/Member'
-import { socket } from '../../utils/config/socket'
+import { emitToMembers } from '../../utils/config/socket'
 import { BadRequestError } from '../../utils/errors/BadRequestError'
 import { ForbiddenError } from '../../utils/errors/ForbiddenError'
 import { NotFoundError } from '../../utils/errors/NotFoundError'
@@ -45,7 +45,12 @@ deleteByIdChannelsRouter.delete(
 
     const deletedChannelId = channel.id
     await channel.destroy()
-    socket.io?.emit('guilds', { action: 'delete', deletedChannelId })
+
+    emitToMembers({
+      event: 'channels',
+      guildId: channel.guildId,
+      payload: { action: 'delete', deletedChannelId }
+    })
     return res.status(200).json({ deletedChannelId })
   }
 )
