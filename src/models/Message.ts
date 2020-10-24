@@ -3,14 +3,12 @@ import {
   Column,
   DataType,
   ForeignKey,
-  HasMany,
   Model,
   Table
 } from 'sequelize-typescript'
 
 import Channel from './Channel'
 import Member from './Member'
-import Reaction from './Reaction'
 
 @Table
 export default class Message extends Model<Message> {
@@ -33,7 +31,4 @@ export default class Message extends Model<Message> {
 
   @BelongsTo(() => Channel, { onDelete: 'CASCADE' })
   channel!: Channel
-
-  @HasMany(() => Reaction)
-  reactions!: Reaction[]
 }
