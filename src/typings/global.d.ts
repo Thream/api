@@ -17,6 +17,7 @@ declare global {
       EMAIL_USER: string
       EMAIL_PASSWORD: string
       EMAIL_PORT: string
+      npm_package_version: string
     }
   }
 

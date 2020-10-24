@@ -8,7 +8,7 @@ export const swaggerSpec = swaggerJsDoc({
       title: "Thream's API",
       description:
         'Stay close with your friends and communities, talk, chat, collaborate, share, and have fun.',
-      version: '0.0.1'
+      version: process.env.npm_package_version
     },
     basePath: '/',
     host: process.env.API_BASE_URL,
