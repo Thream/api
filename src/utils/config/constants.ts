@@ -16,7 +16,7 @@ export const guildsIconPath = path.join(imagesPath, 'guilds')
 
 export const authorizedRedirectDomains = [
   'http://localhost:3000/',
-  'https://social.divlo.fr/'
+  'https://thream.divlo.fr/'
 ]
 
 export const supportedImageMimetype = [
