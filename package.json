@@ -129,7 +129,7 @@
     "nodemon": "2.0.6",
     "release-it": "^14.2.0",
     "rimraf": "^3.0.2",
-    "snazzy": "8.0.0",
+    "snazzy": "9.0.0",
     "sqlite": "^4.0.15",
     "sqlite3": "^5.0.0",
     "supertest": "5.0.0",
