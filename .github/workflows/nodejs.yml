@@ -17,6 +17,12 @@ jobs:
         node-version: [14.x]
     steps:
       - uses: actions/checkout@v2
+      - name: 'Cache dependencies'
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2.1.2
         with:
@@ -36,10 +42,3 @@ jobs:
 
       - name: 'Build'
         run: npm run build
-
-      - name: 'Cache dependencies'
-        uses: actions/cache@v2
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
