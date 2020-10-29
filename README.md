@@ -74,4 +74,4 @@ The steps to contribute can be found in the [CONTRIBUTING.md](./.github/CONTRIBU
 
 ## 📄 License
 
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FThream%2Fapi.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FThream%2Fapi?ref=badge_large)
+[MIT](./LICENSE)
