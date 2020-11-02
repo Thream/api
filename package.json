@@ -127,7 +127,7 @@
     "jest": "26.6.1",
     "mock-fs": "^4.13.0",
     "nodemon": "2.0.6",
-    "release-it": "^14.2.0",
+    "release-it": "^14.2.1",
     "rimraf": "^3.0.2",
     "snazzy": "9.0.0",
     "sqlite": "^4.0.15",
