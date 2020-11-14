@@ -19,24 +19,30 @@ import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
 import { buildQueryURL } from '../utils/buildQueryURL'
 import { isValidRedirectURIValidation } from '../utils/isValidRedirectURIValidation'
 
-const PROVIDER = 'discord'
+const DISCORD_PROVIDER = 'discord'
 const DISCORD_BASE_URL = 'https://discordapp.com/api/v6'
 
-const getUserDiscordData = async (
-  code: string,
-  redirectURI: string
-): Promise<{
+interface DiscordUser {
   id: string
   username: string
   discriminator: string
-}> => {
-  const { data: dataTokens } = await axios.post<{
-    access_token: string
-    token_type: string
-    expires_in: number
-    refresh_token: string
-    scope: 'identify'
-  }>(
+  avatar?: string
+  locale?: string
+}
+
+interface DiscordTokens {
+  access_token: string
+  token_type: string
+  expires_in: number
+  refresh_token: string
+  scope: 'identify'
+}
+
+const getDiscordUserData = async (
+  code: string,
+  redirectURI: string
+): Promise<DiscordUser> => {
+  const { data: tokens } = await axios.post<DiscordTokens>(
     `${DISCORD_BASE_URL}/oauth2/token`,
     querystring.stringify({
       client_id: process.env.DISCORD_CLIENT_ID,
@@ -52,12 +58,12 @@ const getUserDiscordData = async (
       }
     }
   )
-  const { data: dataUser } = await axios.get(`${DISCORD_BASE_URL}/users/@me`, {
+  const { data: discordUser } = await axios.get<DiscordUser>(`${DISCORD_BASE_URL}/users/@me`, {
     headers: {
-      Authorization: `${dataTokens.token_type} ${dataTokens.access_token}`
+      Authorization: `${tokens.token_type} ${tokens.access_token}`
     }
   })
-  return dataUser
+  return discordUser
 }
 
 const discordRouter = Router()
@@ -103,27 +109,25 @@ discordRouter.get(
       state: string
     }
     const userRequest = await getUserWithBearerToken(`Bearer ${accessToken}`)
-    const dataUser = await getUserDiscordData(
+    const discordUser = await getDiscordUserData(
       code,
       `${process.env.API_BASE_URL}/users/oauth2/discord/callback-add-strategy?redirectURI=${redirectURI}`
     )
     const OAuthUser = await OAuth.findOne({
-      where: { providerId: dataUser.id, provider: PROVIDER }
+      where: { providerId: discordUser.id, provider: DISCORD_PROVIDER }
     })
     let message = 'success'
 
-    if (OAuthUser != null) {
-      if (OAuthUser.userId !== userRequest.current.id) {
-        message = 'This account is already used by someone else'
-      } else {
-        message = 'You are already using this account'
-      }
-    } else {
+    if (OAuthUser == null) {
       await OAuth.create({
-        provider: PROVIDER,
-        providerId: dataUser.id,
+        provider: DISCORD_PROVIDER,
+        providerId: discordUser.id,
         userId: userRequest.current.id
       })
+    } else if (OAuthUser.userId !== userRequest.current.id) {
+      message = 'This account is already used by someone else'
+    } else {
+      message = 'You are already using this account'
     }
 
     return res.redirect(buildQueryURL(redirectURI, { message }))
@@ -162,19 +166,19 @@ discordRouter.get(
       code: string
       redirectURI: string
     }
-    const dataUser = await getUserDiscordData(
+    const discordUser = await getDiscordUserData(
       code,
       `${process.env.API_BASE_URL}/users/oauth2/discord/callback?redirectURI=${redirectURI}`
     )
     const OAuthUser = await OAuth.findOne({
-      where: { providerId: dataUser.id, provider: PROVIDER }
+      where: { providerId: discordUser.id, provider: DISCORD_PROVIDER }
     })
     let userId: number = OAuthUser?.user?.id
 
     if (OAuthUser == null) {
-      let name = dataUser.username
+      let name = discordUser.username
       let isAlreadyUsedName = true
-      let countId: string | number = dataUser.discriminator
+      let countId: string | number = discordUser.discriminator
       while (isAlreadyUsedName) {
         const foundUsername = await User.findOne({ where: { name } })
         isAlreadyUsedName = foundUsername != null
@@ -186,18 +190,18 @@ discordRouter.get(
       const user = await User.create({ name })
       userId = user.id
       await OAuth.create({
-        provider: PROVIDER,
-        providerId: dataUser.id,
+        provider: DISCORD_PROVIDER,
+        providerId: discordUser.id,
         userId: user.id
       })
     }
 
     const accessToken = generateAccessToken({
       id: userId,
-      strategy: PROVIDER
+      strategy: DISCORD_PROVIDER
     })
     const refreshToken = await generateRefreshToken({
-      strategy: PROVIDER,
+      strategy: DISCORD_PROVIDER,
       id: userId
     })
 
