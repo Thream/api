@@ -5,8 +5,8 @@ export const buildQueryURL = (
   queryObject: ObjectAny
 ): string => {
   const url = new URL(baseURL)
-  for (const query in queryObject) {
-    url.searchParams.append(query, queryObject[query])
-  }
+  Object.entries(queryObject).forEach(([query, value]) => {
+    url.searchParams.append(query, value)
+  })
   return url.href
 }
