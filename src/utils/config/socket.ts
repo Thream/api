@@ -43,8 +43,8 @@ export const emitToAuthorizedUsers = (
       const client = socket.io?.sockets.connected[clientId]
       const userId: number = (client as any).decoded_token?.id
       const isAuthorized = await isAuthorizedCallback(userId)
-      if (isAuthorized) {
-        client?.emit(event, payload)
+      if (isAuthorized && client != null) {
+        client.emit(event, payload)
       }
     }
   })
@@ -57,10 +57,10 @@ export const emitToMembers = (options: EmitToMembersOptions): void => {
     event,
     payload,
     isAuthorizedCallback: async userId => {
-      const member = await Member.findOne({
+      const member = await Member.count({
         where: { userId, guildId }
       })
-      return member != null
+      return member > 0
     }
   })
 }

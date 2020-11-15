@@ -19,9 +19,6 @@ import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
 import { buildQueryURL } from '../utils/buildQueryURL'
 import { isValidRedirectURIValidation } from '../utils/isValidRedirectURIValidation'
 
-const DISCORD_PROVIDER = 'discord'
-const DISCORD_BASE_URL = 'https://discordapp.com/api/v6'
-
 interface DiscordUser {
   id: string
   username: string
@@ -37,6 +34,9 @@ interface DiscordTokens {
   refresh_token: string
   scope: 'identify'
 }
+
+const DISCORD_PROVIDER = 'discord'
+const DISCORD_BASE_URL = 'https://discordapp.com/api/v6'
 
 const getDiscordUserData = async (
   code: string,
@@ -58,11 +58,14 @@ const getDiscordUserData = async (
       }
     }
   )
-  const { data: discordUser } = await axios.get<DiscordUser>(`${DISCORD_BASE_URL}/users/@me`, {
-    headers: {
-      Authorization: `${tokens.token_type} ${tokens.access_token}`
+  const { data: discordUser } = await axios.get<DiscordUser>(
+    `${DISCORD_BASE_URL}/users/@me`,
+    {
+      headers: {
+        Authorization: `${tokens.token_type} ${tokens.access_token}`
+      }
     }
-  })
+  )
   return discordUser
 }
 
@@ -180,8 +183,8 @@ discordRouter.get(
       let isAlreadyUsedName = true
       let countId: string | number = discordUser.discriminator
       while (isAlreadyUsedName) {
-        const foundUsername = await User.findOne({ where: { name } })
-        isAlreadyUsedName = foundUsername != null
+        const foundUsers = await User.count({ where: { name } })
+        isAlreadyUsedName = foundUsers > 0
         if (isAlreadyUsedName) {
           name = `${name}-${countId}`
           countId = Math.random() * Date.now()
