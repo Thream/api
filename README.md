@@ -9,6 +9,7 @@
   <a href="https://conventionalcommits.org"><img src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg" alt="Conventional Commits" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/licence-MIT-blue.svg" alt="Licence MIT"/></a>
   <img src="https://github.com/Thream/api/workflows/Node.js%20CI/badge.svg" alt="Node.js CI" />
+  <a href="https://codecov.io/gh/Thream/api"><img src="https://codecov.io/gh/Thream/api/branch/develop/graph/badge.svg" alt="codecov" /></a>
 </p>
 
 ## 📜 About

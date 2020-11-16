@@ -3,8 +3,8 @@ import { query } from 'express-validator'
 
 import { validateRequest } from '../../middlewares/validateRequest'
 import User from '../../models/User'
-import { authorizedRedirectDomains } from '../../utils/config/constants'
 import { ForbiddenError } from '../../utils/errors/ForbiddenError'
+import { isValidRedirectURIValidation } from './utils/isValidRedirectURIValidation'
 
 const confirmEmailRouter = Router()
 
@@ -17,15 +17,7 @@ confirmEmailRouter.get(
     query('redirectURI')
       .optional({ nullable: true })
       .trim()
-      .custom(async (redirectURI: string) => {
-        const isValidRedirectURI = authorizedRedirectDomains.some(domain => {
-          return redirectURI.startsWith(domain)
-        })
-        if (!isValidRedirectURI) {
-          return await Promise.reject(new Error('Untrusted URL redirection'))
-        }
-        return true
-      })
+      .custom(isValidRedirectURIValidation)
   ],
   validateRequest,
   async (req: Request, res: Response) => {

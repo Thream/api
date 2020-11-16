@@ -11,6 +11,7 @@ on:
 
 jobs:
   commitlint:
+    if: ${{ (github.event_name == 'pull_request_review' && github.event.pull_request_review.pull_request.state == 'APPROVED') || (github.event_name == 'push') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

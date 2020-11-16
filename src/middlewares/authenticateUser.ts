@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import jwt from 'jsonwebtoken'
 
-import User, { UserJWT } from '../models/User'
+import User, { UserJWT, UserRequest } from '../models/User'
 import { BadRequestError } from '../utils/errors/BadRequestError'
 import { ForbiddenError } from '../utils/errors/ForbiddenError'
 import { UnauthorizedError } from '../utils/errors/UnauthorizedError'
@@ -11,13 +11,14 @@ export const errorsMessages = {
     'You should have a confirmed account, please check your email and follow the instructions to verify your account'
 }
 
-export const authenticateUser: RequestHandler = async (req, _res, next) => {
-  const authorizationHeader = req.get('Authorization')
-  if (authorizationHeader == null || typeof authorizationHeader !== 'string') {
+export const getUserWithBearerToken = async (
+  bearerToken?: string
+): Promise<UserRequest> => {
+  if (bearerToken == null || typeof bearerToken !== 'string') {
     throw new UnauthorizedError()
   }
 
-  const tokenSplited = authorizationHeader.split(' ')
+  const tokenSplited = bearerToken.split(' ')
   if (tokenSplited.length !== 2 || tokenSplited[0] !== 'Bearer') {
     throw new UnauthorizedError()
   }
@@ -39,9 +40,15 @@ export const authenticateUser: RequestHandler = async (req, _res, next) => {
     throw new BadRequestError(errorsMessages.invalidAccount)
   }
 
-  req.user = {
+  return {
     current: user,
-    strategy: payload.strategy
+    strategy: payload.strategy,
+    accessToken: token
   }
+}
+
+export const authenticateUser: RequestHandler = async (req, _res, next) => {
+  const authorizationHeader = req.get('Authorization')
+  req.user = await getUserWithBearerToken(authorizationHeader)
   return next()
 }

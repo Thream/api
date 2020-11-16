@@ -15,7 +15,7 @@ export const emailTemplatePath = path.join(
 export const guildsIconPath = path.join(imagesPath, 'guilds')
 
 export const authorizedRedirectDomains = [
-  'http://localhost:3000/',
+  ...(process.env.NODE_ENV === 'development' ? ['http://localhost:3000/'] : []),
   'https://thream.divlo.fr/'
 ]
 

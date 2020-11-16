@@ -45,7 +45,9 @@
     "setupFilesAfterEnv": [
       "./__test__/setup.ts"
     ],
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "collectCoverage": true,
+    "coverageDirectory": "../coverage/"
   },
   "ts-standard": {
     "files": [
@@ -70,6 +72,7 @@
     "prepare": "npm run build"
   },
   "dependencies": {
+    "axios": "^0.21.0",
     "bcryptjs": "^2.4.3",
     "cors": "2.8.5",
     "dotenv": "8.2.0",

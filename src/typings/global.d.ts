@@ -13,6 +13,8 @@ declare global {
       DATABASE_PORT: string
       JWT_ACCESS_SECRET: string
       JWT_REFRESH_SECRET: string
+      DISCORD_CLIENT_ID: string
+      DISCORD_CLIENT_SECRET: string
       EMAIL_HOST: string
       EMAIL_USER: string
       EMAIL_PASSWORD: string

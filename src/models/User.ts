@@ -15,6 +15,7 @@ export interface UserJWT {
 export interface UserRequest {
   current: User
   strategy: AuthenticationStrategy
+  accessToken: string
 }
 
 @Table
