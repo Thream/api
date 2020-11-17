@@ -1,11 +1,11 @@
 import { Request, Response, Router } from 'express'
 import Sequelize from 'sequelize'
 
-import { authenticateUser } from '../../middlewares/authenticateUser'
-import Guild from '../../models/Guild'
-import Invitation from '../../models/Invitation'
-import { ObjectAny } from '../../typings/utils'
-import { paginateModel } from '../../utils/database/paginateModel'
+import { authenticateUser } from '../../../middlewares/authenticateUser'
+import Guild from '../../../models/Guild'
+import Invitation from '../../../models/Invitation'
+import { ObjectAny } from '../../../typings/utils'
+import { paginateModel } from '../../../utils/database/paginateModel'
 
 const getPublicDiscoverGuildsRouter = Router()
 

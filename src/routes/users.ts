@@ -1,13 +1,13 @@
 import { Router } from 'express'
 
-import { confirmEmailRouter } from '../controllers/Users/confirmEmail'
-import { currentRouter } from '../controllers/Users/current'
-import { discordRouter } from '../controllers/Users/oauth2/discord'
-import { refreshTokenRouter } from '../controllers/Users/refreshToken'
-import { resetPasswordRouter } from '../controllers/Users/resetPassword'
-import { signinRouter } from '../controllers/Users/signin'
-import { signoutRouter } from '../controllers/Users/signout'
-import { signupRouter } from '../controllers/Users/signup'
+import { confirmEmailRouter } from '../controllers/users/confirmEmail'
+import { currentRouter } from '../controllers/users/current'
+import { discordRouter } from '../controllers/users/oauth2/discord'
+import { refreshTokenRouter } from '../controllers/users/refreshToken'
+import { resetPasswordRouter } from '../controllers/users/resetPassword'
+import { signinRouter } from '../controllers/users/signin'
+import { signoutRouter } from '../controllers/users/signout'
+import { signupRouter } from '../controllers/users/signup'
 
 const usersRouter = Router()
 

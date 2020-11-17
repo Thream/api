@@ -5,7 +5,7 @@ import { formatErrors } from '../../../__test__/utils/formatErrors'
 import app from '../../../app'
 import { commonErrorsMessages } from '../../../utils/config/constants'
 import { randomString } from '../../../utils/random'
-import { createGuild } from '../../Guilds/__test__/utils/createGuild'
+import { createGuild } from '../../guilds/__test__/utils/createGuild'
 import { errorsMessages } from '../post'
 
 describe('POST /channels/guilds/:guildId', () => {

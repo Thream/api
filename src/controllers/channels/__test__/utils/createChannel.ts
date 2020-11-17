@@ -2,7 +2,7 @@ import request from 'supertest'
 
 import app from '../../../../app'
 import Channel from '../../../../models/Channel'
-import { createGuild } from '../../../Guilds/__test__/utils/createGuild'
+import { createGuild } from '../../../guilds/__test__/utils/createGuild'
 
 interface ChannelOptions {
   name: string
