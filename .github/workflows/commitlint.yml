@@ -11,10 +11,10 @@ on:
 
 jobs:
   commitlint:
-    if: ${{ (github.event_name == 'pull_request_review' && github.event.pull_request_review.pull_request.state == 'APPROVED') || (github.event_name == 'push') }}
+    if: ${{ (github.event_name == 'push') || github.event_name == 'pull_request_review' && github.event.review.state == 'approved' && (github.event.review.author_association == 'COLLABORATOR' || github.event.review.author_association == 'MEMBER' || github.event.review.author_association == 'OWNER') && !github.event.pull_request.draft && github.event.pull_request.state == 'open' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: 'actions/checkout@v2'
         with:
           fetch-depth: 0
-      - uses: wagoid/commitlint-github-action@v2
+      - uses: 'wagoid/commitlint-github-action@v2'
