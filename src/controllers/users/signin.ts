@@ -7,7 +7,8 @@ import User from '../../models/User'
 import {
   expiresIn,
   generateAccessToken,
-  generateRefreshToken
+  generateRefreshToken,
+  ResponseJWT
 } from '../../utils/config/jwtToken'
 import { BadRequestError } from '../../utils/errors/BadRequestError'
 
@@ -60,13 +61,13 @@ signinRouter.post(
       strategy: 'local',
       id: user.id
     })
-
-    return res.status(200).json({
+    const responseJWT: ResponseJWT = {
       accessToken,
       refreshToken,
       expiresIn,
       type: 'Bearer'
-    })
+    }
+    return res.status(200).json(responseJWT)
   }
 )
 

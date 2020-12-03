@@ -8,16 +8,10 @@ import {
   getUserWithBearerToken
 } from '../../../middlewares/authenticateUser'
 import { validateRequest } from '../../../middlewares/validateRequest'
-import OAuth from '../../../models/OAuth'
-import User from '../../../models/User'
-import {
-  expiresIn,
-  generateAccessToken,
-  generateRefreshToken
-} from '../../../utils/config/jwtToken'
 import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
 import { buildQueryURL } from '../utils/buildQueryURL'
 import { isValidRedirectURIValidation } from '../utils/isValidRedirectURIValidation'
+import { OAuthStrategy } from '../utils/OAuthStrategy'
 
 interface GitHubUser {
   login: string
@@ -35,6 +29,7 @@ interface GitHubTokens {
 const GITHUB_PROVIDER = 'github'
 const GITHUB_BASE_URL = 'https://github.com'
 const GITHUB_API_BASE_URL = 'https://api.github.com'
+const githubStrategy = new OAuthStrategy(GITHUB_PROVIDER)
 
 const getGitHubUserData = async (
   code: string,
@@ -86,7 +81,7 @@ githubRouter.get(
     }
     const { redirectURI } = req.query as { redirectURI: string }
     const redirectCallback = `${process.env.API_BASE_URL}/users/oauth2/${GITHUB_PROVIDER}/callback-add-strategy?redirectURI=${redirectURI}`
-    const url = `${GITHUB_BASE_URL}/oauth2/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&scope=identify&response_type=code&state=${req.user.accessToken}&redirect_uri=${redirectCallback}`
+    const url = `${GITHUB_BASE_URL}/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&state=${req.user.accessToken}&redirect_uri=${redirectCallback}`
     return res.json(url)
   }
 )
@@ -115,23 +110,10 @@ githubRouter.get(
       code,
       `${process.env.API_BASE_URL}/users/oauth2/${GITHUB_PROVIDER}/callback-add-strategy?redirectURI=${redirectURI}`
     )
-    const OAuthUser = await OAuth.findOne({
-      where: { providerId: githubUser.id, provider: GITHUB_PROVIDER }
-    })
-    let message = 'success'
-
-    if (OAuthUser == null) {
-      await OAuth.create({
-        provider: GITHUB_PROVIDER,
-        providerId: githubUser.id,
-        userId: userRequest.current.id
-      })
-    } else if (OAuthUser.userId !== userRequest.current.id) {
-      message = 'This account is already used by someone else'
-    } else {
-      message = 'You are already using this account'
-    }
-
+    const message = await githubStrategy.callbackAddStrategy(
+      { name: githubUser.name, id: githubUser.id },
+      userRequest
+    )
     return res.redirect(buildQueryURL(redirectURI, { message }))
   }
 )
@@ -172,49 +154,11 @@ githubRouter.get(
       code,
       `${process.env.API_BASE_URL}/users/oauth2/${GITHUB_PROVIDER}/callback?redirectURI=${redirectURI}`
     )
-    const OAuthUser = await OAuth.findOne({
-      where: { providerId: githubUser.id, provider: GITHUB_PROVIDER }
+    const responseJWT = await githubStrategy.callbackSignin({
+      name: githubUser.name,
+      id: githubUser.id
     })
-    let userId: number = OAuthUser?.userId ?? 0
-
-    if (OAuthUser == null) {
-      let name = githubUser.name
-      let isAlreadyUsedName = true
-      let countId: string | number = githubUser.id
-      while (isAlreadyUsedName) {
-        const foundUsers = await User.count({ where: { name } })
-        isAlreadyUsedName = foundUsers > 0
-        if (isAlreadyUsedName) {
-          name = `${name}-${countId}`
-          countId = Math.random() * Date.now()
-        }
-      }
-      const user = await User.create({ name })
-      userId = user.id
-      await OAuth.create({
-        provider: GITHUB_PROVIDER,
-        providerId: githubUser.id,
-        userId: user.id
-      })
-    }
-
-    const accessToken = generateAccessToken({
-      id: userId,
-      strategy: GITHUB_PROVIDER
-    })
-    const refreshToken = await generateRefreshToken({
-      strategy: GITHUB_PROVIDER,
-      id: userId
-    })
-
-    return res.redirect(
-      buildQueryURL(redirectURI, {
-        accessToken,
-        refreshToken,
-        expiresIn: expiresIn.toString(),
-        type: 'Bearer'
-      })
-    )
+    return res.redirect(buildQueryURL(redirectURI, responseJWT))
   }
 )
 

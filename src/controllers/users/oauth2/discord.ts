@@ -8,19 +8,14 @@ import {
   getUserWithBearerToken
 } from '../../../middlewares/authenticateUser'
 import { validateRequest } from '../../../middlewares/validateRequest'
-import OAuth from '../../../models/OAuth'
-import User from '../../../models/User'
-import {
-  expiresIn,
-  generateAccessToken,
-  generateRefreshToken
-} from '../../../utils/config/jwtToken'
 import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
 import { buildQueryURL } from '../utils/buildQueryURL'
 import { isValidRedirectURIValidation } from '../utils/isValidRedirectURIValidation'
+import { OAuthStrategy } from '../utils/OAuthStrategy'
 
 const DISCORD_PROVIDER = 'discord'
 const DISCORD_BASE_URL = 'https://discordapp.com/api/v6'
+const discordStrategy = new OAuthStrategy(DISCORD_PROVIDER)
 
 interface DiscordUser {
   id: string
@@ -116,23 +111,10 @@ discordRouter.get(
       code,
       `${process.env.API_BASE_URL}/users/oauth2/${DISCORD_PROVIDER}/callback-add-strategy?redirectURI=${redirectURI}`
     )
-    const OAuthUser = await OAuth.findOne({
-      where: { providerId: discordUser.id, provider: DISCORD_PROVIDER }
-    })
-    let message = 'success'
-
-    if (OAuthUser == null) {
-      await OAuth.create({
-        provider: DISCORD_PROVIDER,
-        providerId: discordUser.id,
-        userId: userRequest.current.id
-      })
-    } else if (OAuthUser.userId !== userRequest.current.id) {
-      message = 'This account is already used by someone else'
-    } else {
-      message = 'You are already using this account'
-    }
-
+    const message = await discordStrategy.callbackAddStrategy(
+      { name: discordUser.username, id: discordUser.id },
+      userRequest
+    )
     return res.redirect(buildQueryURL(redirectURI, { message }))
   }
 )
@@ -173,49 +155,11 @@ discordRouter.get(
       code,
       `${process.env.API_BASE_URL}/users/oauth2/${DISCORD_PROVIDER}/callback?redirectURI=${redirectURI}`
     )
-    const OAuthUser = await OAuth.findOne({
-      where: { providerId: discordUser.id, provider: DISCORD_PROVIDER }
+    const responseJWT = await discordStrategy.callbackSignin({
+      name: discordUser.username,
+      id: discordUser.id
     })
-    let userId: number = OAuthUser?.userId ?? 0
-
-    if (OAuthUser == null) {
-      let name = discordUser.username
-      let isAlreadyUsedName = true
-      let countId: string | number = discordUser.discriminator
-      while (isAlreadyUsedName) {
-        const foundUsers = await User.count({ where: { name } })
-        isAlreadyUsedName = foundUsers > 0
-        if (isAlreadyUsedName) {
-          name = `${name}-${countId}`
-          countId = Math.random() * Date.now()
-        }
-      }
-      const user = await User.create({ name })
-      userId = user.id
-      await OAuth.create({
-        provider: DISCORD_PROVIDER,
-        providerId: discordUser.id,
-        userId: user.id
-      })
-    }
-
-    const accessToken = generateAccessToken({
-      id: userId,
-      strategy: DISCORD_PROVIDER
-    })
-    const refreshToken = await generateRefreshToken({
-      strategy: DISCORD_PROVIDER,
-      id: userId
-    })
-
-    return res.redirect(
-      buildQueryURL(redirectURI, {
-        accessToken,
-        refreshToken,
-        expiresIn: expiresIn.toString(),
-        type: 'Bearer'
-      })
-    )
+    return res.redirect(buildQueryURL(redirectURI, responseJWT))
   }
 )
 
