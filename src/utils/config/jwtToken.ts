@@ -4,7 +4,14 @@ import ms from 'ms'
 import RefreshToken from '../../models/RefreshToken'
 import { UserJWT } from '../../models/User'
 
-const expiresInMinutesString = '15 minutes'
+export interface ResponseJWT {
+  accessToken: string
+  refreshToken?: string
+  expiresIn: number
+  type: 'Bearer'
+}
+
+export const expiresInMinutesString = '15 minutes'
 
 /** expiresIn is how long, in seconds, until the returned accessToken expires */
 export const expiresIn = ms(expiresInMinutesString) / 1000

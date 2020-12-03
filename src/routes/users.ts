@@ -3,6 +3,7 @@ import { Router } from 'express'
 import { confirmEmailRouter } from '../controllers/users/confirmEmail'
 import { currentRouter } from '../controllers/users/current'
 import { discordRouter } from '../controllers/users/oauth2/discord'
+import { githubRouter } from '../controllers/users/oauth2/github'
 import { refreshTokenRouter } from '../controllers/users/refreshToken'
 import { resetPasswordRouter } from '../controllers/users/resetPassword'
 import { signinRouter } from '../controllers/users/signin'
@@ -20,5 +21,6 @@ usersRouter.use('/signout', signoutRouter)
 usersRouter.use('/signup', signupRouter)
 
 usersRouter.use('/oauth2/discord', discordRouter)
+usersRouter.use('/oauth2/github', githubRouter)
 
 export { usersRouter }

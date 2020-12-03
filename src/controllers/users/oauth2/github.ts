@@ -13,60 +13,59 @@ import { buildQueryURL } from '../utils/buildQueryURL'
 import { isValidRedirectURIValidation } from '../utils/isValidRedirectURIValidation'
 import { OAuthStrategy } from '../utils/OAuthStrategy'
 
-const DISCORD_PROVIDER = 'discord'
-const DISCORD_BASE_URL = 'https://discordapp.com/api/v6'
-const discordStrategy = new OAuthStrategy(DISCORD_PROVIDER)
-
-interface DiscordUser {
-  id: string
-  username: string
-  discriminator: string
-  avatar?: string
-  locale?: string
+interface GitHubUser {
+  login: string
+  id: number
+  name: string
+  avatar_url: string
 }
 
-interface DiscordTokens {
+interface GitHubTokens {
   access_token: string
-  token_type: string
-  expires_in: number
-  refresh_token: string
   scope: string
+  token_type: string
 }
 
-const getDiscordUserData = async (
+const GITHUB_PROVIDER = 'github'
+const GITHUB_BASE_URL = 'https://github.com'
+const GITHUB_API_BASE_URL = 'https://api.github.com'
+const githubStrategy = new OAuthStrategy(GITHUB_PROVIDER)
+
+const getGitHubUserData = async (
   code: string,
   redirectURI: string
-): Promise<DiscordUser> => {
-  const { data: tokens } = await axios.post<DiscordTokens>(
-    `${DISCORD_BASE_URL}/oauth2/token`,
+): Promise<GitHubUser> => {
+  const { data: token } = await axios.post<GitHubTokens>(
+    `${GITHUB_BASE_URL}/login/oauth/access_token`,
     querystring.stringify({
-      client_id: process.env.DISCORD_CLIENT_ID,
-      client_secret: process.env.DISCORD_CLIENT_SECRET,
-      grant_type: 'authorization_code',
+      client_id: process.env.GITHUB_CLIENT_ID,
+      client_secret: process.env.GITHUB_CLIENT_SECRET,
       code,
-      redirect_uri: redirectURI,
-      scope: 'identify'
+      redirect_uri: redirectURI
     }),
     {
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json'
       }
     }
   )
-  const { data: discordUser } = await axios.get<DiscordUser>(
-    `${DISCORD_BASE_URL}/users/@me`,
+
+  const { data: githubUser } = await axios.get<GitHubUser>(
+    `${GITHUB_API_BASE_URL}/user`,
     {
       headers: {
-        Authorization: `${tokens.token_type} ${tokens.access_token}`
+        Authorization: `token ${token.access_token}`
       }
     }
   )
-  return discordUser
+
+  return githubUser
 }
 
-const discordRouter = Router()
+const githubRouter = Router()
 
-discordRouter.get(
+githubRouter.get(
   '/add-strategy',
   authenticateUser,
   [
@@ -81,13 +80,13 @@ discordRouter.get(
       throw new ForbiddenError()
     }
     const { redirectURI } = req.query as { redirectURI: string }
-    const redirectCallback = `${process.env.API_BASE_URL}/users/oauth2/${DISCORD_PROVIDER}/callback-add-strategy?redirectURI=${redirectURI}`
-    const url = `${DISCORD_BASE_URL}/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT_ID}&scope=identify&response_type=code&state=${req.user.accessToken}&redirect_uri=${redirectCallback}`
+    const redirectCallback = `${process.env.API_BASE_URL}/users/oauth2/${GITHUB_PROVIDER}/callback-add-strategy?redirectURI=${redirectURI}`
+    const url = `${GITHUB_BASE_URL}/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&state=${req.user.accessToken}&redirect_uri=${redirectCallback}`
     return res.json(url)
   }
 )
 
-discordRouter.get(
+githubRouter.get(
   '/callback-add-strategy',
   [
     query('code').notEmpty(),
@@ -107,19 +106,19 @@ discordRouter.get(
       state: string
     }
     const userRequest = await getUserWithBearerToken(`Bearer ${accessToken}`)
-    const discordUser = await getDiscordUserData(
+    const githubUser = await getGitHubUserData(
       code,
-      `${process.env.API_BASE_URL}/users/oauth2/${DISCORD_PROVIDER}/callback-add-strategy?redirectURI=${redirectURI}`
+      `${process.env.API_BASE_URL}/users/oauth2/${GITHUB_PROVIDER}/callback-add-strategy?redirectURI=${redirectURI}`
     )
-    const message = await discordStrategy.callbackAddStrategy(
-      { name: discordUser.username, id: discordUser.id },
+    const message = await githubStrategy.callbackAddStrategy(
+      { name: githubUser.name, id: githubUser.id },
       userRequest
     )
     return res.redirect(buildQueryURL(redirectURI, { message }))
   }
 )
 
-discordRouter.get(
+githubRouter.get(
   '/signin',
   [
     query('redirectURI')
@@ -130,13 +129,13 @@ discordRouter.get(
   validateRequest,
   (req: Request, res: Response) => {
     const { redirectURI } = req.query as { redirectURI: string }
-    const redirectCallback = `${process.env.API_BASE_URL}/users/oauth2/${DISCORD_PROVIDER}/callback?redirectURI=${redirectURI}`
-    const url = `${DISCORD_BASE_URL}/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirectCallback}`
+    const redirectCallback = `${process.env.API_BASE_URL}/users/oauth2/${GITHUB_PROVIDER}/callback?redirectURI=${redirectURI}`
+    const url = `${GITHUB_BASE_URL}/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${redirectCallback}`
     return res.json(url)
   }
 )
 
-discordRouter.get(
+githubRouter.get(
   '/callback',
   [
     query('code').notEmpty(),
@@ -151,16 +150,16 @@ discordRouter.get(
       code: string
       redirectURI: string
     }
-    const discordUser = await getDiscordUserData(
+    const githubUser = await getGitHubUserData(
       code,
-      `${process.env.API_BASE_URL}/users/oauth2/${DISCORD_PROVIDER}/callback?redirectURI=${redirectURI}`
+      `${process.env.API_BASE_URL}/users/oauth2/${GITHUB_PROVIDER}/callback?redirectURI=${redirectURI}`
     )
-    const responseJWT = await discordStrategy.callbackSignin({
-      name: discordUser.username,
-      id: discordUser.id
+    const responseJWT = await githubStrategy.callbackSignin({
+      name: githubUser.name,
+      id: githubUser.id
     })
     return res.redirect(buildQueryURL(redirectURI, responseJWT))
   }
 )
 
-export { discordRouter }
+export { githubRouter }

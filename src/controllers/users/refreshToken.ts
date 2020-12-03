@@ -5,7 +5,11 @@ import jwt from 'jsonwebtoken'
 import { validateRequest } from '../../middlewares/validateRequest'
 import RefreshToken from '../../models/RefreshToken'
 import { UserJWT } from '../../models/User'
-import { expiresIn, generateAccessToken } from '../../utils/config/jwtToken'
+import {
+  expiresIn,
+  generateAccessToken,
+  ResponseJWT
+} from '../../utils/config/jwtToken'
 import { ForbiddenError } from '../../utils/errors/ForbiddenError'
 import { UnauthorizedError } from '../../utils/errors/UnauthorizedError'
 
@@ -40,11 +44,12 @@ refreshTokenRouter.post(
           id: userJWT.id,
           strategy: userJWT.strategy
         })
-        return res.status(200).json({
+        const responseJWT: ResponseJWT = {
           accessToken,
           expiresIn,
           type: 'Bearer'
-        })
+        }
+        return res.status(200).json(responseJWT)
       }
     )
   }
