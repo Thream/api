@@ -1,0 +1,31 @@
+import { NotFoundError } from '../../utils/errors/NotFoundError'
+import { errorHandler } from '../errorHandler'
+
+const mockRes = (): any => {
+  const res: any = {}
+  res.status = jest.fn().mockReturnValue(res)
+  res.json = jest.fn().mockReturnValue(res)
+  return res
+}
+
+describe('middlewares/errorHandler', () => {
+  it('should send 500 error if not custom error', () => {
+    const mockedRes = mockRes()
+    errorHandler(new Error('random error'), {} as any, mockedRes, () => {})
+
+    expect(mockedRes.json).toHaveBeenCalledWith({
+      errors: [{ message: 'Internal server error' }]
+    })
+    expect(mockedRes.status).toHaveBeenCalledWith(500)
+  })
+
+  it('should send 404 error if NotFoundError', () => {
+    const mockedRes = mockRes()
+    errorHandler(new NotFoundError(), {} as any, mockedRes, () => {})
+
+    expect(mockedRes.json).toHaveBeenCalledWith({
+      errors: [{ message: 'Not Found' }]
+    })
+    expect(mockedRes.status).toHaveBeenCalledWith(404)
+  })
+})

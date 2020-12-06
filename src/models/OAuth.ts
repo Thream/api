@@ -9,7 +9,7 @@ import {
 
 import User from './User'
 
-export type ProviderOAuth = 'google' | 'github' | 'discord' | 'twitter'
+export type ProviderOAuth = 'google' | 'github' | 'discord'
 
 export type AuthenticationStrategy = 'local' | ProviderOAuth
 
