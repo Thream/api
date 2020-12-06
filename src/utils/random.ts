@@ -1,4 +1,4 @@
-const alphabet =
+export const alphabet =
   'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 
 export function randomInteger (min: number, max: number): number {
