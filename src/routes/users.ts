@@ -4,6 +4,7 @@ import { confirmEmailRouter } from '../controllers/users/confirmEmail'
 import { currentRouter } from '../controllers/users/current'
 import { discordRouter } from '../controllers/users/oauth2/discord'
 import { githubRouter } from '../controllers/users/oauth2/github'
+import { googleRouter } from '../controllers/users/oauth2/google'
 import { refreshTokenRouter } from '../controllers/users/refreshToken'
 import { resetPasswordRouter } from '../controllers/users/resetPassword'
 import { signinRouter } from '../controllers/users/signin'
@@ -22,5 +23,6 @@ usersRouter.use('/signup', signupRouter)
 
 usersRouter.use('/oauth2/discord', discordRouter)
 usersRouter.use('/oauth2/github', githubRouter)
+usersRouter.use('/oauth2/google', googleRouter)
 
 export { usersRouter }

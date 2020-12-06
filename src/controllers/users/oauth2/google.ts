@@ -13,35 +13,41 @@ import { buildQueryURL } from '../utils/buildQueryURL'
 import { isValidRedirectURIValidation } from '../utils/isValidRedirectURIValidation'
 import { OAuthStrategy } from '../utils/OAuthStrategy'
 
-interface GitHubUser {
-  login: string
-  id: number
+interface GoogleUser {
+  id: string
   name: string
-  avatar_url: string
+  given_name: string
+  link: string
+  picture: string
+  locale: string
 }
 
-interface GitHubTokens {
+interface GoogleTokens {
   access_token: string
-  scope: string
+  expires_in: number
   token_type: string
+  scope: string
+  refresh_token?: string
 }
 
-const GITHUB_PROVIDER = 'github'
-const GITHUB_BASE_URL = 'https://github.com'
-const GITHUB_API_BASE_URL = 'https://api.github.com'
-const githubStrategy = new OAuthStrategy(GITHUB_PROVIDER)
+const GOOGLE_PROVIDER = 'google'
+const GOOGLE_BASE_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
+const GOOGLE_OAUTH2_TOKEN = 'https://oauth2.googleapis.com/token'
+const GOOGLE_USERINFO = 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json'
+const googleStrategy = new OAuthStrategy(GOOGLE_PROVIDER)
 
-const getGitHubUserData = async (
+const getGoogleUserData = async (
   code: string,
   redirectURI: string
-): Promise<GitHubUser> => {
-  const { data: token } = await axios.post<GitHubTokens>(
-    `${GITHUB_BASE_URL}/login/oauth/access_token`,
+): Promise<GoogleUser> => {
+  const { data: token } = await axios.post<GoogleTokens>(
+    GOOGLE_OAUTH2_TOKEN,
     querystring.stringify({
-      client_id: process.env.GITHUB_CLIENT_ID,
-      client_secret: process.env.GITHUB_CLIENT_SECRET,
+      client_id: process.env.GOOGLE_CLIENT_ID,
+      client_secret: process.env.GOOGLE_CLIENT_SECRET,
       code,
-      redirect_uri: redirectURI
+      redirect_uri: redirectURI,
+      grant_type: 'authorization_code'
     }),
     {
       headers: {
@@ -50,20 +56,15 @@ const getGitHubUserData = async (
       }
     }
   )
-  const { data: githubUser } = await axios.get<GitHubUser>(
-    `${GITHUB_API_BASE_URL}/user`,
-    {
-      headers: {
-        Authorization: `token ${token.access_token}`
-      }
-    }
+  const { data: googleUser } = await axios.get<GoogleUser>(
+    `${GOOGLE_USERINFO}&access_token=${token.access_token}`
   )
-  return githubUser
+  return googleUser
 }
 
-const githubRouter = Router()
+const googleRouter = Router()
 
-githubRouter.get(
+googleRouter.get(
   '/add-strategy',
   authenticateUser,
   [
@@ -78,13 +79,13 @@ githubRouter.get(
       throw new ForbiddenError()
     }
     const { redirectURI } = req.query as { redirectURI: string }
-    const redirectCallback = `${process.env.API_BASE_URL}/users/oauth2/${GITHUB_PROVIDER}/callback-add-strategy?redirectURI=${redirectURI}`
-    const url = `${GITHUB_BASE_URL}/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&state=${req.user.accessToken}&redirect_uri=${redirectCallback}`
+    const redirectCallback = `${process.env.API_BASE_URL}/users/oauth2/${GOOGLE_PROVIDER}/callback-add-strategy?redirectURI=${redirectURI}`
+    const url = `${GOOGLE_BASE_URL}?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${redirectCallback}&response_type=code&scope=profile&access_type=online&state=${req.user.accessToken}`
     return res.json(url)
   }
 )
 
-githubRouter.get(
+googleRouter.get(
   '/callback-add-strategy',
   [
     query('code').notEmpty(),
@@ -104,19 +105,19 @@ githubRouter.get(
       state: string
     }
     const userRequest = await getUserWithBearerToken(`Bearer ${accessToken}`)
-    const githubUser = await getGitHubUserData(
+    const googleUser = await getGoogleUserData(
       code,
-      `${process.env.API_BASE_URL}/users/oauth2/${GITHUB_PROVIDER}/callback-add-strategy?redirectURI=${redirectURI}`
+      `${process.env.API_BASE_URL}/users/oauth2/${GOOGLE_PROVIDER}/callback-add-strategy?redirectURI=${redirectURI}`
     )
-    const message = await githubStrategy.callbackAddStrategy(
-      { name: githubUser.name, id: githubUser.id },
+    const message = await googleStrategy.callbackAddStrategy(
+      { name: googleUser.name, id: googleUser.id },
       userRequest
     )
     return res.redirect(buildQueryURL(redirectURI, { message }))
   }
 )
 
-githubRouter.get(
+googleRouter.get(
   '/signin',
   [
     query('redirectURI')
@@ -127,13 +128,13 @@ githubRouter.get(
   validateRequest,
   (req: Request, res: Response) => {
     const { redirectURI } = req.query as { redirectURI: string }
-    const redirectCallback = `${process.env.API_BASE_URL}/users/oauth2/${GITHUB_PROVIDER}/callback?redirectURI=${redirectURI}`
-    const url = `${GITHUB_BASE_URL}/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${redirectCallback}`
+    const redirectCallback = `${process.env.API_BASE_URL}/users/oauth2/${GOOGLE_PROVIDER}/callback?redirectURI=${redirectURI}`
+    const url = `${GOOGLE_BASE_URL}?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${redirectCallback}&response_type=code&scope=profile&access_type=online`
     return res.json(url)
   }
 )
 
-githubRouter.get(
+googleRouter.get(
   '/callback',
   [
     query('code').notEmpty(),
@@ -148,16 +149,16 @@ githubRouter.get(
       code: string
       redirectURI: string
     }
-    const githubUser = await getGitHubUserData(
+    const googleUser = await getGoogleUserData(
       code,
-      `${process.env.API_BASE_URL}/users/oauth2/${GITHUB_PROVIDER}/callback?redirectURI=${redirectURI}`
+      `${process.env.API_BASE_URL}/users/oauth2/${GOOGLE_PROVIDER}/callback?redirectURI=${redirectURI}`
     )
-    const responseJWT = await githubStrategy.callbackSignin({
-      name: githubUser.name,
-      id: githubUser.id
+    const responseJWT = await googleStrategy.callbackSignin({
+      name: googleUser.name,
+      id: googleUser.id
     })
     return res.redirect(buildQueryURL(redirectURI, responseJWT))
   }
 )
 
-export { githubRouter }
+export { googleRouter }
