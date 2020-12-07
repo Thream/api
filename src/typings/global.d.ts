@@ -1,5 +1,4 @@
-// eslint-disable-next-line
-import { UserRequest } from '../models/User'
+import type { UserRequest } from '../models/User'
 
 declare global {
   namespace NodeJS {
