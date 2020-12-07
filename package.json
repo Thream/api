@@ -137,7 +137,7 @@
     "sqlite3": "^5.0.0",
     "supertest": "^6.0.1",
     "ts-jest": "^26.4.4",
-    "ts-standard": "^9.0.0",
+    "ts-standard": "^10.0.0",
     "typescript": "^4.1.2"
   }
 }
