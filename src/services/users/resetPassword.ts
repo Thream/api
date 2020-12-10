@@ -85,7 +85,7 @@ resetPasswordRouter.post(
 )
 
 resetPasswordRouter.put(
-  '/',
+  '/reset-password',
   [
     body('password')
       .trim()

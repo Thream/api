@@ -9,7 +9,7 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 
 import { errorHandler } from './middlewares/errorHandler'
-import { router } from './routes'
+import { router } from './services'
 import { NotFoundError } from './utils/errors/NotFoundError'
 import { TooManyRequestsError } from './utils/errors/TooManyRequestsError'
 
