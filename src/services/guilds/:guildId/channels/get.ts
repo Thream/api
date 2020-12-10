@@ -1,16 +1,16 @@
 import { Request, Response, Router } from 'express'
 
-import { authenticateUser } from '../../middlewares/authenticateUser'
-import Channel from '../../models/Channel'
-import Member from '../../models/Member'
-import { paginateModel } from '../../utils/database/paginateModel'
-import { ForbiddenError } from '../../utils/errors/ForbiddenError'
-import { NotFoundError } from '../../utils/errors/NotFoundError'
+import { authenticateUser } from '../../../../middlewares/authenticateUser'
+import Channel from '../../../../models/Channel'
+import Member from '../../../../models/Member'
+import { paginateModel } from '../../../../utils/database/paginateModel'
+import { ForbiddenError } from '../../../../utils/errors/ForbiddenError'
+import { NotFoundError } from '../../../../utils/errors/NotFoundError'
 
 const getChannelsRouter = Router()
 
 getChannelsRouter.get(
-  '/channels/guilds/:guildId',
+  '/guilds/:guildId/channels',
   authenticateUser,
   async (req: Request, res: Response) => {
     if (req.user == null) {

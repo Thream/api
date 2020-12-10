@@ -1,14 +1,14 @@
 import request from 'supertest'
 
-import { authenticateUserTest } from '../../../__test__/utils/authenticateUser'
-import { formatErrors } from '../../../__test__/utils/formatErrors'
-import app from '../../../app'
-import { commonErrorsMessages } from '../../../utils/config/constants'
-import { randomString } from '../../../utils/random'
-import { createGuild } from '../../guilds/__test__/utils/createGuild'
+import { authenticateUserTest } from '../../../../../__test__/utils/authenticateUser'
+import { formatErrors } from '../../../../../__test__/utils/formatErrors'
+import app from '../../../../../app'
+import { commonErrorsMessages } from '../../../../../utils/config/constants'
+import { randomString } from '../../../../../utils/random'
+import { createGuild } from '../../../__test__/utils/createGuild'
 import { errorsMessages } from '../post'
 
-describe('POST /channels/guilds/:guildId', () => {
+describe('POST /guilds/:guildId/channels', () => {
   it('succeeds with valid name/description', async () => {
     const result = await createGuild({
       guild: { description: 'description', name: 'guild' },
@@ -20,7 +20,7 @@ describe('POST /channels/guilds/:guildId', () => {
     const name = 'channel-name'
     const description = 'testing channel creation'
     const response = await request(app)
-      .post(`/channels/guilds/${result.guild.id}`)
+      .post(`/guilds/${result.guild.id}/channels`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send({ name, description })
       .expect(201)
@@ -40,7 +40,7 @@ describe('POST /channels/guilds/:guildId', () => {
     })
     const name = 'channel-name'
     const response = await request(app)
-      .post(`/channels/guilds/${result.guild.id}`)
+      .post(`/guilds/${result.guild.id}/channels`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send({ name })
       .expect(201)
@@ -57,7 +57,7 @@ describe('POST /channels/guilds/:guildId', () => {
       }
     })
     const response = await request(app)
-      .post(`/channels/guilds/${result.guild.id}`)
+      .post(`/guilds/${result.guild.id}/channels`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send({ description: 'testing channel creation' })
       .expect(400)
@@ -81,7 +81,7 @@ describe('POST /channels/guilds/:guildId', () => {
       }
     })
     const response = await request(app)
-      .post(`/channels/guilds/${result.guild.id}`)
+      .post(`/guilds/${result.guild.id}/channels`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send({
         name: 'random channel name',
@@ -104,7 +104,7 @@ describe('POST /channels/guilds/:guildId', () => {
       }
     })
     const response = await request(app)
-      .post(`/channels/guilds/${result.guild.id}`)
+      .post(`/guilds/${result.guild.id}/channels`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send({ name: 'channel-name', description: randomString(170) })
       .expect(400)
@@ -128,7 +128,7 @@ describe('POST /channels/guilds/:guildId', () => {
     const userToken = await authenticateUserTest()
     const name = 'channel-name'
     const response = await request(app)
-      .post(`/channels/guilds/${result.guild.id}`)
+      .post(`/guilds/${result.guild.id}/channels`)
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ name, description: 'testing channel creation' })
       .expect(404)
@@ -141,7 +141,7 @@ describe('POST /channels/guilds/:guildId', () => {
     const userToken = await authenticateUserTest()
     const name = 'channel-name'
     const response = await request(app)
-      .post('/channels/guilds/1')
+      .post('/guilds/1/channels')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ name, description: 'testing channel creation' })
       .expect(404)

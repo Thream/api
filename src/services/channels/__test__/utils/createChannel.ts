@@ -36,7 +36,7 @@ export const createChannel = async (
   const channelsResponses: Channel[] = []
   for (const { name, description } of channels) {
     const response = await request(app)
-      .post(`/channels/guilds/${result.guild.id}`)
+      .post(`/guilds/${result.guild.id}/channels`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send({ name, description })
       .expect(201)

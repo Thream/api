@@ -1,14 +1,14 @@
 import { Request, Response, Router } from 'express'
 import { body } from 'express-validator'
 
-import { authenticateUser } from '../../middlewares/authenticateUser'
-import { validateRequest } from '../../middlewares/validateRequest'
-import Channel from '../../models/Channel'
-import Member from '../../models/Member'
-import { commonErrorsMessages } from '../../utils/config/constants'
-import { emitToMembers } from '../../utils/config/socket'
-import { ForbiddenError } from '../../utils/errors/ForbiddenError'
-import { NotFoundError } from '../../utils/errors/NotFoundError'
+import { authenticateUser } from '../../../../middlewares/authenticateUser'
+import { validateRequest } from '../../../../middlewares/validateRequest'
+import Channel from '../../../../models/Channel'
+import Member from '../../../../models/Member'
+import { commonErrorsMessages } from '../../../../utils/config/constants'
+import { emitToMembers } from '../../../../utils/config/socket'
+import { ForbiddenError } from '../../../../utils/errors/ForbiddenError'
+import { NotFoundError } from '../../../../utils/errors/NotFoundError'
 
 export const errorsMessages = {
   name: {
@@ -20,7 +20,7 @@ export const errorsMessages = {
 const postChannelsRouter = Router()
 
 postChannelsRouter.post(
-  '/channels/guilds/:guildId',
+  '/guilds/:guildId/channels',
   authenticateUser,
   [
     body('name')

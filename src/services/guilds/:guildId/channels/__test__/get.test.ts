@@ -1,15 +1,15 @@
 import request from 'supertest'
 
-import app from '../../../app'
-import { createChannel } from './utils/createChannel'
+import app from '../../../../../app'
+import { createChannel } from '../../../../channels/__test__/utils/createChannel'
 
-describe('GET /channels/guilds/:guildId', () => {
+describe('GET /guilds/:guildId/channels', () => {
   it('should get all the channels of the guild', async () => {
     const channel1 = { name: 'general1', description: 'testing' }
     const channel2 = { name: 'general2', description: 'testing' }
     const result = await createChannel([channel1, channel2])
     const response = await request(app)
-      .get(`/channels/guilds/${result.guild.id}`)
+      .get(`/guilds/${result.guild.id}/channels/`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send()
       .expect(200)
