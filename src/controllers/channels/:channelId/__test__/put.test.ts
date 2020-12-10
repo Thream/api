@@ -1,13 +1,13 @@
 import request from 'supertest'
 
-import { authenticateUserTest } from '../../../__test__/utils/authenticateUser'
-import { formatErrors } from '../../../__test__/utils/formatErrors'
-import app from '../../../app'
-import Channel from '../../../models/Channel'
-import { commonErrorsMessages } from '../../../utils/config/constants'
-import { randomString } from '../../../utils/random'
-import { errorsMessages } from '../putById'
-import { createChannel } from './utils/createChannel'
+import { authenticateUserTest } from '../../../../__test__/utils/authenticateUser'
+import { formatErrors } from '../../../../__test__/utils/formatErrors'
+import app from '../../../../app'
+import Channel from '../../../../models/Channel'
+import { commonErrorsMessages } from '../../../../utils/config/constants'
+import { randomString } from '../../../../utils/random'
+import { errorsMessages } from '../put'
+import { createChannel } from '../../__test__/utils/createChannel'
 
 describe('PUT /channels/:channelId', () => {
   it('succeeds and edit name/description of the channel', async () => {

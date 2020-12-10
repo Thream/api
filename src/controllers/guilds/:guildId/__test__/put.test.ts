@@ -1,13 +1,13 @@
 import request from 'supertest'
 
-import { authenticateUserTest } from '../../../__test__/utils/authenticateUser'
-import { formatErrors } from '../../../__test__/utils/formatErrors'
-import app from '../../../app'
-import Guild from '../../../models/Guild'
-import Invitation from '../../../models/Invitation'
-import { commonErrorsMessages } from '../../../utils/config/constants'
-import { randomString } from '../../../utils/random'
-import { createGuild } from './utils/createGuild'
+import { authenticateUserTest } from '../../../../__test__/utils/authenticateUser'
+import { formatErrors } from '../../../../__test__/utils/formatErrors'
+import app from '../../../../app'
+import Guild from '../../../../models/Guild'
+import Invitation from '../../../../models/Invitation'
+import { commonErrorsMessages } from '../../../../utils/config/constants'
+import { randomString } from '../../../../utils/random'
+import { createGuild } from '../../__test__/utils/createGuild'
 
 describe('PUT /guilds/:guildId', () => {
   it('succeeds and edit the guild', async () => {

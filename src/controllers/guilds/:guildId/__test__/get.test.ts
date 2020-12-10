@@ -1,13 +1,12 @@
 import request from 'supertest'
 
-import { authenticateUserTest } from '../../../__test__/utils/authenticateUser'
-import { formatErrors } from '../../../__test__/utils/formatErrors'
-import app from '../../../app'
-import Guild from '../../../models/Guild'
-import { createGuild } from './utils/createGuild'
+import { authenticateUserTest } from '../../../../__test__/utils/authenticateUser'
+import { formatErrors } from '../../../../__test__/utils/formatErrors'
+import app from '../../../../app'
+import { createGuild } from '../../__test__/utils/createGuild'
 
-describe('DELETE /guilds/:guildId', () => {
-  it('succeeds and delete the guild', async () => {
+describe('GET /guilds/:guildId', () => {
+  it('succeeds and get the guild', async () => {
     const name = 'guild'
     const description = 'testing'
     const result = await createGuild({
@@ -18,19 +17,25 @@ describe('DELETE /guilds/:guildId', () => {
       }
     })
     const response = await request(app)
-      .delete(`/guilds/${result.guild.id}`)
+      .get(`/guilds/${result.guild.id}`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send()
       .expect(200)
-    expect(response.body.deletedGuildId).toEqual(result.guild.id)
-    const foundGuild = await Guild.findOne({ where: { id: result.guild.id } })
-    expect(foundGuild).toBeNull()
+    expect(response.body.guild.name).toEqual(name)
+    expect(response.body.guild.description).toEqual(description)
   })
 
-  it("fails if the guild doesn't exist", async () => {
+  it("fails if the user isn't a member", async () => {
+    const result = await createGuild({
+      guild: { description: 'testing', name: 'guild' },
+      user: {
+        email: 'test@test.com',
+        name: 'Test'
+      }
+    })
     const userToken = await authenticateUserTest()
     const response = await request(app)
-      .delete('/guilds/23')
+      .get(`/guilds/${result.guild.id}`)
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send()
       .expect(404)
@@ -39,19 +44,10 @@ describe('DELETE /guilds/:guildId', () => {
     expect(errors).toEqual(expect.arrayContaining(['Not Found']))
   })
 
-  it("fails if the user isn't the owner", async () => {
-    const name = 'guild'
-    const description = 'testing'
-    const result = await createGuild({
-      guild: { description, name },
-      user: {
-        email: 'test@test.com',
-        name: 'Test'
-      }
-    })
+  it("fails if the guild doesn't exist", async () => {
     const userToken = await authenticateUserTest()
     const response = await request(app)
-      .delete(`/guilds/${result.guild.id}`)
+      .get('/guilds/23')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send()
       .expect(404)

@@ -3,22 +3,22 @@ import fileUpload from 'express-fileupload'
 import { body } from 'express-validator'
 import { v4 as uuidv4 } from 'uuid'
 
-import { authenticateUser } from '../../middlewares/authenticateUser'
-import { validateRequest } from '../../middlewares/validateRequest'
-import Guild from '../../models/Guild'
-import Invitation from '../../models/Invitation'
-import Member from '../../models/Member'
-import { ObjectAny } from '../../typings/utils'
+import { authenticateUser } from '../../../middlewares/authenticateUser'
+import { validateRequest } from '../../../middlewares/validateRequest'
+import Guild from '../../../models/Guild'
+import Invitation from '../../../models/Invitation'
+import Member from '../../../models/Member'
+import { ObjectAny } from '../../../typings/utils'
 import {
   commonErrorsMessages,
   guildsIconPath,
   imageFileUploadOptions
-} from '../../utils/config/constants'
-import { emitToMembers } from '../../utils/config/socket'
-import { alreadyUsedValidation } from '../../utils/database/alreadyUsedValidation'
-import { ForbiddenError } from '../../utils/errors/ForbiddenError'
-import { NotFoundError } from '../../utils/errors/NotFoundError'
-import { uploadImage } from '../../utils/uploadImage'
+} from '../../../utils/config/constants'
+import { emitToMembers } from '../../../utils/config/socket'
+import { alreadyUsedValidation } from '../../../utils/database/alreadyUsedValidation'
+import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
+import { NotFoundError } from '../../../utils/errors/NotFoundError'
+import { uploadImage } from '../../../utils/uploadImage'
 
 const putByIdGuildsRouter = Router()
 

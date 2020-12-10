@@ -1,9 +1,9 @@
 import { Router } from 'express'
 
-import { deleteByIdChannelsRouter } from '../controllers/channels/deleteById'
+import { deleteByIdChannelsRouter } from '../controllers/channels/:channelId/delete'
 import { getChannelsRouter } from '../controllers/channels/get'
 import { postChannelsRouter } from '../controllers/channels/post'
-import { putByIdChannelsRouter } from '../controllers/channels/putById'
+import { putByIdChannelsRouter } from '../controllers/channels/:channelId/put'
 
 const channelsRouter = Router()
 

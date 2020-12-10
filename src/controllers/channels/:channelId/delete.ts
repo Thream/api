@@ -1,12 +1,12 @@
 import { Request, Response, Router } from 'express'
 
-import { authenticateUser } from '../../middlewares/authenticateUser'
-import Channel from '../../models/Channel'
-import Member from '../../models/Member'
-import { emitToMembers } from '../../utils/config/socket'
-import { BadRequestError } from '../../utils/errors/BadRequestError'
-import { ForbiddenError } from '../../utils/errors/ForbiddenError'
-import { NotFoundError } from '../../utils/errors/NotFoundError'
+import { authenticateUser } from '../../../middlewares/authenticateUser'
+import Channel from '../../../models/Channel'
+import Member from '../../../models/Member'
+import { emitToMembers } from '../../../utils/config/socket'
+import { BadRequestError } from '../../../utils/errors/BadRequestError'
+import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
+import { NotFoundError } from '../../../utils/errors/NotFoundError'
 
 export const errorsMessages = {
   channel: {

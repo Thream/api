@@ -1,8 +1,8 @@
 import request from 'supertest'
 
-import { authenticateUserTest } from '../../../__test__/utils/authenticateUser'
-import app from '../../../app'
-import { createGuild } from './utils/createGuild'
+import { authenticateUserTest } from '../../../../../__test__/utils/authenticateUser'
+import app from '../../../../../app'
+import { createGuild } from '../../../__test__/utils/createGuild'
 
 describe('GET /guilds/public/discover', () => {
   it('should get all the public guilds', async () => {

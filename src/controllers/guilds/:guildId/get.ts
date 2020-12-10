@@ -1,10 +1,10 @@
 import { Request, Response, Router } from 'express'
 
-import { authenticateUser } from '../../middlewares/authenticateUser'
-import Guild from '../../models/Guild'
-import Member from '../../models/Member'
-import { ForbiddenError } from '../../utils/errors/ForbiddenError'
-import { NotFoundError } from '../../utils/errors/NotFoundError'
+import { authenticateUser } from '../../../middlewares/authenticateUser'
+import Guild from '../../../models/Guild'
+import Member from '../../../models/Member'
+import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
+import { NotFoundError } from '../../../utils/errors/NotFoundError'
 
 const getByIdGuildsRouter = Router()
 

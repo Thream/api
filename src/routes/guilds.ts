@@ -1,11 +1,11 @@
 import { Router } from 'express'
 
-import { deleteByIdGuildsRouter } from '../controllers/guilds/deleteById'
+import { deleteByIdGuildsRouter } from '../controllers/guilds/:guildId/delete'
 import { getGuildsRouter } from '../controllers/guilds/get'
-import { getByIdGuildsRouter } from '../controllers/guilds/getById'
-import { getPublicDiscoverGuildsRouter } from '../controllers/guilds/public/getDiscover'
+import { getByIdGuildsRouter } from '../controllers/guilds/:guildId/get'
+import { getPublicDiscoverGuildsRouter } from '../controllers/guilds/public/discover/get'
 import { postGuildsRouter } from '../controllers/guilds/post'
-import { putByIdGuildsRouter } from '../controllers/guilds/putById'
+import { putByIdGuildsRouter } from '../controllers/guilds/:guildId/put'
 
 const guildsRouter = Router()
 

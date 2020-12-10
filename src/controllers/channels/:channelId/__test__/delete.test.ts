@@ -1,11 +1,11 @@
 import request from 'supertest'
 
-import { authenticateUserTest } from '../../../__test__/utils/authenticateUser'
-import { formatErrors } from '../../../__test__/utils/formatErrors'
-import app from '../../../app'
-import Channel from '../../../models/Channel'
-import { errorsMessages } from '../deleteById'
-import { createChannel } from './utils/createChannel'
+import { authenticateUserTest } from '../../../../__test__/utils/authenticateUser'
+import { formatErrors } from '../../../../__test__/utils/formatErrors'
+import app from '../../../../app'
+import Channel from '../../../../models/Channel'
+import { errorsMessages } from '../delete'
+import { createChannel } from '../../__test__/utils/createChannel'
 
 describe('DELETE /channels/:channelId', () => {
   it('succeeds and delete the channel', async () => {
