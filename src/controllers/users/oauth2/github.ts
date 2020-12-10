@@ -64,7 +64,7 @@ const getGitHubUserData = async (
 const githubRouter = Router()
 
 githubRouter.get(
-  '/add-strategy',
+  `/oauth2/${GITHUB_PROVIDER}/add-strategy`,
   authenticateUser,
   [
     query('redirectURI')
@@ -85,7 +85,7 @@ githubRouter.get(
 )
 
 githubRouter.get(
-  '/callback-add-strategy',
+  `/oauth2/${GITHUB_PROVIDER}/callback-add-strategy`,
   [
     query('code').notEmpty(),
     query('redirectURI')
@@ -117,7 +117,7 @@ githubRouter.get(
 )
 
 githubRouter.get(
-  '/signin',
+  `/oauth2/${GITHUB_PROVIDER}/signin`,
   [
     query('redirectURI')
       .notEmpty()
@@ -134,7 +134,7 @@ githubRouter.get(
 )
 
 githubRouter.get(
-  '/callback',
+  `/oauth2/${GITHUB_PROVIDER}/callback`,
   [
     query('code').notEmpty(),
     query('redirectURI')

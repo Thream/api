@@ -67,7 +67,7 @@ const getDiscordUserData = async (
 const discordRouter = Router()
 
 discordRouter.get(
-  '/add-strategy',
+  `/oauth2/${DISCORD_PROVIDER}/add-strategy`,
   authenticateUser,
   [
     query('redirectURI')
@@ -88,7 +88,7 @@ discordRouter.get(
 )
 
 discordRouter.get(
-  '/callback-add-strategy',
+  `/oauth2/${DISCORD_PROVIDER}/callback-add-strategy`,
   [
     query('code').notEmpty(),
     query('redirectURI')
@@ -120,7 +120,7 @@ discordRouter.get(
 )
 
 discordRouter.get(
-  '/signin',
+  `/oauth2/${DISCORD_PROVIDER}/signin`,
   [
     query('redirectURI')
       .notEmpty()
@@ -137,7 +137,7 @@ discordRouter.get(
 )
 
 discordRouter.get(
-  '/callback',
+  `/oauth2/${DISCORD_PROVIDER}/callback`,
   [
     query('code').notEmpty(),
     query('redirectURI')

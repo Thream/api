@@ -8,7 +8,7 @@ import { UnauthorizedError } from '../../utils/errors/UnauthorizedError'
 const signoutRouter = Router()
 
 signoutRouter.post(
-  '/',
+  '/signout',
   [
     body('refreshToken')
       .trim()

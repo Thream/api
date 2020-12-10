@@ -18,7 +18,7 @@ export const errorsMessages = {
 const signupRouter = Router()
 
 signupRouter.post(
-  '/',
+  '/signup',
   [
     body('email')
       .trim()

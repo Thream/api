@@ -13,16 +13,16 @@ import { signupRouter } from '../controllers/users/signup'
 
 const usersRouter = Router()
 
-usersRouter.use('/confirm-email', confirmEmailRouter)
-usersRouter.use('/current', currentRouter)
-usersRouter.use('/refresh-token', refreshTokenRouter)
-usersRouter.use('/reset-password', resetPasswordRouter)
-usersRouter.use('/signin', signinRouter)
-usersRouter.use('/signout', signoutRouter)
-usersRouter.use('/signup', signupRouter)
+usersRouter.use('/', confirmEmailRouter)
+usersRouter.use('/', currentRouter)
+usersRouter.use('/', refreshTokenRouter)
+usersRouter.use('/', resetPasswordRouter)
+usersRouter.use('/', signinRouter)
+usersRouter.use('/', signoutRouter)
+usersRouter.use('/', signupRouter)
 
-usersRouter.use('/oauth2/discord', discordRouter)
-usersRouter.use('/oauth2/github', githubRouter)
-usersRouter.use('/oauth2/google', googleRouter)
+usersRouter.use('/', discordRouter)
+usersRouter.use('/', githubRouter)
+usersRouter.use('/', googleRouter)
 
 export { usersRouter }
