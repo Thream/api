@@ -61,7 +61,7 @@ const getGitHubUserData = async (
   return githubUser
 }
 
-const githubRouter = Router()
+export const githubRouter = Router()
 
 githubRouter.get(
   `/users/oauth2/${GITHUB_PROVIDER}/add-strategy`,
@@ -159,5 +159,3 @@ githubRouter.get(
     return res.redirect(buildQueryURL(redirectURI, responseJWT))
   }
 )
-
-export { githubRouter }

@@ -64,7 +64,7 @@ const getDiscordUserData = async (
   return discordUser
 }
 
-const discordRouter = Router()
+export const discordRouter = Router()
 
 discordRouter.get(
   `/users/oauth2/${DISCORD_PROVIDER}/add-strategy`,
@@ -162,5 +162,3 @@ discordRouter.get(
     return res.redirect(buildQueryURL(redirectURI, responseJWT))
   }
 )
-
-export { discordRouter }

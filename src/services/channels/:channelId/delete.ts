@@ -14,7 +14,7 @@ export const errorsMessages = {
   }
 }
 
-const deleteByIdChannelsRouter = Router()
+export const deleteByIdChannelsRouter = Router()
 
 deleteByIdChannelsRouter.delete(
   '/channels/:channelId',
@@ -54,5 +54,3 @@ deleteByIdChannelsRouter.delete(
     return res.status(200).json({ deletedChannelId })
   }
 )
-
-export { deleteByIdChannelsRouter }

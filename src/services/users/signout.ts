@@ -5,7 +5,7 @@ import { validateRequest } from '../../middlewares/validateRequest'
 import RefreshToken from '../../models/RefreshToken'
 import { UnauthorizedError } from '../../utils/errors/UnauthorizedError'
 
-const signoutRouter = Router()
+export const signoutRouter = Router()
 
 signoutRouter.post(
   '/users/signout',
@@ -27,5 +27,3 @@ signoutRouter.post(
     res.status(200).json({})
   }
 )
-
-export { signoutRouter }

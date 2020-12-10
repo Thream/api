@@ -17,7 +17,7 @@ export const errorsMessages = {
   }
 }
 
-const postChannelsRouter = Router()
+export const postChannelsRouter = Router()
 
 postChannelsRouter.post(
   '/guilds/:guildId/channels',
@@ -75,5 +75,3 @@ postChannelsRouter.post(
     return res.status(201).json({ channel })
   }
 )
-
-export { postChannelsRouter }

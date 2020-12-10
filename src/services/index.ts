@@ -7,12 +7,10 @@ import { channelsRouter } from './channels'
 import { guildsRouter } from './guilds'
 import { usersRouter } from './users'
 
-const router = Router()
+export const router = Router()
 
 router.use(express.static(path.join(__dirname, '..', '..', 'public')))
 router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 router.use('/', usersRouter)
 router.use('/', guildsRouter)
 router.use('/', channelsRouter)
-
-export { router }

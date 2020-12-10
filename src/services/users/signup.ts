@@ -15,7 +15,7 @@ export const errorsMessages = {
   }
 }
 
-const signupRouter = Router()
+export const signupRouter = Router()
 
 signupRouter.post(
   '/users/signup',
@@ -76,5 +76,3 @@ signupRouter.post(
     return res.status(201).json({ user })
   }
 )
-
-export { signupRouter }

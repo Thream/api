@@ -16,7 +16,7 @@ import { alreadyUsedValidation } from '../../utils/database/alreadyUsedValidatio
 import { ForbiddenError } from '../../utils/errors/ForbiddenError'
 import { uploadImage } from '../../utils/uploadImage'
 
-const postGuildsRouter = Router()
+export const postGuildsRouter = Router()
 
 postGuildsRouter.post(
   '/guilds',
@@ -81,5 +81,3 @@ postGuildsRouter.post(
     return res.status(201).json({ guild })
   }
 )
-
-export { postGuildsRouter }

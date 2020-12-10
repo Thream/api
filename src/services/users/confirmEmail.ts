@@ -6,7 +6,7 @@ import User from '../../models/User'
 import { ForbiddenError } from '../../utils/errors/ForbiddenError'
 import { isValidRedirectURIValidation } from './utils/isValidRedirectURIValidation'
 
-const confirmEmailRouter = Router()
+export const confirmEmailRouter = Router()
 
 confirmEmailRouter.get(
   '/users/confirm-email',
@@ -46,5 +46,3 @@ confirmEmailRouter.get(
     return res.redirect(redirectURI)
   }
 )
-
-export { confirmEmailRouter }

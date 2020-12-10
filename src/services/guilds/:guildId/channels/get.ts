@@ -7,7 +7,7 @@ import { paginateModel } from '../../../../utils/database/paginateModel'
 import { ForbiddenError } from '../../../../utils/errors/ForbiddenError'
 import { NotFoundError } from '../../../../utils/errors/NotFoundError'
 
-const getChannelsRouter = Router()
+export const getChannelsRouter = Router()
 
 getChannelsRouter.get(
   '/guilds/:guildId/channels',
@@ -41,5 +41,3 @@ getChannelsRouter.get(
     return res.status(200).json(channels)
   }
 )
-
-export { getChannelsRouter }

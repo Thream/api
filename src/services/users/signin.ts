@@ -22,7 +22,7 @@ export const errorsMessages = {
   invalidCredentials: 'Invalid credentials'
 }
 
-const signinRouter = Router()
+export const signinRouter = Router()
 
 signinRouter.post(
   '/users/signin',
@@ -70,5 +70,3 @@ signinRouter.post(
     return res.status(200).json(responseJWT)
   }
 )
-
-export { signinRouter }

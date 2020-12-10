@@ -62,7 +62,7 @@ const getGoogleUserData = async (
   return googleUser
 }
 
-const googleRouter = Router()
+export const googleRouter = Router()
 
 googleRouter.get(
   `/users/oauth2/${GOOGLE_PROVIDER}/add-strategy`,
@@ -160,5 +160,3 @@ googleRouter.get(
     return res.redirect(buildQueryURL(redirectURI, responseJWT))
   }
 )
-
-export { googleRouter }

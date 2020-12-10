@@ -1,19 +1,18 @@
-import bcrypt from 'bcryptjs'
 import ejs from 'ejs'
 import { Request, Response, Router } from 'express'
 import { body, query } from 'express-validator'
 import ms from 'ms'
 import { v4 as uuidv4 } from 'uuid'
 
-import { errorsMessages as errorsConfirmed } from '../../middlewares/authenticateUser'
-import { validateRequest } from '../../middlewares/validateRequest'
-import User from '../../models/User'
-import { emailTemplatePath } from '../../utils/config/constants'
+import { errorsMessages as errorsConfirmed } from '../../../middlewares/authenticateUser'
+import { validateRequest } from '../../../middlewares/validateRequest'
+import User from '../../../models/User'
+import { emailTemplatePath } from '../../../utils/config/constants'
 import {
   EMAIL_INFO,
   emailTransporter
-} from '../../utils/config/emailTransporter'
-import { BadRequestError } from '../../utils/errors/BadRequestError'
+} from '../../../utils/config/emailTransporter'
+import { BadRequestError } from '../../../utils/errors/BadRequestError'
 
 export const errorsMessages = {
   email: {
@@ -28,9 +27,9 @@ export const errorsMessages = {
   }
 }
 
-const resetPasswordRouter = Router()
+const postResetPasswordRouter = Router()
 
-resetPasswordRouter.post(
+postResetPasswordRouter.post(
   '/users/reset-password',
   [
     body('email')
@@ -84,37 +83,4 @@ resetPasswordRouter.post(
   }
 )
 
-resetPasswordRouter.put(
-  '/users/reset-password',
-  [
-    body('password')
-      .trim()
-      .notEmpty(),
-    body('tempToken')
-      .trim()
-      .notEmpty()
-  ],
-  validateRequest,
-  async (req: Request, res: Response) => {
-    const { password, tempToken } = req.body as {
-      password: string
-      tempToken: string
-    }
-    const user = await User.findOne({ where: { tempToken } })
-    const isValidTempToken =
-      user?.tempExpirationToken != null && user.tempExpirationToken > Date.now()
-    if (user == null || !isValidTempToken) {
-      throw new BadRequestError(errorsMessages.tempToken.invalid)
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 12)
-    user.password = hashedPassword
-    user.tempToken = null
-    user.tempExpirationToken = null
-    await user.save()
-
-    return res.status(200).json({ message: 'The new password has been saved!' })
-  }
-)
-
-export { resetPasswordRouter }
+export { postResetPasswordRouter }

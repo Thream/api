@@ -13,7 +13,7 @@ import {
 import { ForbiddenError } from '../../utils/errors/ForbiddenError'
 import { UnauthorizedError } from '../../utils/errors/UnauthorizedError'
 
-const refreshTokenRouter = Router()
+export const refreshTokenRouter = Router()
 
 refreshTokenRouter.post(
   '/users/refresh-token',
@@ -54,5 +54,3 @@ refreshTokenRouter.post(
     )
   }
 )
-
-export { refreshTokenRouter }

@@ -6,7 +6,7 @@ import Member from '../../models/Member'
 import { paginateModel } from '../../utils/database/paginateModel'
 import { ForbiddenError } from '../../utils/errors/ForbiddenError'
 
-const getGuildsRouter = Router()
+export const getGuildsRouter = Router()
 
 getGuildsRouter.get(
   '/guilds',
@@ -40,5 +40,3 @@ getGuildsRouter.get(
     })
   }
 )
-
-export { getGuildsRouter }

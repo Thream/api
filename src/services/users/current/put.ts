@@ -4,20 +4,20 @@ import { body, query } from 'express-validator'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
 
-import { authenticateUser } from '../../middlewares/authenticateUser'
-import { validateRequest } from '../../middlewares/validateRequest'
-import RefreshToken from '../../models/RefreshToken'
-import User from '../../models/User'
+import { authenticateUser } from '../../../middlewares/authenticateUser'
+import { validateRequest } from '../../../middlewares/validateRequest'
+import RefreshToken from '../../../models/RefreshToken'
+import User from '../../../models/User'
 import {
   commonErrorsMessages,
   imageFileUploadOptions,
   imagesPath
-} from '../../utils/config/constants'
-import { alreadyUsedValidation } from '../../utils/database/alreadyUsedValidation'
-import { ForbiddenError } from '../../utils/errors/ForbiddenError'
-import { UnauthorizedError } from '../../utils/errors/UnauthorizedError'
-import { uploadImage } from '../../utils/uploadImage'
-import { sendConfirmEmail } from './utils/sendConfirmEmail'
+} from '../../../utils/config/constants'
+import { alreadyUsedValidation } from '../../../utils/database/alreadyUsedValidation'
+import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
+import { UnauthorizedError } from '../../../utils/errors/UnauthorizedError'
+import { uploadImage } from '../../../utils/uploadImage'
+import { sendConfirmEmail } from '../utils/sendConfirmEmail'
 
 const usersLogoPath = path.join(imagesPath, 'users')
 
@@ -31,15 +31,9 @@ export const errorsMessages = {
   }
 }
 
-const currentRouter = Router()
+export const putCurrentRouter = Router()
 
-currentRouter.get('/users/current', authenticateUser, (req: Request, res: Response) => {
-  return res
-    .status(200)
-    .json({ user: req.user?.current, strategy: req.user?.strategy })
-})
-
-currentRouter.put(
+putCurrentRouter.put(
   '/users/current',
   authenticateUser,
   fileUpload(imageFileUploadOptions),
@@ -89,9 +83,7 @@ currentRouter.put(
       .withMessage(
         commonErrorsMessages.charactersLength('status', { max: 100 })
       ),
-    query('redirectURI')
-      .optional({ nullable: true })
-      .trim()
+    query('redirectURI').optional({ nullable: true }).trim()
   ],
   validateRequest,
   async (req: Request, res: Response) => {
@@ -164,5 +156,3 @@ currentRouter.put(
       .json({ user: userSaved, strategy: req.user?.strategy })
   }
 )
-
-export { currentRouter }

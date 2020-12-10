@@ -6,7 +6,7 @@ import Member from '../../../models/Member'
 import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
 import { NotFoundError } from '../../../utils/errors/NotFoundError'
 
-const getByIdGuildsRouter = Router()
+export const getByIdGuildsRouter = Router()
 
 getByIdGuildsRouter.get(
   '/guilds/:guildId',
@@ -27,5 +27,3 @@ getByIdGuildsRouter.get(
     return res.status(200).json({ guild: member.guild })
   }
 )
-
-export { getByIdGuildsRouter }

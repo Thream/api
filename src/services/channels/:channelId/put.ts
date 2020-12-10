@@ -16,7 +16,7 @@ export const errorsMessages = {
   }
 }
 
-const putByIdChannelsRouter = Router()
+export const putByIdChannelsRouter = Router()
 
 putByIdChannelsRouter.put(
   '/channels/:channelId',
@@ -94,5 +94,3 @@ putByIdChannelsRouter.put(
     return res.status(200).json({ channel })
   }
 )
-
-export { putByIdChannelsRouter }

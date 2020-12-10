@@ -7,7 +7,7 @@ import { emitToMembers } from '../../../utils/config/socket'
 import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
 import { NotFoundError } from '../../../utils/errors/NotFoundError'
 
-const deleteByIdGuildsRouter = Router()
+export const deleteByIdGuildsRouter = Router()
 
 deleteByIdGuildsRouter.delete(
   '/guilds/:guildId',
@@ -37,5 +37,3 @@ deleteByIdGuildsRouter.delete(
     return res.status(200).json({ deletedGuildId })
   }
 )
-
-export { deleteByIdGuildsRouter }

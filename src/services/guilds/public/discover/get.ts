@@ -7,7 +7,7 @@ import Invitation from '../../../../models/Invitation'
 import { ObjectAny } from '../../../../typings/utils'
 import { paginateModel } from '../../../../utils/database/paginateModel'
 
-const getPublicDiscoverGuildsRouter = Router()
+export const getPublicDiscoverGuildsRouter = Router()
 
 getPublicDiscoverGuildsRouter.get(
   '/guilds/public/discover',
@@ -58,5 +58,3 @@ getPublicDiscoverGuildsRouter.get(
     })
   }
 )
-
-export { getPublicDiscoverGuildsRouter }

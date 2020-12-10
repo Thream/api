@@ -20,7 +20,7 @@ import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
 import { NotFoundError } from '../../../utils/errors/NotFoundError'
 import { uploadImage } from '../../../utils/uploadImage'
 
-const putByIdGuildsRouter = Router()
+export const putByIdGuildsRouter = Router()
 
 putByIdGuildsRouter.put(
   '/guilds/:guildId',
@@ -121,5 +121,3 @@ putByIdGuildsRouter.put(
     return res.status(200).json({ guild })
   }
 )
-
-export { putByIdGuildsRouter }
