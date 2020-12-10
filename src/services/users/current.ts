@@ -33,14 +33,14 @@ export const errorsMessages = {
 
 const currentRouter = Router()
 
-currentRouter.get('/current', authenticateUser, (req: Request, res: Response) => {
+currentRouter.get('/users/current', authenticateUser, (req: Request, res: Response) => {
   return res
     .status(200)
     .json({ user: req.user?.current, strategy: req.user?.strategy })
 })
 
 currentRouter.put(
-  '/current',
+  '/users/current',
   authenticateUser,
   fileUpload(imageFileUploadOptions),
   [

@@ -19,7 +19,7 @@ export const errorsMessages = {
 const putByIdChannelsRouter = Router()
 
 putByIdChannelsRouter.put(
-  '/:channelId',
+  '/channels/:channelId',
   authenticateUser,
   [
     body('name')

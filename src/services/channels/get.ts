@@ -10,7 +10,7 @@ import { NotFoundError } from '../../utils/errors/NotFoundError'
 const getChannelsRouter = Router()
 
 getChannelsRouter.get(
-  '/guilds/:guildId',
+  '/channels/guilds/:guildId',
   authenticateUser,
   async (req: Request, res: Response) => {
     if (req.user == null) {

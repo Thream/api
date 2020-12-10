@@ -11,8 +11,8 @@ const router = Router()
 
 router.use(express.static(path.join(__dirname, '..', '..', 'public')))
 router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
-router.use('/users', usersRouter)
-router.use('/guilds', guildsRouter)
-router.use('/channels', channelsRouter)
+router.use('/', usersRouter)
+router.use('/', guildsRouter)
+router.use('/', channelsRouter)
 
 export { router }

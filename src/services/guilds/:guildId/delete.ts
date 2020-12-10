@@ -10,7 +10,7 @@ import { NotFoundError } from '../../../utils/errors/NotFoundError'
 const deleteByIdGuildsRouter = Router()
 
 deleteByIdGuildsRouter.delete(
-  '/:guildId',
+  '/guilds/:guildId',
   authenticateUser,
   async (req: Request, res: Response) => {
     if (req.user == null) {

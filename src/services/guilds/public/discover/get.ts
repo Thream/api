@@ -10,7 +10,7 @@ import { paginateModel } from '../../../../utils/database/paginateModel'
 const getPublicDiscoverGuildsRouter = Router()
 
 getPublicDiscoverGuildsRouter.get(
-  '/public/discover',
+  '/guilds/public/discover',
   authenticateUser,
   async (req: Request, res: Response) => {
     const { itemsPerPage, page, search } = req.query as {

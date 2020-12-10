@@ -23,7 +23,7 @@ import { uploadImage } from '../../../utils/uploadImage'
 const putByIdGuildsRouter = Router()
 
 putByIdGuildsRouter.put(
-  '/:guildId',
+  '/guilds/:guildId',
   authenticateUser,
   fileUpload(imageFileUploadOptions),
   [

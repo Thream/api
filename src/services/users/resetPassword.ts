@@ -31,7 +31,7 @@ export const errorsMessages = {
 const resetPasswordRouter = Router()
 
 resetPasswordRouter.post(
-  '/reset-password',
+  '/users/reset-password',
   [
     body('email')
       .trim()
@@ -85,7 +85,7 @@ resetPasswordRouter.post(
 )
 
 resetPasswordRouter.put(
-  '/reset-password',
+  '/users/reset-password',
   [
     body('password')
       .trim()

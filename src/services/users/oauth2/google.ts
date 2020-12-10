@@ -65,7 +65,7 @@ const getGoogleUserData = async (
 const googleRouter = Router()
 
 googleRouter.get(
-  `/oauth2/${GOOGLE_PROVIDER}/add-strategy`,
+  `/users/oauth2/${GOOGLE_PROVIDER}/add-strategy`,
   authenticateUser,
   [
     query('redirectURI')
@@ -86,7 +86,7 @@ googleRouter.get(
 )
 
 googleRouter.get(
-  `/oauth2/${GOOGLE_PROVIDER}/callback-add-strategy`,
+  `/users/oauth2/${GOOGLE_PROVIDER}/callback-add-strategy`,
   [
     query('code').notEmpty(),
     query('redirectURI')
@@ -118,7 +118,7 @@ googleRouter.get(
 )
 
 googleRouter.get(
-  `/oauth2/${GOOGLE_PROVIDER}/signin`,
+  `/users/oauth2/${GOOGLE_PROVIDER}/signin`,
   [
     query('redirectURI')
       .notEmpty()
@@ -135,7 +135,7 @@ googleRouter.get(
 )
 
 googleRouter.get(
-  `/oauth2/${GOOGLE_PROVIDER}/callback`,
+  `/users/oauth2/${GOOGLE_PROVIDER}/callback`,
   [
     query('code').notEmpty(),
     query('redirectURI')

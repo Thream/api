@@ -20,7 +20,7 @@ export const errorsMessages = {
 const postChannelsRouter = Router()
 
 postChannelsRouter.post(
-  '/guilds/:guildId',
+  '/channels/guilds/:guildId',
   authenticateUser,
   [
     body('name')

@@ -9,7 +9,7 @@ import { ForbiddenError } from '../../utils/errors/ForbiddenError'
 const getGuildsRouter = Router()
 
 getGuildsRouter.get(
-  '/',
+  '/guilds',
   authenticateUser,
   async (req: Request, res: Response) => {
     if (req.user == null) {

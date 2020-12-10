@@ -19,7 +19,7 @@ import { uploadImage } from '../../utils/uploadImage'
 const postGuildsRouter = Router()
 
 postGuildsRouter.post(
-  '/',
+  '/guilds',
   authenticateUser,
   fileUpload(imageFileUploadOptions),
   [

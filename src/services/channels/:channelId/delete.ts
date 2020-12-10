@@ -17,7 +17,7 @@ export const errorsMessages = {
 const deleteByIdChannelsRouter = Router()
 
 deleteByIdChannelsRouter.delete(
-  '/:channelId',
+  '/channels/:channelId',
   authenticateUser,
   async (req: Request, res: Response) => {
     if (req.user == null) {

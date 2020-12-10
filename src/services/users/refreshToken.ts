@@ -16,7 +16,7 @@ import { UnauthorizedError } from '../../utils/errors/UnauthorizedError'
 const refreshTokenRouter = Router()
 
 refreshTokenRouter.post(
-  '/refresh-token',
+  '/users/refresh-token',
   [
     body('refreshToken')
       .trim()

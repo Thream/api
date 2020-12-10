@@ -25,7 +25,7 @@ export const errorsMessages = {
 const signinRouter = Router()
 
 signinRouter.post(
-  '/signin',
+  '/users/signin',
   [
     body('email')
       .trim()
