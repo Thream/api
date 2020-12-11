@@ -9,9 +9,9 @@ import {
 } from '../../../middlewares/authenticateUser'
 import { validateRequest } from '../../../middlewares/validateRequest'
 import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
-import { buildQueryURL } from '../utils/buildQueryURL'
-import { isValidRedirectURIValidation } from '../utils/isValidRedirectURIValidation'
-import { OAuthStrategy } from '../utils/OAuthStrategy'
+import { buildQueryURL } from '../__utils__/buildQueryURL'
+import { isValidRedirectURIValidation } from '../__utils__/isValidRedirectURIValidation'
+import { OAuthStrategy } from '../__utils__/OAuthStrategy'
 
 interface GitHubUser {
   login: string

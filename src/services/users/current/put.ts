@@ -17,7 +17,7 @@ import { alreadyUsedValidation } from '../../../utils/database/alreadyUsedValida
 import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
 import { UnauthorizedError } from '../../../utils/errors/UnauthorizedError'
 import { uploadImage } from '../../../utils/uploadImage'
-import { sendConfirmEmail } from '../utils/sendConfirmEmail'
+import { sendConfirmEmail } from '../__utils__/sendConfirmEmail'
 
 const usersLogoPath = path.join(imagesPath, 'users')
 

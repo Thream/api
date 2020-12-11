@@ -7,7 +7,7 @@ import { validateRequest } from '../../middlewares/validateRequest'
 import User from '../../models/User'
 import { commonErrorsMessages } from '../../utils/config/constants'
 import { alreadyUsedValidation } from '../../utils/database/alreadyUsedValidation'
-import { sendConfirmEmail } from './utils/sendConfirmEmail'
+import { sendConfirmEmail } from './__utils__/sendConfirmEmail'
 
 export const errorsMessages = {
   email: {
