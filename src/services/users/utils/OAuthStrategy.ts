@@ -12,17 +12,22 @@ interface ProviderData {
   id: number | string
 }
 
+type ResponseCallbackAddStrategy =
+  | 'success'
+  | 'This account is already used by someone else'
+  | 'You are already using this account'
+
 export class OAuthStrategy {
   constructor (public provider: ProviderOAuth) {}
 
   async callbackAddStrategy (
     providerData: ProviderData,
     userRequest: UserRequest
-  ): Promise<string> {
+  ): Promise<ResponseCallbackAddStrategy> {
     const OAuthUser = await OAuth.findOne({
       where: { providerId: providerData.id, provider: this.provider }
     })
-    let message = 'success'
+    let message: ResponseCallbackAddStrategy = 'success'
 
     if (OAuthUser == null) {
       await OAuth.create({

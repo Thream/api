@@ -8,8 +8,8 @@ import { errorsMessages } from '../signup'
 
 describe('POST /users/signup', () => {
   it('succeeds and create a new user', async () => {
-    let user = await User.findAll()
-    expect(user.length).toEqual(0)
+    let users = await User.findAll()
+    expect(users.length).toEqual(0)
 
     await request(app)
       .post('/users/signup')
@@ -20,13 +20,13 @@ describe('POST /users/signup', () => {
       })
       .expect(201)
 
-    user = await User.findAll()
-    expect(user.length).toEqual(1)
+    users = await User.findAll()
+    expect(users.length).toEqual(1)
   })
 
   it('fails with invalid email', async () => {
-    let user = await User.findAll()
-    expect(user.length).toEqual(0)
+    let users = await User.findAll()
+    expect(users.length).toEqual(0)
 
     const response = await request(app)
       .post('/users/signup')
@@ -42,13 +42,13 @@ describe('POST /users/signup', () => {
       errorsMessages.email.mustBeValid
     )
 
-    user = await User.findAll()
-    expect(user.length).toEqual(0)
+    users = await User.findAll()
+    expect(users.length).toEqual(0)
   })
 
   it('fails with invalid name', async () => {
-    let user = await User.findAll()
-    expect(user.length).toEqual(0)
+    let users = await User.findAll()
+    expect(users.length).toEqual(0)
 
     const response = await request(app)
       .post('/users/signup')
@@ -64,13 +64,13 @@ describe('POST /users/signup', () => {
       commonErrorsMessages.charactersLength('name', { max: 30, min: 3 })
     )
 
-    user = await User.findAll()
-    expect(user.length).toEqual(0)
+    users = await User.findAll()
+    expect(users.length).toEqual(0)
   })
 
   it('fails with invalid name and invalid email', async () => {
-    let user = await User.findAll()
-    expect(user.length).toEqual(0)
+    let users = await User.findAll()
+    expect(users.length).toEqual(0)
 
     const response = await request(app)
       .post('/users/signup')
@@ -90,8 +90,8 @@ describe('POST /users/signup', () => {
       ])
     )
 
-    user = await User.findAll()
-    expect(user.length).toEqual(0)
+    users = await User.findAll()
+    expect(users.length).toEqual(0)
   })
 
   it('fails with name and email already used', async () => {
