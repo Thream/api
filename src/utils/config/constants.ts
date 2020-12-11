@@ -60,6 +60,9 @@ export const commonErrorsMessages = {
   ) => {
     const capitalizedName = capitalize(name)
     if (min != null && max != null) {
+      if (min >= max) {
+        throw new Error('min should be less than max')
+      }
       return `${capitalizedName} must be between ${min} and ${max} characters`
     }
 

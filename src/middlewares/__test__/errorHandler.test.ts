@@ -28,4 +28,14 @@ describe('middlewares/errorHandler', () => {
     })
     expect(mockedRes.status).toHaveBeenCalledWith(404)
   })
+
+  it('should call console.error in developement', () => {
+    const consoleErrorOriginal = console.error
+    process.env.NODE_ENV = 'development'
+    console.error = jest.fn()
+    errorHandler(new NotFoundError(), {} as any, mockRes(), () => {})
+    expect(console.error).toHaveBeenCalled()
+    process.env.NODE_ENV = 'test'
+    console.error = consoleErrorOriginal
+  })
 })
