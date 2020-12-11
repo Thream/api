@@ -1,9 +1,9 @@
-/channels/guilds/{guildId}:
+/guilds/{guildId}/channels:
   get:
     security:
       - bearerAuth: []
     tags:
-      - 'channels'
+      - 'guilds'
     summary: 'GET all the channels of a guild'
     parameters:
       - name: 'guildId'

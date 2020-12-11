@@ -1,9 +1,9 @@
-/channels/guilds/{guildId}:
+/guilds/{guildId}/channels:
   post:
     security:
       - bearerAuth: []
     tags:
-      - 'channels'
+      - 'guilds'
     summary: 'Create a channel'
     parameters:
       - name: 'guildId'
