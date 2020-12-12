@@ -13,19 +13,7 @@ import {
   emailTransporter
 } from '../../../utils/config/emailTransporter'
 import { BadRequestError } from '../../../utils/errors/BadRequestError'
-
-export const errorsMessages = {
-  email: {
-    mustBeValid: 'Email must be valid',
-    notExist: "Email address doesn't exist"
-  },
-  password: {
-    alreadyInProgress: 'A request to reset-password is already in progress'
-  },
-  tempToken: {
-    invalid: '"tempToken" is invalid'
-  }
-}
+import { errorsMessages } from './index'
 
 const postResetPasswordRouter = Router()
 

@@ -2,16 +2,6 @@ import { Request, Response, Router } from 'express'
 
 import { authenticateUser } from '../../../middlewares/authenticateUser'
 
-export const errorsMessages = {
-  email: {
-    mustBeValid: 'Email must be valid',
-    alreadyConnected: 'You are already connected with this email address'
-  },
-  name: {
-    alreadyConnected: 'You are already connected with this name'
-  }
-}
-
 export const getCurrentRouter = Router()
 
 getCurrentRouter.get(

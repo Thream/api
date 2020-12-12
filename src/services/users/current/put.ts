@@ -18,18 +18,9 @@ import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
 import { UnauthorizedError } from '../../../utils/errors/UnauthorizedError'
 import { uploadImage } from '../../../utils/uploadImage'
 import { sendConfirmEmail } from '../__utils__/sendConfirmEmail'
+import { errorsMessages } from './index'
 
 const usersLogoPath = path.join(imagesPath, 'users')
-
-export const errorsMessages = {
-  email: {
-    mustBeValid: 'Email must be valid',
-    alreadyConnected: 'You are already connected with this email address'
-  },
-  name: {
-    alreadyConnected: 'You are already connected with this name'
-  }
-}
 
 export const putCurrentRouter = Router()
 
