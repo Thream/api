@@ -35,7 +35,7 @@ describe('PUT /channels/:channelId', () => {
       .send({ isDefault: true })
       .expect(200)
     const defaultChannels = await Channel.findAll({
-      where: { guildId: result.guild.id, isDefault: true }
+      where: { guildId: result.guild.id as number, isDefault: true }
     })
     expect(defaultChannels.length).toEqual(1)
     expect(response.body.channel.name).toEqual(channel1.name)

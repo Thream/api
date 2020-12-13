@@ -23,14 +23,16 @@ describe('PUT /guilds/:guildId', () => {
       }
     })
     const response = await request(app)
-      .put(`/guilds/${result.guild.id}`)
+      .put(`/guilds/${result.guild.id as number}`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send({ name: newName, description: newDescription })
       .expect(200)
     expect(response.body.guild.name).toEqual(newName)
     expect(response.body.guild.description).toEqual(newDescription)
     expect(response.body.guild.publicInvitation).toBeNull()
-    const foundGuild = await Guild.findOne({ where: { id: result.guild.id } })
+    const foundGuild = await Guild.findOne({
+      where: { id: result?.guild.id as number }
+    })
     expect(foundGuild?.name).toEqual(newName)
     expect(foundGuild?.description).toEqual(newDescription)
   })
@@ -46,27 +48,27 @@ describe('PUT /guilds/:guildId', () => {
       }
     })
     const resIsPublic = await request(app)
-      .put(`/guilds/${result.guild.id}`)
+      .put(`/guilds/${result.guild.id as number}`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send({ isPublic: true })
       .expect(200)
     expect(resIsPublic.body.guild.isPublic).toBeTruthy()
     expect(typeof resIsPublic.body.guild.publicInvitation).toBe('string')
     const publicInvitation = await Invitation.findOne({
-      where: { isPublic: true, guildId: result.guild.id }
+      where: { isPublic: true, guildId: result?.guild.id as number }
     })
     expect(publicInvitation).not.toBeNull()
     expect(publicInvitation?.expiresIn).toEqual(0)
 
     const resIsNotPublic = await request(app)
-      .put(`/guilds/${result.guild.id}`)
+      .put(`/guilds/${result.guild.id as number}`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send({ isPublic: false })
       .expect(200)
     expect(resIsNotPublic.body.guild.isPublic).toBeFalsy()
     expect(resIsNotPublic.body.guild.publicInvitation).toBeNull()
     const notPublicInvitation = await Invitation.findOne({
-      where: { isPublic: false, guildId: result.guild.id }
+      where: { isPublic: false, guildId: result?.guild.id as number }
     })
     expect(notPublicInvitation).toBeNull()
   })
@@ -84,7 +86,7 @@ describe('PUT /guilds/:guildId', () => {
     })
     const userToken = await authenticateUserTest()
     const response = await request(app)
-      .put(`/guilds/${result.guild.id}`)
+      .put(`/guilds/${result.guild.id as number}`)
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ name: newName })
       .expect(404)
@@ -116,7 +118,7 @@ describe('PUT /guilds/:guildId', () => {
       }
     })
     const response = await request(app)
-      .put(`/guilds/${result.guild.id}`)
+      .put(`/guilds/${result.guild.id as number}`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send({ name: randomString(35) })
       .expect(400)
@@ -145,7 +147,7 @@ describe('PUT /guilds/:guildId', () => {
       }
     })
     const response = await request(app)
-      .put(`/guilds/${result.guild.id}`)
+      .put(`/guilds/${result.guild.id as number}`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send({ name: guild.name })
       .expect(400)
@@ -165,7 +167,7 @@ describe('PUT /guilds/:guildId', () => {
       }
     })
     const response = await request(app)
-      .put(`/guilds/${result.guild.id}`)
+      .put(`/guilds/${result.guild.id as number}`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send({ description: randomString(165) })
       .expect(400)

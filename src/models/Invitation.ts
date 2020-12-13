@@ -17,11 +17,11 @@ export default class Invitation extends Model<Invitation> {
   })
   value!: string
 
-  // 0 = never expires
   @Column({
     type: DataType.BIGINT,
     allowNull: false
   })
+  /** expiresIn is how long, in milliseconds, until the invitation expires. Note: 0 = never expires */
   expiresIn!: number
 
   @Column({

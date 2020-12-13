@@ -18,7 +18,7 @@ export const createChannel = async (
     type: 'Bearer'
   }
   guild: {
-    id: number
+    id?: number
     name: string
     description: string
     icon: string
@@ -36,7 +36,7 @@ export const createChannel = async (
   const channelsResponses: Channel[] = []
   for (const { name, description } of channels) {
     const response = await request(app)
-      .post(`/guilds/${result.guild.id}/channels`)
+      .post(`/guilds/${result.guild.id as number}/channels`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send({ name, description })
       .expect(201)

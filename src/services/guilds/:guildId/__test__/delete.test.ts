@@ -18,12 +18,12 @@ describe('DELETE /guilds/:guildId', () => {
       }
     })
     const response = await request(app)
-      .delete(`/guilds/${result.guild.id}`)
+      .delete(`/guilds/${result.guild.id as number}`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send()
       .expect(200)
     expect(response.body.deletedGuildId).toEqual(result.guild.id)
-    const foundGuild = await Guild.findOne({ where: { id: result.guild.id } })
+    const foundGuild = await Guild.findOne({ where: { id: result?.guild.id as number } })
     expect(foundGuild).toBeNull()
   })
 
@@ -51,7 +51,7 @@ describe('DELETE /guilds/:guildId', () => {
     })
     const userToken = await authenticateUserTest()
     const response = await request(app)
-      .delete(`/guilds/${result.guild.id}`)
+      .delete(`/guilds/${result.guild.id as number}`)
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send()
       .expect(404)

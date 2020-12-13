@@ -54,7 +54,7 @@ describe('DELETE /channels/:channelId', () => {
   it("fails if it's the default channel", async () => {
     const result = await createChannel([])
     const defaultChannel = await Channel.findOne({
-      where: { guildId: result.guild.id, isDefault: true }
+      where: { guildId: result.guild.id as number, isDefault: true }
     })
     expect(defaultChannel).not.toBeNull()
     const response = await request(app)

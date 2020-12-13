@@ -21,22 +21,24 @@ interface CreateGuildOptions {
   }
 }
 
-export const createGuild = async (
-  options: CreateGuildOptions
-): Promise<{
+export interface CreateGuildResult {
   user: {
     id: number
     accessToken: string
     type: 'Bearer'
   }
   guild: {
-    id: number
+    id?: number
     name: string
     description: string
     icon: string
     isPublic: boolean
   }
-}> => {
+}
+
+export const createGuild = async (
+  options: CreateGuildOptions
+): Promise<CreateGuildResult> => {
   const { user, guild } = options
   let userToken = { type: 'Bearer', accessToken: '', userId: 1 }
   if (user.email != null && user.name != null) {

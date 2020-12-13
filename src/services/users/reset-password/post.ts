@@ -27,6 +27,8 @@ export const errorsMessages = {
   }
 }
 
+export const maximumTimeToResetPassword = '1 hour'
+
 export const postResetPasswordRouter = Router()
 
 postResetPasswordRouter.post(
@@ -59,7 +61,6 @@ postResetPasswordRouter.post(
     }
 
     const tempToken = uuidv4()
-    const maximumTimeToResetPassword = '1 hour'
     user.tempToken = tempToken
     user.tempExpirationToken = Date.now() + ms(maximumTimeToResetPassword)
     await user.save()
