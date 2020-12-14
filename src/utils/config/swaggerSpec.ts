@@ -14,5 +14,5 @@ export const swaggerSpec = swaggerJsDoc({
     host: process.env.API_BASE_URL,
     tags: [{ name: 'users' }, { name: 'guilds' }, { name: 'channels' }]
   },
-  apis: ['./src/services/**/docs/**/*.yaml', './src/services/docs/**/*.yaml']
+  apis: ['./src/services/**/__docs__/**/*.yaml', './src/services/__docs__/**/*.yaml']
 })
