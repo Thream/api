@@ -11,7 +11,8 @@ export interface ResponseJWT {
   type: 'Bearer'
 }
 
-export const expiresInMinutesString = process.env.JWT_ACCESS_EXPIRES_IN
+export const expiresInMinutesString =
+  process.env.JWT_ACCESS_EXPIRES_IN ?? '15 minutes'
 
 /** expiresIn is how long, in seconds, until the returned accessToken expires */
 export const expiresIn = ms(expiresInMinutesString) / 1000
