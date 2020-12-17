@@ -111,7 +111,7 @@ putCurrentRouter.put(
       imagesPath: usersLogoPath
     })
     if (resultUpload != null) {
-      user.logo = `/images/guilds/${resultUpload}`
+      user.logo = `/images/users/${resultUpload}`
     }
 
     // If the email changed, the user should confirm the new email
