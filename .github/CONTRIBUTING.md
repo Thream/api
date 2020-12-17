@@ -1,6 +1,6 @@
 # 💡 Contributing
 
-Thanks a lot for your interest in contributing to **api**! 🎉
+Thanks a lot for your interest in contributing to **Thream/api**! 🎉
 
 ## Types of contributions
 
@@ -17,7 +17,7 @@ Thanks a lot for your interest in contributing to **api**! 🎉
 
 - Make sure your **code passes the tests**.
 
-If you're adding new features to **api**, please include tests.
+If you're adding new features to **Thream/api**, please include tests.
 
 ## Commits
 
