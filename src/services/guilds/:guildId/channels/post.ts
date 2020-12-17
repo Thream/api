@@ -49,7 +49,7 @@ postChannelsRouter.post(
       throw new ForbiddenError()
     }
     const user = req.user.current
-    const { name, description } = req.body as {
+    const { name, description = '' } = req.body as {
       name: string
       description?: string
     }
@@ -63,7 +63,7 @@ postChannelsRouter.post(
 
     const channel = await Channel.create({
       name,
-      description: description ?? '',
+      description,
       guildId: member.guildId
     })
 

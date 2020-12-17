@@ -4,6 +4,8 @@ import { authenticateUserTest } from '../../../../../__test__/utils/authenticate
 import { formatErrors } from '../../../../../__test__/utils/formatErrors'
 import app from '../../../../../app'
 import { createGuild } from '../../../__test__/utils/createGuild'
+import { errorsMessages } from '../post'
+import { commonErrorsMessages } from '../../../../../utils/config/constants'
 
 describe('POST /guilds/:guildId/invitations', () => {
   it('succeeds and create the invitation', async () => {
@@ -41,9 +43,13 @@ describe('POST /guilds/:guildId/invitations', () => {
       .send({ expiresIn: 0 })
       .expect(400)
     const errors = formatErrors(response.body.errors)
-    expect(errors.length).toEqual(1)
+    expect(errors.length).toEqual(3)
     expect(errors).toEqual(
-      expect.arrayContaining(['Value should not be empty'])
+      expect.arrayContaining([
+        errorsMessages.value.shouldNotBeEmpty,
+        errorsMessages.value.mustBeSlug,
+        commonErrorsMessages.charactersLength('value', { max: 100, min: 1 })
+      ])
     )
   })
 
@@ -62,7 +68,9 @@ describe('POST /guilds/:guildId/invitations', () => {
       .expect(400)
     const errors = formatErrors(response.body.errors)
     expect(errors.length).toEqual(1)
-    expect(errors).toEqual(expect.arrayContaining(['Value must be a slug']))
+    expect(errors).toEqual(
+      expect.arrayContaining([errorsMessages.value.mustBeSlug])
+    )
   })
 
   it('fails with negative expiresIn', async () => {
@@ -80,7 +88,9 @@ describe('POST /guilds/:guildId/invitations', () => {
       .expect(400)
     const errors = formatErrors(response.body.errors)
     expect(errors.length).toEqual(1)
-    expect(errors).toEqual(expect.arrayContaining(['ExpiresIn must be >= 0']))
+    expect(errors).toEqual(
+      expect.arrayContaining([errorsMessages.expiresIn.mustBeGreaterOrEqual])
+    )
   })
 
   it('fails if the invitation slug value already exists', async () => {
@@ -96,7 +106,7 @@ describe('POST /guilds/:guildId/invitations', () => {
       .post(`/guilds/${result.guild.id as number}/invitations`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send({ value })
-      .expect(200)
+      .expect(201)
     const response = await request(app)
       .post(`/guilds/${result.guild.id as number}/invitations`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
@@ -104,7 +114,32 @@ describe('POST /guilds/:guildId/invitations', () => {
       .expect(400)
     const errors = formatErrors(response.body.errors)
     expect(errors.length).toEqual(1)
-    expect(errors).toEqual(expect.arrayContaining(['Value is already taken']))
+    expect(errors).toEqual(expect.arrayContaining(['Value already used']))
+  })
+
+  it('fails with isPublic: true - if there is already a public invitation for this guild', async () => {
+    const result = await createGuild({
+      guild: { description: 'description', name: 'guild' },
+      user: {
+        email: 'test@test.com',
+        name: 'Test'
+      }
+    })
+    await request(app)
+      .post(`/guilds/${result.guild.id as number}/invitations`)
+      .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
+      .send({ value: 'awesome', isPublic: true })
+      .expect(201)
+    const response = await request(app)
+      .post(`/guilds/${result.guild.id as number}/invitations`)
+      .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
+      .send({ value: 'awesome2', isPublic: true })
+      .expect(400)
+    const errors = formatErrors(response.body.errors)
+    expect(errors.length).toEqual(1)
+    expect(errors).toEqual(
+      expect.arrayContaining([errorsMessages.public.alreadyHasInvitation])
+    )
   })
 
   it('fails if the user is not the owner', async () => {
