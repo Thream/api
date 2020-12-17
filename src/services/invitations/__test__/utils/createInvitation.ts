@@ -47,7 +47,7 @@ export const createInvitation = async (
     const userToken = await authenticateUserTest({
       email: user.email,
       name: user.name,
-      shouldBeConfirmed: true
+      alreadySignedUp: true
     })
     const guild = (await Guild.findOne({ where: { id: guildId } })) as Guild
     result = {

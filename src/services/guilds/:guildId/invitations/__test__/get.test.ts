@@ -9,16 +9,16 @@ describe('GET /guilds/:guildId/invitations', () => {
   it('should get all the invitations of the guild', async () => {
     const value1 = 'awesome'
     const value2 = 'awesomevalue'
-    const result1 = await createInvitation({ value: value1 })
+    const result = await createInvitation({ value: value1 })
     await createInvitation({
       value: value2,
-      guildId: result1?.guild.id
+      guildId: result?.guild.id
     })
     const response = await request(app)
-      .get(`/guilds/${result1?.guild.id as number}/invitations`)
+      .get(`/guilds/${result?.guild.id as number}/invitations`)
       .set(
         'Authorization',
-        `${result1?.user.type as string} ${result1?.user.accessToken as string}`
+        `${result?.user.type as string} ${result?.user.accessToken as string}`
       )
       .send()
       .expect(200)

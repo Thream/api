@@ -8,6 +8,7 @@ interface AuthenticateUserOptions {
   email?: string
   password?: string
   shouldBeConfirmed?: boolean
+  alreadySignedUp?: boolean
 }
 
 export async function authenticateUserTest (
@@ -23,26 +24,33 @@ export async function authenticateUserTest (
     name = 'John',
     email = 'contact@test.com',
     shouldBeConfirmed = true,
-    password = 'test'
+    password = 'test',
+    alreadySignedUp = false
   } = options
 
-  const { body: signupBody } = await request(app)
-    .post('/users/signup')
-    .send({ name, email, password })
-    .expect(201)
+  if (!alreadySignedUp) {
+    const { body: signupBody } = await request(app)
+      .post('/users/signup')
+      .send({ name, email, password })
+      .expect(201)
+    let signinResponse: any = { body: {} }
+    if (shouldBeConfirmed) {
+      const user = await User.findOne({ where: { id: signupBody.user.id } })
+      await request(app)
+        .get(`/users/confirm-email?tempToken=${user?.tempToken as string}`)
+        .send()
+        .expect(200)
+      signinResponse = await request(app)
+        .post('/users/signin')
+        .send({ email, password })
+        .expect(200)
+    }
 
-  let signinResponse: any = { body: {} }
-  if (shouldBeConfirmed) {
-    const user = await User.findOne({ where: { id: signupBody.user.id } })
-    await request(app)
-      .get(`/users/confirm-email?tempToken=${user?.tempToken as string}`)
-      .send()
-      .expect(200)
-    signinResponse = await request(app)
-      .post('/users/signin')
-      .send({ email, password })
-      .expect(200)
+    return { ...signinResponse.body, userId: signupBody.user.id }
   }
-
-  return { ...signinResponse.body, userId: signupBody.user.id }
+  const signinResponse = await request(app)
+    .post('/users/signin')
+    .send({ email, password })
+    .expect(200)
+  return { ...signinResponse.body }
 }
