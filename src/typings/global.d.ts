@@ -10,6 +10,7 @@ declare global {
       DATABASE_USER: string
       DATABASE_PASSWORD: string
       DATABASE_PORT: string
+      JWT_ACCESS_EXPIRES_IN: string
       JWT_ACCESS_SECRET: string
       JWT_REFRESH_SECRET: string
       DISCORD_CLIENT_ID: string
