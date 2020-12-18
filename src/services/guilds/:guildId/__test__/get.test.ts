@@ -17,7 +17,7 @@ describe('GET /guilds/:guildId', () => {
       }
     })
     const response = await request(app)
-      .get(`/guilds/${result.guild.id}`)
+      .get(`/guilds/${result.guild.id as number}`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send()
       .expect(200)
@@ -35,7 +35,7 @@ describe('GET /guilds/:guildId', () => {
     })
     const userToken = await authenticateUserTest()
     const response = await request(app)
-      .get(`/guilds/${result.guild.id}`)
+      .get(`/guilds/${result.guild.id as number}`)
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send()
       .expect(404)

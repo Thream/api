@@ -9,7 +9,7 @@ describe('GET /guilds/:guildId/channels', () => {
     const channel2 = { name: 'general2', description: 'testing' }
     const result = await createChannel([channel1, channel2])
     const response = await request(app)
-      .get(`/guilds/${result.guild.id}/channels/`)
+      .get(`/guilds/${result.guild.id as number}/channels/`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send()
       .expect(200)
