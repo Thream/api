@@ -44,3 +44,13 @@ Types define which kind of changes you made to the project.
 ### Scopes
 
 Scopes define what part of the code changed.
+
+### Examples
+
+```sh
+git commit -m "feat(users): add POST /users/signup"
+git commit -m "docs(readme): update installation process"
+git commit -m "fix(messages): should emit events to connected users"
+```
+
+## Files and Folders structure
