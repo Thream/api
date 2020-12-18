@@ -140,7 +140,7 @@ putCurrentRouter.put(
         email,
         tempToken,
         redirectURI,
-        subject: 'SocialProject - Confirm email',
+        subject: 'Thream - Confirm email',
         renderOptions: {
           subtitle: 'Please confirm your email',
           buttonText: 'Yes, I confirm',

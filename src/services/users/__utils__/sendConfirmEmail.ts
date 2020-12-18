@@ -30,7 +30,7 @@ export const sendConfirmEmail: SendConfirmEmail = async options => {
     footerText: renderOptions.footerText
   })
   await emailTransporter.sendMail({
-    from: `"SocialProject" <${EMAIL_INFO.auth.user}>`,
+    from: `"Thream" <${EMAIL_INFO.auth.user}>`,
     to: email,
     subject,
     html: emailHTML

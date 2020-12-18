@@ -65,7 +65,7 @@ signupRouter.post(
       email,
       tempToken,
       redirectURI,
-      subject: 'SocialProject - Confirm signup',
+      subject: 'Thream - Confirm signup',
       renderOptions: {
         subtitle: 'Please confirm signup',
         buttonText: 'Yes, I signup',
