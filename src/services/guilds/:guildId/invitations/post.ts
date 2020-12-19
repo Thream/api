@@ -36,9 +36,9 @@ postInvitationsRouter.post(
       .withMessage(errorsMessages.value.shouldNotBeEmpty)
       .trim()
       .escape()
-      .isLength({ max: 100, min: 1 })
+      .isLength({ max: 250, min: 1 })
       .withMessage(
-        commonErrorsMessages.charactersLength('value', { max: 100, min: 1 })
+        commonErrorsMessages.charactersLength('value', { max: 250, min: 1 })
       )
       .isSlug()
       .withMessage(errorsMessages.value.mustBeSlug)

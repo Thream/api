@@ -11,6 +11,9 @@ import {
 import Guild from './Guild'
 import Message from './Message'
 
+export const channelTypes = ['text', 'voice'] as const
+export type ChannelType = typeof channelTypes[number]
+
 @Table
 export default class Channel extends Model<Channel> {
   @Column({
@@ -18,6 +21,13 @@ export default class Channel extends Model<Channel> {
     allowNull: false
   })
   name!: string
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    defaultValue: 'text'
+  })
+  type!: ChannelType
 
   @Column({
     type: DataType.STRING,

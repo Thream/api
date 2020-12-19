@@ -54,11 +54,11 @@ signinRouter.post(
       throw new BadRequestError(errorsMessages.invalidCredentials)
     }
     const accessToken = generateAccessToken({
-      strategy: 'local',
+      currentStrategy: 'local',
       id: user.id
     })
     const refreshToken = await generateRefreshToken({
-      strategy: 'local',
+      currentStrategy: 'local',
       id: user.id
     })
     const responseJWT: ResponseJWT = {

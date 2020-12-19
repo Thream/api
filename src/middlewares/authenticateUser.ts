@@ -36,13 +36,13 @@ export const getUserWithBearerToken = async (
     throw new ForbiddenError()
   }
 
-  if (!user.isConfirmed && payload.strategy === 'local') {
+  if (!user.isConfirmed && payload.currentStrategy === 'local') {
     throw new BadRequestError(errorsMessages.invalidAccount)
   }
 
   return {
     current: user,
-    strategy: payload.strategy,
+    currentStrategy: payload.currentStrategy,
     accessToken: token
   }
 }

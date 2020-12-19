@@ -12,6 +12,10 @@ describe('GET /users/current', () => {
       .send()
       .expect(200)
     expect(response.body.user).not.toBeNull()
+    expect(response.body.settings).not.toBeNull()
+    expect(response.body.currentStrategy).toEqual('local')
+    expect(Array.isArray(response.body.strategies)).toBeTruthy()
+    expect(response.body.strategies.includes('local')).toBeTruthy()
   })
 
   it('fails with unconfirmed account', async () => {

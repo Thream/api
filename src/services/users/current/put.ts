@@ -119,7 +119,7 @@ putCurrentRouter.put(
       user.email = email
 
       // Signout the user if he is using local strategy
-      if (req.user.strategy === 'local') {
+      if (req.user.currentStrategy === 'local') {
         const refreshTokens = await RefreshToken.findAll({
           where: { userId: user.id }
         })
@@ -153,6 +153,6 @@ putCurrentRouter.put(
     const userSaved = await user.save()
     return res
       .status(200)
-      .json({ user: userSaved, strategy: req.user?.strategy })
+      .json({ user: userSaved, strategy: req.user.currentStrategy })
   }
 )

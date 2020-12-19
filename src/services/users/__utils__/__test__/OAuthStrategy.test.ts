@@ -68,7 +68,7 @@ describe('/users/utils/OAuthStrategy - callbackAddStrategy', () => {
         {
           current: user,
           accessToken: userTokens.accessToken,
-          strategy: 'local'
+          currentStrategy: 'local'
         }
       )
       expect(result).toEqual('success')
@@ -88,7 +88,7 @@ describe('/users/utils/OAuthStrategy - callbackAddStrategy', () => {
         {
           current: user,
           accessToken: userTokens.accessToken,
-          strategy: 'local'
+          currentStrategy: 'local'
         }
       )
       expect(result).toEqual('This account is already used by someone else')
@@ -110,7 +110,7 @@ describe('/users/utils/OAuthStrategy - callbackAddStrategy', () => {
         {
           current: refreshToken.user,
           accessToken: userTokens.accessToken,
-          strategy: oauthStrategy.provider
+          currentStrategy: oauthStrategy.provider
         }
       )
       expect(result).toEqual('You are already using this account')

@@ -16,4 +16,6 @@
                 schema:
                   allOf:
                     - $ref: '#/definitions/User'
-                    - $ref: '#/definitions/AuthenticationStrategy'
+                    - $ref: '#/definitions/UserSettings'
+                    - $ref: '#/definitions/UserCurrentStrategy'
+                    - $ref: '#/definitions/UserStrategies'

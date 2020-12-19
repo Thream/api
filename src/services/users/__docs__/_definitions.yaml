@@ -16,7 +16,7 @@ definitions:
             description: 'Unique email address'
           status:
             type: 'string'
-          biograpĥy:
+          biography:
             type: 'string'
           logo:
             type: 'string'
@@ -28,13 +28,42 @@ definitions:
           updatedAt:
             type: 'string'
             format: 'date-time'
-  
-  AuthenticationStrategy:
+
+  UserSettings:
     type: 'object'
     properties:
-      strategy:
-        type: 'string'
-        enum: ['local', 'google', 'github', 'discord']
+      settings:
+        type: object
+        properties:
+          language:
+            type: 'string'
+            enum: ['en', 'fr']
+          theme:
+            type: 'string'
+            enum: ['light', 'dark']
+          isPublicEmail:
+            type: 'boolean'
+
+  AuthenticationStrategy:
+    type: 'string'
+    enum: ['local', 'google', 'github', 'discord']
+
+  UserStrategies:
+    type: 'object'
+    properties:
+      strategies:
+        type: 'array'
+        items:
+          allOf:
+            - $ref: '#/definitions/AuthenticationStrategy'
+
+  UserCurrentStrategy:
+    type: 'object'
+    properties:
+      currentStrategy:
+        items:
+          allOf:
+            - $ref: '#/definitions/AuthenticationStrategy'
 
   AccessTokenResponse:
     type: 'object'

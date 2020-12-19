@@ -1,20 +1,28 @@
-import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript'
+import {
+  Column,
+  DataType,
+  HasMany,
+  HasOne,
+  Model,
+  Table
+} from 'sequelize-typescript'
 
 import Member from './Member'
 import OAuth, { AuthenticationStrategy } from './OAuth'
 import RefreshToken from './RefreshToken'
+import UserSetting from './UserSetting'
 
 export interface UserToJSON
   extends Omit<User, 'password' | 'tempToken' | 'tempExpirationToken'> {}
 
 export interface UserJWT {
   id: number
-  strategy: AuthenticationStrategy
+  currentStrategy: AuthenticationStrategy
 }
 
 export interface UserRequest {
   current: User
-  strategy: AuthenticationStrategy
+  currentStrategy: AuthenticationStrategy
   accessToken: string
 }
 
@@ -86,6 +94,9 @@ export default class User extends Model<User> {
 
   @HasMany(() => Member)
   members!: Member[]
+
+  @HasOne(() => UserSetting)
+  settings!: UserSetting
 
   toJSON (): UserToJSON {
     const attributes = Object.assign({}, this.get()) as User

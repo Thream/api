@@ -48,7 +48,7 @@ describe('POST /guilds/:guildId/invitations', () => {
       expect.arrayContaining([
         errorsMessages.value.shouldNotBeEmpty,
         errorsMessages.value.mustBeSlug,
-        commonErrorsMessages.charactersLength('value', { max: 100, min: 1 })
+        commonErrorsMessages.charactersLength('value', { max: 250, min: 1 })
       ])
     )
   })

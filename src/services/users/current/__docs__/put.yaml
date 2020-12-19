@@ -42,4 +42,4 @@
                 schema:
                   allOf:
                     - $ref: '#/definitions/User'
-                    - $ref: '#/definitions/AuthenticationStrategy'
+                    - $ref: '#/definitions/UserCurrentStrategy'

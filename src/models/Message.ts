@@ -10,6 +10,9 @@ import {
 import Channel from './Channel'
 import Member from './Member'
 
+export const messageTypes = ['text', 'file'] as const
+export type MessageType = typeof messageTypes[number]
+
 @Table
 export default class Message extends Model<Message> {
   @Column({
@@ -17,6 +20,13 @@ export default class Message extends Model<Message> {
     allowNull: false
   })
   value!: string
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    defaultValue: 'text'
+  })
+  type!: MessageType
 
   @ForeignKey(() => Member)
   @Column

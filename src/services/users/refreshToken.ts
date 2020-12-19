@@ -42,7 +42,7 @@ refreshTokenRouter.post(
         const userJWT = user as UserJWT
         const accessToken = generateAccessToken({
           id: userJWT.id,
-          strategy: userJWT.strategy
+          currentStrategy: userJWT.currentStrategy
         })
         const responseJWT: ResponseJWT = {
           accessToken,

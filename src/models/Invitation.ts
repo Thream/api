@@ -12,7 +12,7 @@ import Guild from './Guild'
 @Table
 export default class Invitation extends Model<Invitation> {
   @Column({
-    type: DataType.TEXT,
+    type: DataType.STRING,
     allowNull: false
   })
   value!: string

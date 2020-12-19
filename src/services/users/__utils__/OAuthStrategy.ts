@@ -1,5 +1,6 @@
 import OAuth, { ProviderOAuth } from '../../../models/OAuth'
 import User, { UserRequest } from '../../../models/User'
+import UserSetting from '../../../models/UserSetting'
 import {
   expiresIn,
   generateAccessToken,
@@ -62,6 +63,7 @@ export class OAuthStrategy {
         }
       }
       const user = await User.create({ name })
+      await UserSetting.create({ userId: user.id })
       userId = user.id
       await OAuth.create({
         provider: this.provider,
@@ -70,11 +72,11 @@ export class OAuthStrategy {
       })
     }
     const accessToken = generateAccessToken({
-      strategy: this.provider,
+      currentStrategy: this.provider,
       id: userId
     })
     const refreshToken = await generateRefreshToken({
-      strategy: this.provider,
+      currentStrategy: this.provider,
       id: userId
     })
     return {
