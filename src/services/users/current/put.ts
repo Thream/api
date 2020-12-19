@@ -13,7 +13,7 @@ import {
   imageFileUploadOptions,
   imagesPath
 } from '../../../utils/config/constants'
-import { alreadyUsedValidation } from '../../../utils/database/alreadyUsedValidation'
+import { alreadyUsedValidation } from '../../../utils/validations/alreadyUsedValidation'
 import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
 import { UnauthorizedError } from '../../../utils/errors/UnauthorizedError'
 import { uploadImage } from '../../../utils/uploadImage'

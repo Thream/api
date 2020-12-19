@@ -72,7 +72,7 @@ postResetPasswordRouter.post(
       footerText: `If you received this message by mistake, just delete it. Your password will not be reset if you do not click on the link above. Also, for the security of your account, the password reset is available for a period of ${maximumTimeToResetPassword}, pass this time, the reset will no longer be valid.`
     })
     await emailTransporter.sendMail({
-      from: `"Thream" <${EMAIL_INFO.auth.user}>`,
+      from: `"Thream" <${EMAIL_INFO?.auth?.user as string}>`,
       to: email,
       subject: 'Thream - Reset password',
       html: emailHTML

@@ -65,8 +65,8 @@ describe('utils/database/paginateModel', () => {
   })
 
   it('throws "BadRequestError" if "itemsPerPage" is more than 100', async () => {
-    const numberOfPosts = 200
-    const itemsPerPage = '150'
+    const numberOfPosts = 102
+    const itemsPerPage = '101'
     await createPosts(numberOfPosts)
     await expect(
       paginateModel({ Model: PostTest, queryOptions: { itemsPerPage } })
@@ -88,7 +88,9 @@ describe('utils/database/paginateModel', () => {
     })
     page += 1
     expect(result1.hasMore).toBeTruthy()
-    expect(result1.rows[itemsPerPageInt - 1].title).toEqual(`title-${itemsPerPage}`)
+    expect(result1.rows[itemsPerPageInt - 1].title).toEqual(
+      `title-${itemsPerPage}`
+    )
     expect(result1.totalItems).toEqual(numberOfPosts)
 
     const result2 = await paginateModel({
@@ -99,7 +101,9 @@ describe('utils/database/paginateModel', () => {
       }
     })
     expect(result2.hasMore).toBeTruthy()
-    expect(result2.rows[itemsPerPageInt - 1].title).toEqual(`title-${itemsPerPageInt * 2}`)
+    expect(result2.rows[itemsPerPageInt - 1].title).toEqual(
+      `title-${itemsPerPageInt * 2}`
+    )
     expect(result2.totalItems).toEqual(numberOfPosts)
   })
 })

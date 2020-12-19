@@ -1,10 +1,16 @@
-/users/current:
-  get:
+/users/current/settings:
+  put:
     security:
       - bearerAuth: []
     tags:
       - 'users'
-    summary: 'GET the current connected user'
+    summary: 'Edit the current connected user settings'
+    requestBody:
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/definitions/UserSettings'
     responses:
       allOf:
         - $ref: '#/definitions/BadRequestError'
@@ -15,7 +21,4 @@
               application/json:
                 schema:
                   allOf:
-                    - $ref: '#/definitions/User'
                     - $ref: '#/definitions/UserSettingsObject'
-                    - $ref: '#/definitions/UserCurrentStrategy'
-                    - $ref: '#/definitions/UserStrategies'

@@ -32,17 +32,21 @@ definitions:
   UserSettings:
     type: 'object'
     properties:
+      language:
+        type: 'string'
+        enum: ['en', 'fr']
+      theme:
+        type: 'string'
+        enum: ['light', 'dark']
+      isPublicEmail:
+        type: 'boolean'
+
+  UserSettingsObject:
+    type: 'object'
+    properties:
       settings:
-        type: object
-        properties:
-          language:
-            type: 'string'
-            enum: ['en', 'fr']
-          theme:
-            type: 'string'
-            enum: ['light', 'dark']
-          isPublicEmail:
-            type: 'boolean'
+        allOf:
+          - $ref: '#/definitions/UserSettings'
 
   AuthenticationStrategy:
     type: 'string'
@@ -61,9 +65,8 @@ definitions:
     type: 'object'
     properties:
       currentStrategy:
-        items:
-          allOf:
-            - $ref: '#/definitions/AuthenticationStrategy'
+        allOf:
+          - $ref: '#/definitions/AuthenticationStrategy'
 
   AccessTokenResponse:
     type: 'object'

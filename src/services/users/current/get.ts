@@ -15,8 +15,7 @@ getCurrentRouter.get(
       throw new ForbiddenError()
     }
     const settings = await UserSetting.findOne({
-      where: { userId: req.user.current.id },
-      attributes: { exclude: ['createdAt', 'updatedAt', 'userId', 'id'] }
+      where: { userId: req.user.current.id }
     })
     const OAuths = await OAuth.findAll({
       where: { userId: req.user.current.id }

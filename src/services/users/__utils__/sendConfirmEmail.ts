@@ -20,7 +20,7 @@ interface SendConfirmEmailOptions {
 
 type SendConfirmEmail = (options: SendConfirmEmailOptions) => Promise<void>
 
-export const sendConfirmEmail: SendConfirmEmail = async options => {
+export const sendConfirmEmail: SendConfirmEmail = async (options) => {
   const { tempToken, redirectURI, subject, renderOptions, email } = options
   const redirectQuery = redirectURI != null ? `&redirectURI=${redirectURI}` : ''
   const emailHTML = await ejs.renderFile(emailTemplatePath, {
@@ -30,7 +30,7 @@ export const sendConfirmEmail: SendConfirmEmail = async options => {
     footerText: renderOptions.footerText
   })
   await emailTransporter.sendMail({
-    from: `"Thream" <${EMAIL_INFO.auth.user}>`,
+    from: `"Thream" <${EMAIL_INFO?.auth?.user as string}>`,
     to: email,
     subject,
     html: emailHTML

@@ -9,6 +9,9 @@ import {
 
 import User from './User'
 
+export interface UserSettingToJSON
+  extends Omit<UserSetting, 'createdAt' | 'updatedAt' | 'userId' | 'id'> {}
+
 export const languages = ['fr', 'en'] as const
 export type Language = typeof languages[number]
 
@@ -39,8 +42,17 @@ export default class UserSetting extends Model<UserSetting> {
 
   @ForeignKey(() => User)
   @Column
-  userId!: number
+  userId?: number
 
   @BelongsTo(() => User, { onDelete: 'CASCADE' })
   user!: User
+
+  toJSON (): UserSettingToJSON {
+    const attributes = Object.assign({}, this.get()) as UserSetting
+    delete attributes.id
+    delete attributes.userId
+    delete attributes.createdAt
+    delete attributes.updatedAt
+    return attributes
+  }
 }

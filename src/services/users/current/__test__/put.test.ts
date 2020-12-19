@@ -21,6 +21,7 @@ describe('PUT /users/current', () => {
     expect(response.body.user).not.toBeNull()
     expect(response.body.user.name).toBe(name)
     expect(response.body.user.email).toBe(email)
+    expect(response.body.currentStrategy).not.toBeNull()
   })
 
   it('succeeds and only change the email', async () => {

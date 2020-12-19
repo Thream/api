@@ -15,7 +15,7 @@ import {
   imageFileUploadOptions
 } from '../../../utils/config/constants'
 import { emitToMembers } from '../../../utils/config/socket'
-import { alreadyUsedValidation } from '../../../utils/database/alreadyUsedValidation'
+import { alreadyUsedValidation } from '../../../utils/validations/alreadyUsedValidation'
 import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
 import { NotFoundError } from '../../../utils/errors/NotFoundError'
 import { uploadImage } from '../../../utils/uploadImage'

@@ -3,13 +3,13 @@ import sqlite3 from 'sqlite3'
 import { open, Database } from 'sqlite'
 
 import { alreadyUsedValidation } from '../alreadyUsedValidation'
-import PostTest from './utils/PostTest'
-import { createPosts } from './utils/createPosts'
+import PostTest from '../../database/__test__/utils/PostTest'
+import { createPosts } from '../../database/__test__/utils/createPosts'
 
 let sqlite: Database | undefined
 let sequelize: Sequelize | undefined
 
-describe('utils/database/alreadyUsedValidation', () => {
+describe('utils/validations/alreadyUsedValidation', () => {
   beforeAll(async () => {
     sqlite = await open({
       filename: ':memory:',
@@ -41,7 +41,7 @@ describe('utils/database/alreadyUsedValidation', () => {
         'title',
         `title-${numberOfPosts + 1}`
       )
-    ).toBe(true)
+    ).toBeTruthy()
   })
 
   it('throws an error if the post title already exist', async () => {

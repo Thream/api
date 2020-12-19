@@ -10,7 +10,7 @@ import {
 import { validateRequest } from '../../../middlewares/validateRequest'
 import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
 import { buildQueryURL } from '../__utils__/buildQueryURL'
-import { isValidRedirectURIValidation } from '../__utils__/isValidRedirectURIValidation'
+import { isValidRedirectURIValidation } from '../../../utils/validations/isValidRedirectURIValidation'
 import { OAuthStrategy } from '../__utils__/OAuthStrategy'
 
 interface GoogleUser {

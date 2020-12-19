@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import { getCurrentRouter } from './get'
 import { putCurrentRouter } from './put'
+import { currentSettingsRouter } from './settings'
 
 export const currentRouter = Router()
 
@@ -17,3 +18,4 @@ export const errorsMessages = {
 
 currentRouter.use('/', getCurrentRouter)
 currentRouter.use('/', putCurrentRouter)
+currentRouter.use('/', currentSettingsRouter)
