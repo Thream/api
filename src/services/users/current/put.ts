@@ -6,7 +6,6 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { authenticateUser } from '../../../middlewares/authenticateUser'
 import { validateRequest } from '../../../middlewares/validateRequest'
-import RefreshToken from '../../../models/RefreshToken'
 import User from '../../../models/User'
 import {
   commonErrorsMessages,
@@ -15,9 +14,9 @@ import {
 } from '../../../utils/config/constants'
 import { alreadyUsedValidation } from '../../../utils/validations/alreadyUsedValidation'
 import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
-import { UnauthorizedError } from '../../../utils/errors/UnauthorizedError'
 import { uploadImage } from '../../../utils/uploadImage'
 import { sendConfirmEmail } from '../__utils__/sendConfirmEmail'
+import { deleteEveryRefreshTokens } from '../__utils__/deleteEveryRefreshTokens'
 
 const usersLogoPath = path.join(imagesPath, 'users')
 
@@ -120,17 +119,7 @@ putCurrentRouter.put(
 
       // Signout the user if he is using local strategy
       if (req.user.currentStrategy === 'local') {
-        const refreshTokens = await RefreshToken.findAll({
-          where: { userId: user.id }
-        })
-        if (refreshTokens == null) {
-          throw new UnauthorizedError()
-        }
-
-        // Delete all refreshTokens
-        for (const refreshToken of refreshTokens) {
-          await refreshToken.destroy()
-        }
+        await deleteEveryRefreshTokens(user.id)
       }
 
       const tempToken = uuidv4()

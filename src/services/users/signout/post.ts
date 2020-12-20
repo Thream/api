@@ -1,13 +1,13 @@
 import { Request, Response, Router } from 'express'
 import { body } from 'express-validator'
 
-import { validateRequest } from '../../middlewares/validateRequest'
-import RefreshToken from '../../models/RefreshToken'
-import { UnauthorizedError } from '../../utils/errors/UnauthorizedError'
+import { validateRequest } from '../../../middlewares/validateRequest'
+import RefreshToken from '../../../models/RefreshToken'
+import { UnauthorizedError } from '../../../utils/errors/UnauthorizedError'
 
-export const signoutRouter = Router()
+export const postSignoutRouter = Router()
 
-signoutRouter.post(
+postSignoutRouter.post(
   '/users/signout',
   [
     body('refreshToken')

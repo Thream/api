@@ -3,7 +3,7 @@
     security:
       - bearerAuth: []
     tags:
-      - 'guilds'
+      - 'channels'
     summary: 'Create a channel'
     parameters:
       - name: 'guildId'

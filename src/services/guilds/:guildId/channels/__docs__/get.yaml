@@ -3,7 +3,7 @@
     security:
       - bearerAuth: []
     tags:
-      - 'guilds'
+      - 'channels'
     summary: 'GET all the channels of a guild'
     parameters:
       - name: 'guildId'

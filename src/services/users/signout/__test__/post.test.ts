@@ -1,8 +1,8 @@
 import request from 'supertest'
 
-import { authenticateUserTest } from '../../../__test__/utils/authenticateUser'
-import app from '../../../app'
-import RefreshToken from '../../../models/RefreshToken'
+import { authenticateUserTest } from '../../../../__test__/utils/authenticateUser'
+import app from '../../../../app'
+import RefreshToken from '../../../../models/RefreshToken'
 
 describe('POST /users/signout', () => {
   it('succeeds and signout', async () => {
