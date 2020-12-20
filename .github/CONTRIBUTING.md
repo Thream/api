@@ -2,6 +2,14 @@
 
 Thanks a lot for your interest in contributing to **Thream/api**! 🎉
 
+## Code of Conduct
+
+**Thream** has adopted the [Contributor Covenant](https://www.contributor-covenant.org/) as its Code of Conduct, and we expect project participants to adhere to it. Please read [the full text](./CODE_OF_CONDUCT.md) so that you can understand what actions will and will not be tolerated.
+
+## Open Development
+
+All work on **Thream** happens directly on [GitHub](https://github.com/Thream). Both core team members and external contributors send pull requests which go through the same review process.
+
 ## Types of contributions
 
 - Reporting a bug.
@@ -53,4 +61,42 @@ git commit -m "docs(readme): update installation process"
 git commit -m "fix(messages): should emit events to connected users"
 ```
 
-## Files and Folders structure
+## Directory Structure
+
+Services are listed in the `src/services` directory.
+
+### Example
+
+We have API REST services for the `channels`.
+
+Here is what potentially look like a folder structure for this service :
+
+```text
+└── channels
+    ├── __docs__
+    │   └── get.yaml
+    ├── __test__
+    │   └── get.test.ts
+    ├── :channelId
+    │   ├── __docs__
+    │   │   ├── delete.yaml
+    │   │   └── put.yaml
+    │   ├── __test__
+    │   │   ├── delete.test.ts
+    │   │   └── put.test.ts
+    │   ├── delete.ts
+    │   ├── index.ts
+    │   └── put.ts
+    ├── get.ts
+    └── index.ts
+```
+
+This folder structure will map to these REST API routes :
+
+- GET `/channels`
+- DELETE `/channels/:channelId`
+- PUT `/channels/:channelId`
+
+The folders after `src/services` : is the real name of the routes in the API except folders starting and ending with `__` like `__docs__`, `__test__` or `__utils__`.
+
+The filenames correspond the HTTP method used (`get`, `post`, `put`, `delete`).
