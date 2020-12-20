@@ -52,5 +52,6 @@ export async function authenticateUserTest (
     .post('/users/signin')
     .send({ email, password })
     .expect(200)
-  return { ...signinResponse.body }
+  const user = await User.findOne({ where: { email } })
+  return { ...signinResponse.body, userId: user?.id }
 }

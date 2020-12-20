@@ -8,6 +8,7 @@ import { resetPasswordRouter } from './reset-password'
 import { signinRouter } from './signin'
 import { signoutRouter } from './signout'
 import { signupRouter } from './signup'
+import { usersGetByIdRouter } from './:userId'
 
 export const usersRouter = Router()
 
@@ -19,3 +20,4 @@ usersRouter.use('/', signinRouter)
 usersRouter.use('/', signoutRouter)
 usersRouter.use('/', signupRouter)
 usersRouter.use('/', OAuth2Router)
+usersRouter.use('/', usersGetByIdRouter)
