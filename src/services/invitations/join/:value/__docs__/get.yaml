@@ -1,0 +1,22 @@
+/invitations/join/{value}:
+  get:
+    security:
+      - bearerAuth: []
+    tags:
+      - 'invitations'
+    summary: 'Join a guild with its invitation value'
+    parameters:
+      - name: 'value'
+        in: 'path'
+        required: true
+    responses:
+      allOf:
+        - $ref: '#/definitions/UnauthorizedError'
+        - $ref: '#/definitions/ForbiddenError'
+        - $ref: '#/definitions/BadRequestError'
+        - $ref: '#/definitions/NotFoundError'
+        - '200':
+            content:
+              application/json:
+                schema:
+                  type: 'object'
