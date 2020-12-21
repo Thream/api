@@ -43,13 +43,11 @@ putResetPasswordRouter.put(
     if (user == null || !isValidTempToken) {
       throw new BadRequestError(errorsMessages.tempToken.invalid)
     }
-
     const hashedPassword = await bcrypt.hash(password, 12)
     user.password = hashedPassword
     user.tempToken = null
     user.tempExpirationToken = null
     await user.save()
-
     return res.status(200).json({ message: 'The new password has been saved!' })
   }
 )

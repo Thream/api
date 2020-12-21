@@ -69,21 +69,22 @@ postInvitationsRouter.post(
     if (member == null) {
       throw new NotFoundError()
     }
-
     const foundInvitation = await Invitation.findOne({
       where: { isPublic: true, guildId: member.guildId }
     })
     if (isPublic && foundInvitation != null) {
       throw new BadRequestError(errorsMessages.public.alreadyHasInvitation)
     }
-
+    let expiresInValue = expiresIn
+    if (expiresInValue > 0) {
+      expiresInValue += Date.now()
+    }
     const invitation = await Invitation.create({
       value,
       expiresIn,
       isPublic,
       guildId: member.guildId
     })
-
     emitToMembers({
       event: 'invitations',
       guildId: member.guildId,
