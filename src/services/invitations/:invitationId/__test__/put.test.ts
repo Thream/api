@@ -4,6 +4,7 @@ import { authenticateUserTest } from '../../../../__test__/utils/authenticateUse
 import { formatErrors } from '../../../../__test__/utils/formatErrors'
 import app from '../../../../app'
 import { createInvitation } from '../../__test__/utils/createInvitation'
+import { errorsMessages } from '../put'
 
 describe('PUT /invitations/:invitationId', () => {
   it('succeeds and edit the invitation', async () => {
@@ -23,7 +24,6 @@ describe('PUT /invitations/:invitationId', () => {
       .send({ value, expiresIn, isPublic })
       .expect(200)
     expect(response.body.invitation.value).toEqual(value)
-    expect(response.body.invitation.expiresIn).toEqual(expiresIn)
     expect(response.body.invitation.isPublic).toEqual(isPublic)
   })
 
@@ -36,7 +36,7 @@ describe('PUT /invitations/:invitationId', () => {
       .expect(400)
     const errors = formatErrors(response.body.errors)
     expect(errors.length).toEqual(1)
-    expect(errors).toEqual(expect.arrayContaining(['Value must be a slug']))
+    expect(errors).toEqual(expect.arrayContaining([errorsMessages.value.mustBeSlug]))
   })
 
   it('fails with negative expiresIn', async () => {
@@ -48,7 +48,7 @@ describe('PUT /invitations/:invitationId', () => {
       .expect(400)
     const errors = formatErrors(response.body.errors)
     expect(errors.length).toEqual(1)
-    expect(errors).toEqual(expect.arrayContaining(['ExpiresIn must be >= 0']))
+    expect(errors).toEqual(expect.arrayContaining([errorsMessages.expiresIn.mustBeGreaterOrEqual]))
   })
 
   it("fails if the invitation doesn't exist", async () => {
@@ -65,8 +65,7 @@ describe('PUT /invitations/:invitationId', () => {
 
   it('fails if the invitation slug value already exists', async () => {
     const value = 'random'
-    await createInvitation({ value })
-    const result = await createInvitation({ value, guildName: 'anotherguild' })
+    const result = await createInvitation({ value })
     const response = await request(app)
       .put(`/invitations/${result?.invitation.id as number}`)
       .set('Authorization', `${result?.user.type as string} ${result?.user.accessToken as string}`)
@@ -75,7 +74,7 @@ describe('PUT /invitations/:invitationId', () => {
     const errors = formatErrors(response.body.errors)
     expect(errors.length).toEqual(1)
     expect(errors).toEqual(
-      expect.arrayContaining(['Value is already taken'])
+      expect.arrayContaining(['Value already used'])
     )
   })
 
