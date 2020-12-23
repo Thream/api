@@ -3,50 +3,45 @@ import { Request, Response, Router } from 'express'
 import { authenticateUser } from '../../../middlewares/authenticateUser'
 import Channel from '../../../models/Channel'
 import Member from '../../../models/Member'
+import Message from '../../../models/Message'
 import { emitToMembers } from '../../../utils/config/socket'
-import { BadRequestError } from '../../../utils/errors/BadRequestError'
 import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
 import { NotFoundError } from '../../../utils/errors/NotFoundError'
 
-export const errorsMessages = {
-  channel: {
-    shouldNotBeTheDefault: 'The channel to delete should not be the default'
-  }
-}
+export const deleteByIdMessagesRouter = Router()
 
-export const deleteByIdChannelsRouter = Router()
-
-deleteByIdChannelsRouter.delete(
-  '/channels/:channelId',
+deleteByIdMessagesRouter.delete(
+  '/messages/:messageId',
   authenticateUser,
   async (req: Request, res: Response) => {
     if (req.user == null) {
       throw new ForbiddenError()
     }
     const user = req.user.current
-    const { channelId } = req.params as { channelId: string }
+    const { messageId } = req.params as { messageId: string }
+    const message = await Message.findOne({ where: { id: messageId } })
+    if (message == null) {
+      throw new NotFoundError()
+    }
     const channel = await Channel.findOne({
-      where: { id: channelId }
+      where: { id: message.channelId }
     })
     if (channel == null) {
       throw new NotFoundError()
     }
     const member = await Member.findOne({
-      where: { userId: user.id, guildId: channel.guildId, isOwner: true }
+      where: { userId: user.id, guildId: channel.guildId }
     })
     if (member == null) {
       throw new NotFoundError()
     }
-    if (channel.isDefault) {
-      throw new BadRequestError(errorsMessages.channel.shouldNotBeTheDefault)
-    }
-    const deletedChannelId = channel.id
-    await channel.destroy()
+    const deletedMessageId = message.id
+    await message.destroy()
     emitToMembers({
-      event: 'channels',
+      event: 'messages',
       guildId: channel.guildId,
-      payload: { action: 'delete', deletedChannelId }
+      payload: { action: 'delete', deletedMessageId }
     })
-    return res.status(200).json({ deletedChannelId })
+    return res.status(200).json({ deletedMessageId })
   }
 )

@@ -6,6 +6,7 @@ import { swaggerSpec } from '../utils/config/swaggerSpec'
 import { channelsRouter } from './channels'
 import { guildsRouter } from './guilds'
 import { invitationsRouter } from './invitations'
+import { messagesRouter } from './messages'
 import { usersRouter } from './users'
 
 export const router = Router()
@@ -16,3 +17,4 @@ router.use('/', usersRouter)
 router.use('/', guildsRouter)
 router.use('/', channelsRouter)
 router.use('/', invitationsRouter)
+router.use('/', messagesRouter)

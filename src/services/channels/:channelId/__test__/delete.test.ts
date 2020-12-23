@@ -11,15 +11,15 @@ describe('DELETE /channels/:channelId', () => {
   it('succeeds and delete the channel', async () => {
     const channel1 = { name: 'general1', description: 'testing' }
     const result = await createChannels([channel1])
-    const channelToRemove = result.channels[0]
+    const channelToDelete = result.channels[0]
     const response = await request(app)
-      .delete(`/channels/${channelToRemove.id as string}`)
+      .delete(`/channels/${channelToDelete.id as number}`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send()
       .expect(200)
-    expect(response.body.deletedChannelId).toEqual(channelToRemove.id)
+    expect(response.body.deletedChannelId).toEqual(channelToDelete.id)
     const foundChannel = await Channel.findOne({
-      where: { id: channelToRemove.id }
+      where: { id: channelToDelete.id }
     })
     expect(foundChannel).toBeNull()
   })
@@ -39,10 +39,10 @@ describe('DELETE /channels/:channelId', () => {
   it('fails if the user is not the owner', async () => {
     const channel1 = { name: 'general1', description: 'testing' }
     const result = await createChannels([channel1])
-    const channelToRemove = result.channels[0]
+    const channelToDelete = result.channels[0]
     const userToken = await authenticateUserTest()
     const response = await request(app)
-      .delete(`/channels/${channelToRemove.id as string}`)
+      .delete(`/channels/${channelToDelete.id as number}`)
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send()
       .expect(404)
@@ -58,7 +58,7 @@ describe('DELETE /channels/:channelId', () => {
     })
     expect(defaultChannel).not.toBeNull()
     const response = await request(app)
-      .delete(`/channels/${defaultChannel?.id as string}`)
+      .delete(`/channels/${defaultChannel?.id as number}`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send()
       .expect(400)
