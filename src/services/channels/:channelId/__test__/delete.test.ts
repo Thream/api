@@ -5,12 +5,12 @@ import { formatErrors } from '../../../../__test__/utils/formatErrors'
 import app from '../../../../app'
 import Channel from '../../../../models/Channel'
 import { errorsMessages } from '../delete'
-import { createChannel } from '../../__test__/utils/createChannel'
+import { createChannels } from '../../__test__/utils/createChannel'
 
 describe('DELETE /channels/:channelId', () => {
   it('succeeds and delete the channel', async () => {
     const channel1 = { name: 'general1', description: 'testing' }
-    const result = await createChannel([channel1])
+    const result = await createChannels([channel1])
     const channelToRemove = result.channels[0]
     const response = await request(app)
       .delete(`/channels/${channelToRemove.id as string}`)
@@ -38,7 +38,7 @@ describe('DELETE /channels/:channelId', () => {
 
   it('fails if the user is not the owner', async () => {
     const channel1 = { name: 'general1', description: 'testing' }
-    const result = await createChannel([channel1])
+    const result = await createChannels([channel1])
     const channelToRemove = result.channels[0]
     const userToken = await authenticateUserTest()
     const response = await request(app)
@@ -52,7 +52,7 @@ describe('DELETE /channels/:channelId', () => {
   })
 
   it("fails if it's the default channel", async () => {
-    const result = await createChannel([])
+    const result = await createChannels([])
     const defaultChannel = await Channel.findOne({
       where: { guildId: result.guild.id as number, isDefault: true }
     })

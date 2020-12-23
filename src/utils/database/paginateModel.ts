@@ -29,11 +29,9 @@ export const paginateModel = async <M extends Model<any, any>>(
   } = options
   const page = parseIntOrDefaultValue(queryOptions?.page, 1)
   const itemsPerPage = parseIntOrDefaultValue(queryOptions?.itemsPerPage, 20)
-
   if (itemsPerPage > 100) {
     throw new BadRequestError('"itemsPerPage" should be less than 100')
   }
-
   const offset = (page - 1) * itemsPerPage
   const result = await Model.findAndCountAll<M>({
     limit: itemsPerPage,

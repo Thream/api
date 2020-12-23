@@ -3,7 +3,7 @@ import request from 'supertest'
 import { authenticateUserTest } from '../../../../../__test__/utils/authenticateUser'
 import { formatErrors } from '../../../../../__test__/utils/formatErrors'
 import app from '../../../../../app'
-import { createChannel } from '../../../__test__/utils/createChannel'
+import { createChannels } from '../../../__test__/utils/createChannel'
 import { commonErrorsMessages } from '../../../../../utils/config/constants'
 
 const channel1 = { name: 'general1', description: 'testing' }
@@ -11,7 +11,7 @@ const channel1 = { name: 'general1', description: 'testing' }
 describe('POST /channels/:channelId/messages', () => {
   it('succeeds and create the message', async () => {
     const value = 'my awesome message'
-    const result = await createChannel([channel1])
+    const result = await createChannels([channel1])
     expect(result.channels.length).toEqual(1)
     const channel = result.channels[0]
     const response = await request(app)
@@ -27,7 +27,7 @@ describe('POST /channels/:channelId/messages', () => {
   })
 
   it('fails with no message value', async () => {
-    const result = await createChannel([channel1])
+    const result = await createChannels([channel1])
     const channel = result.channels[0]
     const response = await request(app)
       .post(`/channels/${channel.id as number}/messages`)
@@ -44,7 +44,7 @@ describe('POST /channels/:channelId/messages', () => {
   })
 
   it('fails if the user is not in the guild with this channel', async () => {
-    const result = await createChannel([channel1])
+    const result = await createChannels([channel1])
     const channel = result.channels[0]
     const userToken = await authenticateUserTest()
     const response = await request(app)

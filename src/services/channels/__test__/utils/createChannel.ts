@@ -12,13 +12,13 @@ interface ChannelOptions {
   description: string
 }
 
-interface CreateChannelResult extends CreateGuildResult {
+interface CreateChannelsResult extends CreateGuildResult {
   channels: Channel[]
 }
 
-export const createChannel = async (
+export const createChannels = async (
   channels: ChannelOptions[]
-): Promise<CreateChannelResult> => {
+): Promise<CreateChannelsResult> => {
   const result = await createGuild({
     guild: { description: 'description', name: 'guild' },
     user: {

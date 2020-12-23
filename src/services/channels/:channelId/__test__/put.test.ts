@@ -7,14 +7,14 @@ import Channel from '../../../../models/Channel'
 import { commonErrorsMessages } from '../../../../utils/config/constants'
 import { randomString } from '../../../../utils/random'
 import { errorsMessages } from '../put'
-import { createChannel } from '../../__test__/utils/createChannel'
+import { createChannels } from '../../__test__/utils/createChannel'
 
 describe('PUT /channels/:channelId', () => {
   it('succeeds and edit name/description of the channel', async () => {
     const name = 'general-updated'
     const description = 'general-description'
     const channel1 = { name: 'general1', description: 'testing' }
-    const result = await createChannel([channel1])
+    const result = await createChannels([channel1])
     const channelToEdit = result.channels[0]
     const response = await request(app)
       .put(`/channels/${channelToEdit.id as string}`)
@@ -27,7 +27,7 @@ describe('PUT /channels/:channelId', () => {
 
   it('succeeds and set default channel to true', async () => {
     const channel1 = { name: 'general1', description: 'testing' }
-    const result = await createChannel([channel1])
+    const result = await createChannels([channel1])
     const channelToEdit = result.channels[0]
     const response = await request(app)
       .put(`/channels/${channelToEdit.id as string}`)
@@ -44,7 +44,7 @@ describe('PUT /channels/:channelId', () => {
 
   it('fails with too long description', async () => {
     const channel1 = { name: 'general1', description: 'testing' }
-    const result = await createChannel([channel1])
+    const result = await createChannels([channel1])
     const channelToEdit = result.channels[0]
     const response = await request(app)
       .put(`/channels/${channelToEdit.id as string}`)
@@ -62,7 +62,7 @@ describe('PUT /channels/:channelId', () => {
 
   it('fails with invalid slug name', async () => {
     const channel1 = { name: 'general1', description: 'testing' }
-    const result = await createChannel([channel1])
+    const result = await createChannels([channel1])
     const channelToEdit = result.channels[0]
     const response = await request(app)
       .put(`/channels/${channelToEdit.id as string}`)
@@ -76,7 +76,7 @@ describe('PUT /channels/:channelId', () => {
 
   it('fails with too long name', async () => {
     const channel1 = { name: 'general1', description: 'testing' }
-    const result = await createChannel([channel1])
+    const result = await createChannels([channel1])
     const channelToEdit = result.channels[0]
     const response = await request(app)
       .put(`/channels/${channelToEdit.id as string}`)
@@ -107,7 +107,7 @@ describe('PUT /channels/:channelId', () => {
 
   it('fails if the user is not the owner', async () => {
     const channel1 = { name: 'general1', description: 'testing' }
-    const result = await createChannel([channel1])
+    const result = await createChannels([channel1])
     const channelToRemove = result.channels[0]
     const userToken = await authenticateUserTest()
     const response = await request(app)
