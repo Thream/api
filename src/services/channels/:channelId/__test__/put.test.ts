@@ -17,7 +17,7 @@ describe('PUT /channels/:channelId', () => {
     const result = await createChannels([channel1])
     const channelToEdit = result.channels[0]
     const response = await request(app)
-      .put(`/channels/${channelToEdit.id as string}`)
+      .put(`/channels/${channelToEdit.id as number}`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send({ name, description })
       .expect(200)
@@ -30,7 +30,7 @@ describe('PUT /channels/:channelId', () => {
     const result = await createChannels([channel1])
     const channelToEdit = result.channels[0]
     const response = await request(app)
-      .put(`/channels/${channelToEdit.id as string}`)
+      .put(`/channels/${channelToEdit.id as number}`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send({ isDefault: true })
       .expect(200)
@@ -47,7 +47,7 @@ describe('PUT /channels/:channelId', () => {
     const result = await createChannels([channel1])
     const channelToEdit = result.channels[0]
     const response = await request(app)
-      .put(`/channels/${channelToEdit.id as string}`)
+      .put(`/channels/${channelToEdit.id as number}`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send({ description: randomString(170) })
       .expect(400)
@@ -65,7 +65,7 @@ describe('PUT /channels/:channelId', () => {
     const result = await createChannels([channel1])
     const channelToEdit = result.channels[0]
     const response = await request(app)
-      .put(`/channels/${channelToEdit.id as string}`)
+      .put(`/channels/${channelToEdit.id as number}`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send({ name: 'random channel name' })
       .expect(400)
@@ -79,7 +79,7 @@ describe('PUT /channels/:channelId', () => {
     const result = await createChannels([channel1])
     const channelToEdit = result.channels[0]
     const response = await request(app)
-      .put(`/channels/${channelToEdit.id as string}`)
+      .put(`/channels/${channelToEdit.id as number}`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send({ name: ' random channel name ' + randomString(35) })
       .expect(400)
@@ -111,7 +111,7 @@ describe('PUT /channels/:channelId', () => {
     const channelToRemove = result.channels[0]
     const userToken = await authenticateUserTest()
     const response = await request(app)
-      .put(`/channels/${channelToRemove.id as string}`)
+      .put(`/channels/${channelToRemove.id as number}`)
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send()
       .expect(404)

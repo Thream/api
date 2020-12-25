@@ -7,7 +7,7 @@ import { authenticateUserTest } from '../../../../__test__/utils/authenticateUse
 import { formatErrors } from '../../../../__test__/utils/formatErrors'
 
 describe('DELETE /messages/:messageId', () => {
-  it('suceeds and delete the message', async () => {
+  it('succeeds and delete the message', async () => {
     const result = await createMessages(['awesome'])
     const messageToDelete = result.messages[0]
     const response = await request(app)
