@@ -5,6 +5,7 @@ import Channel from '../../../models/Channel'
 import Member from '../../../models/Member'
 import Message from '../../../models/Message'
 import { emitToMembers } from '../../../utils/config/socket'
+import { BadRequestError } from '../../../utils/errors/BadRequestError'
 import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
 import { NotFoundError } from '../../../utils/errors/NotFoundError'
 
@@ -34,6 +35,11 @@ deleteByIdMessagesRouter.delete(
     })
     if (member == null) {
       throw new NotFoundError()
+    }
+    if (!member.isOwner && member.id !== message.memberId) {
+      throw new BadRequestError(
+        'You can only delete your messages except if you are owner of the guild'
+      )
     }
     const deletedMessageId = message.id
     await message.destroy()
