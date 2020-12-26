@@ -33,7 +33,7 @@ putCurrentSettingsRouter.put(
       .isString()
       .custom(async (language: Language) => {
         return await onlyPossibleValuesValidation(
-          [...languages],
+          languages,
           'language',
           language
         )

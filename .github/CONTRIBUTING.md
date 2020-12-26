@@ -99,4 +99,4 @@ This folder structure will map to these REST API routes :
 
 The folders after `src/services` : is the real name of the routes in the API except folders starting and ending with `__` like `__docs__`, `__test__` or `__utils__`.
 
-The filenames correspond the HTTP method used (`get`, `post`, `put`, `delete`).
+The filenames correspond to the HTTP method used (`get`, `post`, `put`, `delete`).

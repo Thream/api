@@ -40,9 +40,7 @@ putByIdChannelsRouter.put(
       .withMessage(
         commonErrorsMessages.charactersLength('description', { max: 160 })
       ),
-    body('isDefault')
-      .optional({ nullable: true })
-      .isBoolean()
+    body('isDefault').optional({ nullable: true }).isBoolean()
   ],
   validateRequest,
   async (req: Request, res: Response) => {
@@ -62,17 +60,14 @@ putByIdChannelsRouter.put(
     if (channel == null) {
       throw new NotFoundError()
     }
-
     const member = await Member.findOne({
       where: { userId: user.id, guildId: channel.guildId, isOwner: true }
     })
     if (member == null) {
       throw new NotFoundError()
     }
-
     channel.name = name ?? channel.name
     channel.description = description ?? channel.description
-
     if (isDefault != null) {
       const defaultChannel = await Channel.findOne({
         where: { isDefault: true, guildId: member.guildId }
@@ -83,9 +78,7 @@ putByIdChannelsRouter.put(
         await defaultChannel.save()
       }
     }
-
     await channel.save()
-
     emitToMembers({
       event: 'channels',
       guildId: channel.guildId,

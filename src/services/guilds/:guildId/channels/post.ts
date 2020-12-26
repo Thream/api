@@ -60,13 +60,11 @@ postChannelsRouter.post(
     if (member == null) {
       throw new NotFoundError()
     }
-
     const channel = await Channel.create({
       name,
       description,
       guildId: member.guildId
     })
-
     emitToMembers({
       event: 'channels',
       guildId: member.guildId,

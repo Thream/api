@@ -28,6 +28,13 @@ export default class Message extends Model<Message> {
   })
   type!: MessageType
 
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    defaultValue: 'text/plain'
+  })
+  mimetype!: string
+
   @ForeignKey(() => Member)
   @Column
   memberId!: number

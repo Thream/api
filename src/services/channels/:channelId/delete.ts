@@ -31,21 +31,17 @@ deleteByIdChannelsRouter.delete(
     if (channel == null) {
       throw new NotFoundError()
     }
-
     const member = await Member.findOne({
       where: { userId: user.id, guildId: channel.guildId, isOwner: true }
     })
     if (member == null) {
       throw new NotFoundError()
     }
-
     if (channel.isDefault) {
       throw new BadRequestError(errorsMessages.channel.shouldNotBeTheDefault)
     }
-
     const deletedChannelId = channel.id
     await channel.destroy()
-
     emitToMembers({
       event: 'channels',
       guildId: channel.guildId,

@@ -1,20 +1,22 @@
 definitions:
-  Channel:
+  MessageType:
+    type: 'string'
+    enum: ['text', 'file']
+
+  Message:
     type: 'object'
     properties:
       id:
         type: 'integer'
         description: 'Unique id'
-      name:
+      value:
         type: 'string'
       type:
-        type: 'string'
-        enum: ['text', 'voice']
-      description:
-        type: 'string'
-      isDefault:
-        type: 'boolean'
-      guildId:
+        allOf:
+          - $ref: '#/definitions/MessageType'
+      memberId:
+        type: 'integer'
+      channelId:
         type: 'integer'
       createdAt:
         type: 'string'

@@ -5,21 +5,21 @@ import { formatErrors } from '../../../../__test__/utils/formatErrors'
 import app from '../../../../app'
 import Channel from '../../../../models/Channel'
 import { errorsMessages } from '../delete'
-import { createChannel } from '../../__test__/utils/createChannel'
+import { createChannels } from '../../__test__/utils/createChannel'
 
 describe('DELETE /channels/:channelId', () => {
   it('succeeds and delete the channel', async () => {
     const channel1 = { name: 'general1', description: 'testing' }
-    const result = await createChannel([channel1])
-    const channelToRemove = result.channels[0]
+    const result = await createChannels([channel1])
+    const channelToDelete = result.channels[0]
     const response = await request(app)
-      .delete(`/channels/${channelToRemove.id as string}`)
+      .delete(`/channels/${channelToDelete.id as number}`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send()
       .expect(200)
-    expect(response.body.deletedChannelId).toEqual(channelToRemove.id)
+    expect(response.body.deletedChannelId).toEqual(channelToDelete.id)
     const foundChannel = await Channel.findOne({
-      where: { id: channelToRemove.id }
+      where: { id: channelToDelete.id }
     })
     expect(foundChannel).toBeNull()
   })
@@ -38,11 +38,11 @@ describe('DELETE /channels/:channelId', () => {
 
   it('fails if the user is not the owner', async () => {
     const channel1 = { name: 'general1', description: 'testing' }
-    const result = await createChannel([channel1])
-    const channelToRemove = result.channels[0]
+    const result = await createChannels([channel1])
+    const channelToDelete = result.channels[0]
     const userToken = await authenticateUserTest()
     const response = await request(app)
-      .delete(`/channels/${channelToRemove.id as string}`)
+      .delete(`/channels/${channelToDelete.id as number}`)
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send()
       .expect(404)
@@ -52,13 +52,13 @@ describe('DELETE /channels/:channelId', () => {
   })
 
   it("fails if it's the default channel", async () => {
-    const result = await createChannel([])
+    const result = await createChannels([])
     const defaultChannel = await Channel.findOne({
       where: { guildId: result.guild.id as number, isDefault: true }
     })
     expect(defaultChannel).not.toBeNull()
     const response = await request(app)
-      .delete(`/channels/${defaultChannel?.id as string}`)
+      .delete(`/channels/${defaultChannel?.id as number}`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send()
       .expect(400)

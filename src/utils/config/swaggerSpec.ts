@@ -16,7 +16,8 @@ export const swaggerSpec = swaggerJsDoc({
       { name: 'users' },
       { name: 'guilds' },
       { name: 'channels' },
-      { name: 'invitations' }
+      { name: 'invitations' },
+      { name: 'messages' }
     ]
   },
   apis: [
