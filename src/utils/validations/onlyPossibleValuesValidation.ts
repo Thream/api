@@ -2,7 +2,7 @@ import { capitalize } from '../capitalize'
 
 /** returns true if the field value is one of the possible values otherwise throws an error */
 export const onlyPossibleValuesValidation = async (
-  possibleValues: string[],
+  possibleValues: readonly string[],
   fieldName: string,
   fieldValue: string
 ): Promise<boolean> => {

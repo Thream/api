@@ -7,6 +7,7 @@ export const srcPath = path.join(__dirname, '..', '..')
 export const rootPath = path.join(srcPath, '..')
 export const tempPath = path.join(rootPath, 'temp')
 export const imagesPath = path.join(rootPath, 'public', 'images')
+export const uploadsPath = path.join(rootPath, 'public', 'uploads')
 export const emailTemplatePath = path.join(
   rootPath,
   'views',
@@ -28,15 +29,25 @@ export const supportedImageMimetype = [
 
 /** in megabytes */
 export const maximumImageSize = 6
+export const maximumFileSize = 10
 
-export const imageFileUploadOptions: FileUploadOptions = {
+const basicFileUploadOptions: FileUploadOptions = {
   useTempFiles: true,
   tempFileDir: tempPath,
   safeFileNames: true,
-  preserveExtension: 4,
-  limits: { fileSize: 6 * 1024 * 1024 },
+  preserveExtension: Number(),
   parseNested: true,
   debug: process.env.NODE_ENV === 'development'
+}
+
+export const imageFileUploadOptions: FileUploadOptions = {
+  ...basicFileUploadOptions,
+  limits: { fileSize: maximumImageSize * 1024 * 1024 }
+}
+
+export const fileUploadOptions: FileUploadOptions = {
+  ...basicFileUploadOptions,
+  limits: { fileSize: maximumFileSize * 1024 * 1024 }
 }
 
 export const commonErrorsMessages = {
@@ -48,6 +59,8 @@ export const commonErrorsMessages = {
         ', '
       )})`
   },
+  tooLargeFile: (name: string) =>
+    `The ${name} should be less than ${maximumFileSize}mb`,
   charactersLength: (
     name: string,
     {

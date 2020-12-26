@@ -12,9 +12,9 @@ import { BadRequestError } from '../../../utils/errors/BadRequestError'
 import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
 import { NotFoundError } from '../../../utils/errors/NotFoundError'
 
-export const putMessagesRouter = Router()
+export const putByIdMessagesRouter = Router()
 
-putMessagesRouter.put(
+putByIdMessagesRouter.put(
   '/messages/:messageId',
   authenticateUser,
   [
@@ -37,6 +37,11 @@ putMessagesRouter.put(
     const messageToEdit = await Message.findOne({ where: { id: messageId } })
     if (messageToEdit == null) {
       throw new NotFoundError()
+    }
+    if (messageToEdit.type === 'file') {
+      throw new BadRequestError(
+        'You can\'t edit a message with the type "file"'
+      )
     }
     const channel = await Channel.findOne({
       where: { id: messageToEdit.channelId }

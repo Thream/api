@@ -11,7 +11,7 @@
         required: true
     requestBody:
       content:
-        application/json:
+        multipart/form-data:
           schema:
             type: 'object'
             properties:
@@ -19,6 +19,12 @@
                 type: 'string'
                 minLength: 1
                 maxLength: 10_000
+              file:
+                type: 'string'
+                format: 'binary'
+              type:
+                allOf:
+                  - $ref: '#/definitions/MessageType'
     responses:
       allOf:
         - $ref: '#/definitions/UnauthorizedError'

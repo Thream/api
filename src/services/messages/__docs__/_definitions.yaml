@@ -1,4 +1,8 @@
 definitions:
+  MessageType:
+    type: 'string'
+    enum: ['text', 'file']
+
   Message:
     type: 'object'
     properties:
@@ -8,8 +12,8 @@ definitions:
       value:
         type: 'string'
       type:
-        type: 'string'
-        enum: ['text', 'file']
+        allOf:
+          - $ref: '#/definitions/MessageType'
       memberId:
         type: 'integer'
       channelId:

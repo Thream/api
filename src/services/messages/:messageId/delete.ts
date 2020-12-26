@@ -1,13 +1,18 @@
 import { Request, Response, Router } from 'express'
+import * as fsWithCallbacks from 'fs'
+import path from 'path'
 
 import { authenticateUser } from '../../../middlewares/authenticateUser'
 import Channel from '../../../models/Channel'
 import Member from '../../../models/Member'
 import Message from '../../../models/Message'
+import { uploadsPath } from '../../../utils/config/constants'
 import { emitToMembers } from '../../../utils/config/socket'
 import { BadRequestError } from '../../../utils/errors/BadRequestError'
 import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
 import { NotFoundError } from '../../../utils/errors/NotFoundError'
+
+const fs = fsWithCallbacks.promises
 
 export const deleteByIdMessagesRouter = Router()
 
@@ -42,6 +47,11 @@ deleteByIdMessagesRouter.delete(
       )
     }
     const deletedMessageId = message.id
+    if (message.type === 'file') {
+      const filePath = message.value.split('/')
+      const filename = filePath[filePath.length - 1]
+      await fs.unlink(path.join(uploadsPath, filename))
+    }
     await message.destroy()
     emitToMembers({
       event: 'messages',

@@ -23,7 +23,7 @@ export const createMessages = async (
     const response = await request(app)
       .post(`/channels/${channelId}/messages`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
-      .send({ value: message })
+      .send({ value: message, type: 'text' })
       .expect(201)
     messagesResponses.push(response.body.message)
   }

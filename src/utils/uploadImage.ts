@@ -28,25 +28,21 @@ export const uploadImage = async (options: {
         commonErrorsMessages.image.tooLarge(propertyName)
       )
     }
-
     if (!supportedImageMimetype.includes(image.mimetype)) {
       await deleteAllFilesInDirectory(tempPath)
       throw new BadRequestError(
         commonErrorsMessages.image.validType(propertyName)
       )
     }
-
     const splitedMimetype = image.mimetype.split('/')
     const imageExtension = splitedMimetype[1]
     const completeImageName = `${imageName}.${imageExtension}`
-
     // Removes old images
     await deleteFilesByName({
       directoryPath: imagesPath,
       filesNameToDelete: imageName,
       filesToExclude: ['default.png']
     })
-
     await image.mv(path.join(imagesPath, completeImageName))
     await deleteAllFilesInDirectory(tempPath)
     return completeImageName
