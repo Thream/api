@@ -28,8 +28,8 @@ export const supportedImageMimetype = [
 ]
 
 /** in megabytes */
-export const maximumImageSize = 5
-export const maximumFileSize = 20
+export const maximumImageSize = 10
+export const maximumFileSize = 100
 
 const basicFileUploadOptions: FileUploadOptions = {
   useTempFiles: true,
