@@ -97,8 +97,10 @@ postMessagesRouter.post(
           commonErrorsMessages.tooLargeFile('file')
         )
       }
-      filename = `${uuidv4()}-${file.name}`
       mimetype = file.mimetype
+      const splitedMimetype = mimetype.split('/')
+      const fileExtension = splitedMimetype[1]
+      filename = `${uuidv4()}-${file.name}.${fileExtension}`
       await file.mv(path.join(uploadsPath, filename))
     }
     const messageCreated = await Message.create({
