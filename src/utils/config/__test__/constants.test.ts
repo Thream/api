@@ -1,5 +1,6 @@
 import {
   commonErrorsMessages,
+  maximumFileSize,
   maximumImageSize,
   supportedImageMimetype
 } from '../constants'
@@ -10,6 +11,9 @@ test('utils/config/constants', () => {
   )
   expect(commonErrorsMessages.image.validType('logo')).toEqual(
     `The logo must have a valid type (${supportedImageMimetype.join(', ')})`
+  )
+  expect(commonErrorsMessages.tooLargeFile('file')).toEqual(
+    `The file should be less than ${maximumFileSize}mb`
   )
   expect(commonErrorsMessages.charactersLength('name', {})).toEqual(
     'Name should not be empty'

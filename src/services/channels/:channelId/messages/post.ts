@@ -102,6 +102,7 @@ postMessagesRouter.post(
       const fileExtension = splitedMimetype[1]
       filename = `${uuidv4()}-${file.name}.${fileExtension}`
       await file.mv(path.join(uploadsPath, filename))
+      await deleteAllFilesInDirectory(tempPath)
     }
     const messageCreated = await Message.create({
       value: filename != null ? `/uploads/${filename}` : value,
