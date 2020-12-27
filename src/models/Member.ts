@@ -13,7 +13,7 @@ import Message from './Message'
 import User from './User'
 
 @Table
-export default class Member extends Model<Member> {
+export default class Member extends Model {
   @Column({
     type: DataType.BOOLEAN,
     allowNull: false,

@@ -10,7 +10,7 @@ import {
 import User from './User'
 
 @Table
-export default class RefreshToken extends Model<RefreshToken> {
+export default class RefreshToken extends Model {
   @Column({
     type: DataType.TEXT,
     allowNull: false

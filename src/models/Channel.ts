@@ -15,7 +15,7 @@ export const channelTypes = ['text', 'voice'] as const
 export type ChannelType = typeof channelTypes[number]
 
 @Table
-export default class Channel extends Model<Channel> {
+export default class Channel extends Model {
   @Column({
     type: DataType.STRING,
     allowNull: false

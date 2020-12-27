@@ -14,7 +14,7 @@ export const messageTypes = ['text', 'file'] as const
 export type MessageType = typeof messageTypes[number]
 
 @Table
-export default class Message extends Model<Message> {
+export default class Message extends Model {
   @Column({
     type: DataType.TEXT,
     allowNull: false

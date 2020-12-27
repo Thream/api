@@ -27,7 +27,7 @@ export interface UserRequest {
 }
 
 @Table
-export default class User extends Model<User> {
+export default class User extends Model {
   @Column({
     type: DataType.STRING,
     allowNull: false

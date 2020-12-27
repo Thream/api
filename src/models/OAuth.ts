@@ -14,7 +14,7 @@ export type ProviderOAuth = 'google' | 'github' | 'discord'
 export type AuthenticationStrategy = 'local' | ProviderOAuth
 
 @Table
-export default class OAuth extends Model<OAuth> {
+export default class OAuth extends Model {
   @Column({
     type: DataType.STRING,
     allowNull: false
