@@ -3,12 +3,12 @@ import { Request, Response, Router } from 'express'
 import { body, query } from 'express-validator'
 import { v4 as uuidv4 } from 'uuid'
 
-import { validateRequest } from '../../middlewares/validateRequest'
-import User from '../../models/User'
-import UserSetting from '../../models/UserSetting'
-import { commonErrorsMessages } from '../../utils/config/constants'
-import { alreadyUsedValidation } from '../../utils/validations/alreadyUsedValidation'
-import { sendConfirmEmail } from './__utils__/sendConfirmEmail'
+import { validateRequest } from '../../../middlewares/validateRequest'
+import User from '../../../models/User'
+import UserSetting from '../../../models/UserSetting'
+import { commonErrorsMessages } from '../../../utils/config/constants'
+import { alreadyUsedValidation } from '../../../utils/validations/alreadyUsedValidation'
+import { sendConfirmEmail } from '../__utils__/sendConfirmEmail'
 
 export const errorsMessages = {
   email: {

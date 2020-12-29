@@ -2,16 +2,16 @@ import { Request, Response, Router } from 'express'
 import { body } from 'express-validator'
 import jwt from 'jsonwebtoken'
 
-import { validateRequest } from '../../middlewares/validateRequest'
-import RefreshToken from '../../models/RefreshToken'
-import { UserJWT } from '../../models/User'
+import { validateRequest } from '../../../middlewares/validateRequest'
+import RefreshToken from '../../../models/RefreshToken'
+import { UserJWT } from '../../../models/User'
 import {
   expiresIn,
   generateAccessToken,
   ResponseJWT
-} from '../../utils/config/jwtToken'
-import { ForbiddenError } from '../../utils/errors/ForbiddenError'
-import { UnauthorizedError } from '../../utils/errors/UnauthorizedError'
+} from '../../../utils/config/jwtToken'
+import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
+import { UnauthorizedError } from '../../../utils/errors/UnauthorizedError'
 
 export const refreshTokenRouter = Router()
 

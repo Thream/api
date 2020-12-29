@@ -2,15 +2,15 @@ import bcrypt from 'bcryptjs'
 import { Request, Response, Router } from 'express'
 import { body } from 'express-validator'
 
-import { validateRequest } from '../../middlewares/validateRequest'
-import User from '../../models/User'
+import { validateRequest } from '../../../middlewares/validateRequest'
+import User from '../../../models/User'
 import {
   expiresIn,
   generateAccessToken,
   generateRefreshToken,
   ResponseJWT
-} from '../../utils/config/jwtToken'
-import { BadRequestError } from '../../utils/errors/BadRequestError'
+} from '../../../utils/config/jwtToken'
+import { BadRequestError } from '../../../utils/errors/BadRequestError'
 
 export const errorsMessages = {
   email: {

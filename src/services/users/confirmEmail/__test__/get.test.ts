@@ -1,8 +1,8 @@
 import request from 'supertest'
 
-import { authenticateUserTest } from '../../../__test__/utils/authenticateUser'
-import app from '../../../app'
-import User from '../../../models/User'
+import { authenticateUserTest } from '../../../../__test__/utils/authenticateUser'
+import app from '../../../../app'
+import User from '../../../../models/User'
 
 describe('GET /users/confirmEmail', () => {
   it('succeeds and confirm the user', async () => {

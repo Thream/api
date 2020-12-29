@@ -1,8 +1,8 @@
 import request from 'supertest'
 
-import app from '../../../app'
-import User from '../../../models/User'
-import { errorsMessages } from '../signin'
+import app from '../../../../app'
+import User from '../../../../models/User'
+import { errorsMessages } from '../post'
 
 describe('POST /users/signin', () => {
   it('succeeds with valid credentials', async () => {

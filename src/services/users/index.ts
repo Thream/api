@@ -1,13 +1,13 @@
 import { Router } from 'express'
 
-import { confirmEmailRouter } from './confirmEmail'
+import { confirmEmailRouter } from './confirmEmail/get'
 import { currentRouter } from './current'
 import { OAuth2Router } from './oauth2'
-import { refreshTokenRouter } from './refreshToken'
+import { refreshTokenRouter } from './refreshToken/post'
 import { resetPasswordRouter } from './resetPassword'
-import { signinRouter } from './signin'
+import { signinRouter } from './signin/post'
 import { signoutRouter } from './signout'
-import { signupRouter } from './signup'
+import { signupRouter } from './signup/post'
 import { usersGetByIdRouter } from './:userId'
 
 export const usersRouter = Router()

@@ -1,7 +1,7 @@
 import request from 'supertest'
 
-import { authenticateUserTest } from '../../../__test__/utils/authenticateUser'
-import app from '../../../app'
+import { authenticateUserTest } from '../../../../__test__/utils/authenticateUser'
+import app from '../../../../app'
 
 describe('POST /users/refreshToken', () => {
   it('succeeds and generate a new accessToken with a valid refreshToken', async () => {
