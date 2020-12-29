@@ -85,7 +85,7 @@ postInvitationsRouter.post(
       isPublic,
       guildId: member.guildId
     })
-    emitToMembers({
+    await emitToMembers({
       event: 'invitations',
       guildId: member.guildId,
       payload: { action: 'create', invitation },

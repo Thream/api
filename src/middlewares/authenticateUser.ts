@@ -18,12 +18,12 @@ export const getUserWithBearerToken = async (
     throw new UnauthorizedError()
   }
 
-  const tokenSplited = bearerToken.split(' ')
-  if (tokenSplited.length !== 2 || tokenSplited[0] !== 'Bearer') {
+  const tokenSplitted = bearerToken.split(' ')
+  if (tokenSplitted.length !== 2 || tokenSplitted[0] !== 'Bearer') {
     throw new UnauthorizedError()
   }
 
-  const token = tokenSplited[1]
+  const token = tokenSplitted[1]
   let payload: UserJWT
   try {
     payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET) as UserJWT

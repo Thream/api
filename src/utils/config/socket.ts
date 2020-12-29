@@ -1,6 +1,6 @@
 import { Server as HttpServer } from 'http'
 import { Server as HttpsServer } from 'https'
-import socketIo, { Server as SocketIoServer } from 'socket.io'
+import { Server as SocketIoServer } from 'socket.io'
 
 import Member from '../../models/Member'
 
@@ -12,7 +12,7 @@ interface Socket {
 export const socket: Socket = {
   io: null,
   init (httpServer) {
-    socket.io = socketIo(httpServer)
+    socket.io = new SocketIoServer(httpServer)
   }
 }
 
@@ -35,26 +35,27 @@ interface EmitToAuthorizedUsersOptions extends EmitEventOptions {
 }
 
 /** emits socket.io event to every connected authorized users */
-export const emitToAuthorizedUsers = (
+export const emitToAuthorizedUsers = async (
   options: EmitToAuthorizedUsersOptions
-): void => {
+): Promise<void> => {
   const { event, payload, isAuthorizedCallback } = options
-  socket.io?.sockets.clients(async (_error: Error, clients: string[]) => {
+  const clients = await socket.io?.sockets.allSockets()
+  if (clients != null) {
     for (const clientId of clients) {
-      const client = socket.io?.sockets.connected[clientId]
-      const userId: number = (client as any).decoded_token?.id
+      const client = socket.io?.sockets.sockets.get(clientId)
+      const userId: number = (client as any).decodedToken?.id
       const isAuthorized = await isAuthorizedCallback(userId)
       if (isAuthorized && client != null) {
         client.emit(event, payload)
       }
     }
-  })
+  }
 }
 
 /** emits socket.io event to every connected members of the guild */
-export const emitToMembers = (options: EmitToMembersOptions): void => {
+export const emitToMembers = async (options: EmitToMembersOptions): Promise<void> => {
   const { event, payload, guildId, onlyOwner = false } = options
-  emitToAuthorizedUsers({
+  await emitToAuthorizedUsers({
     event,
     payload,
     isAuthorizedCallback: async (userId) => {

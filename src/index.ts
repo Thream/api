@@ -1,4 +1,4 @@
-import socketioJwt from 'socketio-jwt'
+import { authorize } from '@thream/socketio-jwt'
 
 import app from './app'
 import { socket } from './utils/config/socket'
@@ -14,10 +14,9 @@ sequelize
     )
     socket.init(server)
     socket.io?.use(
-      socketioJwt.authorize({
-        secret: process.env.JWT_ACCESS_SECRET,
-        handshake: true
+      authorize({
+        secret: process.env.JWT_ACCESS_SECRET
       })
     )
   })
-  .catch(error => console.error(error))
+  .catch((error) => console.error(error))

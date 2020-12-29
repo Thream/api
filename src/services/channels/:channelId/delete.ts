@@ -42,7 +42,7 @@ deleteByIdChannelsRouter.delete(
     }
     const deletedChannelId = channel.id
     await channel.destroy()
-    emitToMembers({
+    await emitToMembers({
       event: 'channels',
       guildId: channel.guildId,
       payload: { action: 'delete', deletedChannelId }

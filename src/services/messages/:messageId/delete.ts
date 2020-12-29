@@ -53,7 +53,7 @@ deleteByIdMessagesRouter.delete(
       await fs.unlink(path.join(uploadsPath, filename))
     }
     await message.destroy()
-    emitToMembers({
+    await emitToMembers({
       event: 'messages',
       guildId: channel.guildId,
       payload: { action: 'delete', deletedMessageId }
