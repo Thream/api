@@ -106,7 +106,7 @@ putCurrentRouter.put(
     const resultUpload = await uploadImage({
       image: logo,
       propertyName: 'logo',
-      imageName: `${user.name}-${user.id as string}`,
+      oldImage: user.logo,
       imagesPath: usersLogoPath
     })
     if (resultUpload != null) {

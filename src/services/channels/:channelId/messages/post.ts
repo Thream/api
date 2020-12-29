@@ -19,7 +19,7 @@ import { emitToMembers } from '../../../../utils/config/socket'
 import { ForbiddenError } from '../../../../utils/errors/ForbiddenError'
 import { NotFoundError } from '../../../../utils/errors/NotFoundError'
 import { onlyPossibleValuesValidation } from '../../../../utils/validations/onlyPossibleValuesValidation'
-import { deleteAllFilesInDirectory } from '../../../../utils/deleteFiles'
+import { deleteAllFilesInDirectory } from '../../../../utils/deleteAllFilesInDirectory'
 import { PayloadTooLargeError } from '../../../../utils/errors/PayloadTooLargeError'
 import { BadRequestError } from '../../../../utils/errors/BadRequestError'
 
@@ -100,7 +100,7 @@ postMessagesRouter.post(
       mimetype = file.mimetype
       const splitedMimetype = mimetype.split('/')
       const fileExtension = splitedMimetype[1]
-      filename = `${uuidv4()}-${file.name}.${fileExtension}`
+      filename = `${uuidv4()}.${fileExtension}`
       await file.mv(path.join(uploadsPath, filename))
       await deleteAllFilesInDirectory(tempPath)
     }
