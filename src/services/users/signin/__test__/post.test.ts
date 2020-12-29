@@ -1,8 +1,8 @@
 import request from 'supertest'
 
-import app from '../../../app'
-import User from '../../../models/User'
-import { errorsMessages } from '../signin'
+import app from '../../../../app'
+import User from '../../../../models/User'
+import { errorsMessages } from '../post'
 
 describe('POST /users/signin', () => {
   it('succeeds with valid credentials', async () => {
@@ -17,7 +17,7 @@ describe('POST /users/signin', () => {
     const user = await User.findOne({ where: { id: response.body.user.id } })
     if (user != null) {
       await request(app)
-        .get(`/users/confirm-email?tempToken=${user.tempToken as string}`)
+        .get(`/users/confirmEmail?tempToken=${user.tempToken as string}`)
         .send()
         .expect(200)
     }

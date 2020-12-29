@@ -37,7 +37,7 @@ export async function authenticateUserTest (
     if (shouldBeConfirmed) {
       const user = await User.findOne({ where: { id: signupBody.user.id } })
       await request(app)
-        .get(`/users/confirm-email?tempToken=${user?.tempToken as string}`)
+        .get(`/users/confirmEmail?tempToken=${user?.tempToken as string}`)
         .send()
         .expect(200)
       signinResponse = await request(app)

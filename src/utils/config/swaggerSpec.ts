@@ -20,8 +20,5 @@ export const swaggerSpec = swaggerJsDoc({
       { name: 'messages' }
     ]
   },
-  apis: [
-    './src/services/**/__docs__/**/*.yaml',
-    './src/services/__docs__/**/*.yaml'
-  ]
+  apis: ['./src/services/**/__docs__/**/*.yaml']
 })

@@ -1,4 +1,4 @@
-/users/refresh-token:
+/users/refreshToken:
   post:
     tags:
       - 'users'

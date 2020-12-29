@@ -1,10 +1,10 @@
 import request from 'supertest'
 
-import { formatErrors } from '../../../__test__/utils/formatErrors'
-import app from '../../../app'
-import User from '../../../models/User'
-import { commonErrorsMessages } from '../../../utils/config/constants'
-import { errorsMessages } from '../signup'
+import { formatErrors } from '../../../../__test__/utils/formatErrors'
+import app from '../../../../app'
+import User from '../../../../models/User'
+import { commonErrorsMessages } from '../../../../utils/config/constants'
+import { errorsMessages } from '../post'
 
 describe('POST /users/signup', () => {
   it('succeeds and create a new user', async () => {

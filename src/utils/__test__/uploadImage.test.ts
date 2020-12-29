@@ -1,5 +1,4 @@
 import fsMock from 'mock-fs'
-import path from 'path'
 import * as fsWithCallbacks from 'fs'
 import { UploadedFile } from 'express-fileupload'
 
@@ -33,17 +32,19 @@ describe('utils/uploadImage', () => {
       [tempPath]: {
         'logo.png': ''
       },
-      [imagesPath]: {}
+      [imagesPath]: {
+        'logo.png': ''
+      }
     })
     const image = getImage()
     const result = await uploadImage({
       image,
       propertyName: 'logo',
-      imageName: 'logo',
+      oldImage: '/images/logo.png',
       imagesPath
     })
-    expect(result).toEqual('logo.png')
-    expect(image.mv).toHaveBeenCalledWith(path.join(imagesPath, 'logo.png'))
+    expect(result).not.toBeNull()
+    expect(image.mv).toHaveBeenCalled()
     const directoryContent = await fs.readdir(tempPath)
     expect(directoryContent.length).toEqual(0)
   })
@@ -52,14 +53,14 @@ describe('utils/uploadImage', () => {
     const result = await uploadImage({
       image: [getImage(), getImage()],
       propertyName: 'logo',
-      imageName: 'logo',
-      imagesPath: '/public/images/logo.png'
+      oldImage: '/images/logo.png',
+      imagesPath
     })
     const result2 = await uploadImage({
       image: undefined,
       propertyName: 'logo',
-      imageName: 'logo',
-      imagesPath: '/public/images/logo.png'
+      oldImage: '/images/logo.png',
+      imagesPath
     })
     expect(result).toBeNull()
     expect(result2).toBeNull()
@@ -75,8 +76,8 @@ describe('utils/uploadImage', () => {
       uploadImage({
         image: getImage({ truncated: true }),
         propertyName: 'logo',
-        imageName: 'logo',
-        imagesPath: '/public/images/logo.png'
+        oldImage: '/images/logo.png',
+        imagesPath
       })
     ).rejects.toThrow(PayloadTooLargeError)
     const directoryContent = await fs.readdir(tempPath)
@@ -93,8 +94,8 @@ describe('utils/uploadImage', () => {
       uploadImage({
         image: getImage({ mimetype: 'text/html' }),
         propertyName: 'logo',
-        imageName: 'logo',
-        imagesPath: '/public/images/logo.png'
+        oldImage: '/images/logo.png',
+        imagesPath
       })
     ).rejects.toThrow(BadRequestError)
     const directoryContent = await fs.readdir(tempPath)

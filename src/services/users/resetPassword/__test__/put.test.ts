@@ -6,7 +6,7 @@ import app from '../../../../app'
 import User from '../../../../models/User'
 import { errorsMessages } from '..'
 
-describe('PUT /reset-password', () => {
+describe('PUT /users/resetPassword', () => {
   it('succeeds and change the password so we can signin again', async () => {
     const email = 'contact@test.com'
     const name = 'John'
@@ -19,7 +19,7 @@ describe('PUT /reset-password', () => {
     })
 
     await request(app)
-      .post('/users/reset-password?redirectURI=someurl.com')
+      .post('/users/resetPassword?redirectURI=someurl.com')
       .send({ email })
       .expect(200)
 
@@ -28,7 +28,7 @@ describe('PUT /reset-password', () => {
 
     const newPassword = 'newpassword'
     await request(app)
-      .put('/users/reset-password')
+      .put('/users/resetPassword')
       .send({ password: newPassword, tempToken: user?.tempToken })
       .expect(200)
 
@@ -40,7 +40,7 @@ describe('PUT /reset-password', () => {
 
   it('fails with an invalid "tempToken"', async () => {
     const response = await request(app)
-      .put('/users/reset-password')
+      .put('/users/resetPassword')
       .send({ password: 'newpassword', tempToken: 'sometemptoken' })
       .expect(400)
 
@@ -52,7 +52,7 @@ describe('PUT /reset-password', () => {
 
   it('fails if there is no password and tempToken provided', async () => {
     const response = await request(app)
-      .put('/users/reset-password')
+      .put('/users/resetPassword')
       .send()
       .expect(400)
     expect(response.body.errors.length).toEqual(2)
@@ -70,7 +70,7 @@ describe('PUT /reset-password', () => {
     })
 
     await request(app)
-      .post('/users/reset-password?redirectURI=someurl.com')
+      .post('/users/resetPassword?redirectURI=someurl.com')
       .send({ email })
       .expect(200)
 
@@ -83,7 +83,7 @@ describe('PUT /reset-password', () => {
 
     const newPassword = 'newpassword'
     const response = await request(app)
-      .put('/users/reset-password')
+      .put('/users/resetPassword')
       .send({ password: newPassword, tempToken: user?.tempToken })
       .expect(400)
 

@@ -101,7 +101,7 @@ putByIdGuildsRouter.put(
     const resultUpload = await uploadImage({
       image: icon,
       propertyName: 'icon',
-      imageName: `${member.guild.name}-${member.guild.id as string}`,
+      oldImage: member.guild.icon,
       imagesPath: guildsIconPath
     })
     if (resultUpload != null) {

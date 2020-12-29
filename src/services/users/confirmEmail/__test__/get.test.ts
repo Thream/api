@@ -1,10 +1,10 @@
 import request from 'supertest'
 
-import { authenticateUserTest } from '../../../__test__/utils/authenticateUser'
-import app from '../../../app'
-import User from '../../../models/User'
+import { authenticateUserTest } from '../../../../__test__/utils/authenticateUser'
+import app from '../../../../app'
+import User from '../../../../models/User'
 
-describe('GET /users/confirm-email', () => {
+describe('GET /users/confirmEmail', () => {
   it('succeeds and confirm the user', async () => {
     const name = 'John'
     await authenticateUserTest({
@@ -17,7 +17,7 @@ describe('GET /users/confirm-email', () => {
     expect(user).not.toBeNull()
     expect(user?.isConfirmed).toBe(false)
     await request(app)
-      .get(`/users/confirm-email?tempToken=${user?.tempToken as string}`)
+      .get(`/users/confirmEmail?tempToken=${user?.tempToken as string}`)
       .send()
       .expect(200)
 
@@ -29,14 +29,14 @@ describe('GET /users/confirm-email', () => {
 
   it('fails with invalid tempToken', async () => {
     await request(app)
-      .get('/users/confirm-email?tempToken=mybadtoken')
+      .get('/users/confirmEmail?tempToken=mybadtoken')
       .send()
       .expect(403)
   })
 
   it('fails with empty tempToken', async () => {
     await request(app)
-      .get('/users/confirm-email')
+      .get('/users/confirmEmail')
       .send()
       .expect(400)
   })

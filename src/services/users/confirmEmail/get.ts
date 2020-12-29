@@ -1,15 +1,15 @@
 import { Request, Response, Router } from 'express'
 import { query } from 'express-validator'
 
-import { validateRequest } from '../../middlewares/validateRequest'
-import User from '../../models/User'
-import { ForbiddenError } from '../../utils/errors/ForbiddenError'
-import { isValidRedirectURIValidation } from '../../utils/validations/isValidRedirectURIValidation'
+import { validateRequest } from '../../../middlewares/validateRequest'
+import User from '../../../models/User'
+import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
+import { isValidRedirectURIValidation } from '../../../utils/validations/isValidRedirectURIValidation'
 
 export const confirmEmailRouter = Router()
 
 confirmEmailRouter.get(
-  '/users/confirm-email',
+  '/users/confirmEmail',
   [
     query('tempToken')
       .trim()

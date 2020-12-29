@@ -68,7 +68,7 @@ postGuildsRouter.post(
     const resultUpload = await uploadImage({
       image: icon,
       propertyName: 'icon',
-      imageName: `${guild.name}-${guild.id as string}`,
+      oldImage: guild.icon,
       imagesPath: guildsIconPath
     })
     if (resultUpload != null) {

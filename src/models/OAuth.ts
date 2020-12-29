@@ -9,9 +9,11 @@ import {
 
 import User from './User'
 
-export type ProviderOAuth = 'google' | 'github' | 'discord'
+export const providers = ['google', 'github', 'discord'] as const
+export const strategies = [...providers, 'local'] as const
 
-export type AuthenticationStrategy = 'local' | ProviderOAuth
+export type ProviderOAuth = typeof providers[number]
+export type AuthenticationStrategy = typeof strategies[number]
 
 @Table
 export default class OAuth extends Model {

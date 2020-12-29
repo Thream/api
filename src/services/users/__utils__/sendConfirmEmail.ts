@@ -26,7 +26,7 @@ export const sendConfirmEmail: SendConfirmEmail = async (options) => {
   const emailHTML = await ejs.renderFile(emailTemplatePath, {
     subtitle: renderOptions.subtitle,
     buttonText: renderOptions.buttonText,
-    url: `${process.env.API_BASE_URL}/users/confirm-email?tempToken=${tempToken}${redirectQuery}`,
+    url: `${process.env.API_BASE_URL}/users/confirmEmail?tempToken=${tempToken}${redirectQuery}`,
     footerText: renderOptions.footerText
   })
   await emailTransporter.sendMail({
