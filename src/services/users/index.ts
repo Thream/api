@@ -9,6 +9,7 @@ import { signinRouter } from './signin/post'
 import { signoutRouter } from './signout'
 import { signupRouter } from './signup/post'
 import { usersGetByIdRouter } from './:userId'
+import { addLocalStrategyRouter } from './addLocalStrategy/post'
 
 export const usersRouter = Router()
 
@@ -22,3 +23,4 @@ usersRouter.use('/', signupRouter)
 usersRouter.use('/', OAuth2Router)
 usersRouter.use('/', usersGetByIdRouter)
 usersRouter.use('/', signoutRouter)
+usersRouter.use('/', addLocalStrategyRouter)
