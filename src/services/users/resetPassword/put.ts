@@ -22,7 +22,7 @@ export const errorsMessages = {
 export const putResetPasswordRouter = Router()
 
 putResetPasswordRouter.put(
-  '/users/reset-password',
+  '/users/resetPassword',
   [
     body('password')
       .trim()

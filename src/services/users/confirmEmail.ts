@@ -9,7 +9,7 @@ import { isValidRedirectURIValidation } from '../../utils/validations/isValidRed
 export const confirmEmailRouter = Router()
 
 confirmEmailRouter.get(
-  '/users/confirm-email',
+  '/users/confirmEmail',
   [
     query('tempToken')
       .trim()

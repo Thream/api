@@ -7,7 +7,7 @@ import { errorsMessages as errorsConfirmed } from '../../../../middlewares/authe
 import User from '../../../../models/User'
 import { errorsMessages } from '..'
 
-describe('POST /reset-password', () => {
+describe('POST /users/resetPassword', () => {
   it('succeeds with valid email and generate a tempToken', async () => {
     const email = 'contact@test.com'
     const name = 'John'
@@ -18,7 +18,7 @@ describe('POST /reset-password', () => {
     expect(userBefore?.tempExpirationToken).toBe(null)
 
     await request(app)
-      .post('/users/reset-password?redirectURI=someurl.com')
+      .post('/users/resetPassword?redirectURI=someurl.com')
       .send({ email })
       .expect(200)
 
@@ -33,7 +33,7 @@ describe('POST /reset-password', () => {
     await authenticateUserTest({ email, name, shouldBeConfirmed: true })
 
     await request(app)
-      .post('/users/reset-password?redirectURI=someurl.com')
+      .post('/users/resetPassword?redirectURI=someurl.com')
       .send({ email })
       .expect(200)
 
@@ -45,14 +45,14 @@ describe('POST /reset-password', () => {
     }
 
     await request(app)
-      .post('/users/reset-password?redirectURI=someurl.com')
+      .post('/users/resetPassword?redirectURI=someurl.com')
       .send({ email })
       .expect(200)
   })
 
   it("fails with email address that doesn't exist", async () => {
     const response = await request(app)
-      .post('/users/reset-password?redirectURI=someurl.com')
+      .post('/users/resetPassword?redirectURI=someurl.com')
       .send({ email: 'contact@test.com' })
       .expect(400)
 
@@ -66,7 +66,7 @@ describe('POST /reset-password', () => {
     await authenticateUserTest({ email, name, shouldBeConfirmed: false })
 
     const response = await request(app)
-      .post('/users/reset-password?redirectURI=someurl.com')
+      .post('/users/resetPassword?redirectURI=someurl.com')
       .send({ email })
       .expect(400)
 
@@ -80,12 +80,12 @@ describe('POST /reset-password', () => {
     await authenticateUserTest({ email, name, shouldBeConfirmed: true })
 
     await request(app)
-      .post('/users/reset-password?redirectURI=someurl.com')
+      .post('/users/resetPassword?redirectURI=someurl.com')
       .send({ email })
       .expect(200)
 
     const response = await request(app)
-      .post('/users/reset-password?redirectURI=someurl.com')
+      .post('/users/resetPassword?redirectURI=someurl.com')
       .send({ email })
       .expect(400)
 

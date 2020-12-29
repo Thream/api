@@ -32,7 +32,7 @@ export const maximumTimeToResetPassword = '1 hour'
 export const postResetPasswordRouter = Router()
 
 postResetPasswordRouter.post(
-  '/users/reset-password',
+  '/users/resetPassword',
   [
     body('email')
       .trim()

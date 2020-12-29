@@ -3,11 +3,11 @@ import request from 'supertest'
 import { authenticateUserTest } from '../../../__test__/utils/authenticateUser'
 import app from '../../../app'
 
-describe('POST /users/refresh-token', () => {
+describe('POST /users/refreshToken', () => {
   it('succeeds and generate a new accessToken with a valid refreshToken', async () => {
     const userToken = await authenticateUserTest()
     const response = await request(app)
-      .post('/users/refresh-token')
+      .post('/users/refreshToken')
       .send({
         refreshToken: userToken.refreshToken
       })
@@ -17,7 +17,7 @@ describe('POST /users/refresh-token', () => {
 
   it('fails with invalid refreshToken', async () => {
     await request(app)
-      .post('/users/refresh-token')
+      .post('/users/refreshToken')
       .send({
         refreshToken: 'invalidtoken'
       })
