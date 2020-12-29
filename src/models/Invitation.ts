@@ -10,7 +10,7 @@ import {
 import Guild from './Guild'
 
 @Table
-export default class Invitation extends Model<Invitation> {
+export default class Invitation extends Model {
   @Column({
     type: DataType.STRING,
     allowNull: false

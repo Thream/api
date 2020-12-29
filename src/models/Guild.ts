@@ -5,7 +5,7 @@ import Invitation from './Invitation'
 import Member from './Member'
 
 @Table
-export default class Guild extends Model<Guild> {
+export default class Guild extends Model {
   @Column({
     type: DataType.STRING,
     allowNull: false

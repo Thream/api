@@ -113,7 +113,7 @@ putByIdGuildsRouter.put(
     guild.publicInvitation = invitation != null ? invitation.value : null
     delete guild.invitations
 
-    emitToMembers({
+    await emitToMembers({
       event: 'guilds',
       guildId: guild.id,
       payload: { action: 'update', guild }

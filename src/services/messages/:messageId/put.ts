@@ -61,7 +61,7 @@ putByIdMessagesRouter.put(
     messageToEdit.value = value ?? messageToEdit.value
     await messageToEdit.save()
     const message = { ...messageToEdit.toJSON(), user: req.user.current }
-    emitToMembers({
+    await emitToMembers({
       event: 'messages',
       guildId: channel.guildId,
       payload: { action: 'update', message }

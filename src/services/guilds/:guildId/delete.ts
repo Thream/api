@@ -29,7 +29,7 @@ deleteByIdGuildsRouter.delete(
     const deletedGuildId = member.guild.id
     await member.guild.destroy()
 
-    emitToMembers({
+    await emitToMembers({
       event: 'guilds',
       guildId: member.guildId,
       payload: { action: 'delete', deletedGuildId }

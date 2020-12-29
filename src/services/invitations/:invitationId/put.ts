@@ -85,7 +85,7 @@ putInvitationsRouter.put(
       throw new BadRequestError(errorsMessages.public.alreadyHasInvitation)
     }
     await invitation.save()
-    emitToMembers({
+    await emitToMembers({
       event: 'invitations',
       guildId: member.guildId,
       onlyOwner: true,

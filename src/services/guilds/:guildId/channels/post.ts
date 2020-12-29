@@ -65,7 +65,7 @@ postChannelsRouter.post(
       description,
       guildId: member.guildId
     })
-    emitToMembers({
+    await emitToMembers({
       event: 'channels',
       guildId: member.guildId,
       payload: { action: 'create', channel }

@@ -79,7 +79,7 @@ putByIdChannelsRouter.put(
       }
     }
     await channel.save()
-    emitToMembers({
+    await emitToMembers({
       event: 'channels',
       guildId: channel.guildId,
       payload: { action: 'update', channel }

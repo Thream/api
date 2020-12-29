@@ -19,7 +19,7 @@ export const themes = ['light', 'dark'] as const
 export type Theme = typeof themes[number]
 
 @Table
-export default class UserSetting extends Model<UserSetting> {
+export default class UserSetting extends Model {
   @Column({
     type: DataType.STRING,
     allowNull: false,

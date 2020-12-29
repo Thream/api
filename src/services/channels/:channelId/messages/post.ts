@@ -112,7 +112,7 @@ postMessagesRouter.post(
       channelId: channel.id
     })
     const message = { ...messageCreated.toJSON(), user: req.user.current }
-    emitToMembers({
+    await emitToMembers({
       event: 'messages',
       guildId: member.guildId,
       payload: { action: 'create', message }

@@ -36,7 +36,7 @@ deleteByIdInvitationsRouter.delete(
     }
     const deletedInvitationId = invitation.id
     await invitation.destroy()
-    emitToMembers({
+    await emitToMembers({
       event: 'invitations',
       guildId: member.guildId,
       onlyOwner: true,
