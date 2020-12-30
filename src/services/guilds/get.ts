@@ -20,7 +20,7 @@ getGuildsRouter.get(
       page: string
     }
     const user = req.user.current
-    const { hasMore, totalItems, rows } = await paginateModel({
+    const guilds = await paginateModel({
       Model: Member,
       queryOptions: { itemsPerPage, page },
       findOptions: {
@@ -31,12 +31,6 @@ getGuildsRouter.get(
         include: [Guild]
       }
     })
-    return res.status(200).json({
-      hasMore,
-      totalItems,
-      rows: rows.map(row => {
-        return row.guild
-      })
-    })
+    return res.status(200).json(guilds)
   }
 )

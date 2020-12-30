@@ -4,7 +4,7 @@
       - bearerAuth: []
     tags:
       - 'guilds'
-    summary: 'GET all the guilds of a user'
+    summary: 'GET all the guilds of a Member'
     allOf:
       - $ref: '#/definitions/PaginateModelParameters'
     responses:
