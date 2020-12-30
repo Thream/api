@@ -1,12 +1,12 @@
-/channels/{channelId}/messages:
+/guilds/{guildId}/members:
   get:
     security:
       - bearerAuth: []
     tags:
-      - 'messages'
-    summary: 'GET all the messages of a channel'
+      - 'members'
+    summary: 'GET all the members of a guild'
     parameters:
-      - name: 'channelId'
+      - name: 'guildId'
         in: 'path'
         required: true
     allOf:
@@ -16,7 +16,6 @@
         - $ref: '#/definitions/UnauthorizedError'
         - $ref: '#/definitions/ForbiddenError'
         - $ref: '#/definitions/BadRequestError'
-        - $ref: '#/definitions/NotFoundError'
         - '200':
             content:
               application/json:
@@ -29,5 +28,5 @@
                       type: 'array'
                       items:
                         allOf:
-                          - $ref: '#/definitions/Message'
+                          - $ref: '#/definitions/Member'
                           - $ref: '#/definitions/User'

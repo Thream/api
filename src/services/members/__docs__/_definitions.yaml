@@ -1,25 +1,15 @@
 definitions:
-  MessageType:
-    type: 'string'
-    enum: ['text', 'file']
-
-  Message:
+  Member:
     type: 'object'
     properties:
       id:
         type: 'integer'
         description: 'Unique id'
-      value:
-        type: 'string'
-      type:
-        allOf:
-          - $ref: '#/definitions/MessageType'
-      mimetype:
-        type: 'string'
-        example: 'text/plain'
-      memberId:
+      isOwner:
+        type: 'boolean'
+      userId:
         type: 'integer'
-      channelId:
+      guildId:
         type: 'integer'
       createdAt:
         type: 'string'
