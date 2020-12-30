@@ -1,10 +1,14 @@
-/guilds:
+/guilds/{guildId}/members:
   get:
     security:
       - bearerAuth: []
     tags:
-      - 'guilds'
-    summary: 'GET all the guilds of a Member'
+      - 'members'
+    summary: 'GET all the members of a guild'
+    parameters:
+      - name: 'guildId'
+        in: 'path'
+        required: true
     allOf:
       - $ref: '#/definitions/PaginateModelParameters'
     responses:
@@ -24,4 +28,5 @@
                       type: 'array'
                       items:
                         allOf:
-                          - $ref: '#/definitions/Guild'
+                          - $ref: '#/definitions/Member'
+                          - $ref: '#/definitions/User'

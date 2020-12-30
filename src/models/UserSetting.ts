@@ -8,9 +8,17 @@ import {
 } from 'sequelize-typescript'
 
 import User from './User'
+import { deleteObjectAttributes } from '../utils/deleteObjectAttributes'
 
+export const userSettingHiddenAttributes = [
+  'createdAt',
+  'updatedAt',
+  'userId',
+  'id'
+] as const
+export type UserSettingHiddenAttributes = typeof userSettingHiddenAttributes[number]
 export interface UserSettingToJSON
-  extends Omit<UserSetting, 'createdAt' | 'updatedAt' | 'userId' | 'id'> {}
+  extends Omit<UserSetting, UserSettingHiddenAttributes> {}
 
 export const languages = ['fr', 'en'] as const
 export type Language = typeof languages[number]
@@ -48,11 +56,10 @@ export default class UserSetting extends Model {
   user!: User
 
   toJSON (): UserSettingToJSON {
-    const attributes = Object.assign({}, this.get()) as UserSetting
-    delete attributes.id
-    delete attributes.userId
-    delete attributes.createdAt
-    delete attributes.updatedAt
-    return attributes
+    const attributes = Object.assign({}, this.get())
+    return deleteObjectAttributes(
+      attributes,
+      userSettingHiddenAttributes
+    ) as UserSettingToJSON
   }
 }

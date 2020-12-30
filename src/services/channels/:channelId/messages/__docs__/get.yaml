@@ -28,9 +28,6 @@
                     rows:
                       type: 'array'
                       items:
-                        type: 'object'
-                        properties:
-                          message:
-                            allOf:
-                              - $ref: '#/definitions/Message'
-                              - $ref: '#/definitions/User'
+                        allOf:
+                          - $ref: '#/definitions/Message'
+                          - $ref: '#/definitions/User'

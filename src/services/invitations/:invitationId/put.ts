@@ -11,6 +11,7 @@ import { alreadyUsedValidation } from '../../../utils/validations/alreadyUsedVal
 import { BadRequestError } from '../../../utils/errors/BadRequestError'
 import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
 import { NotFoundError } from '../../../utils/errors/NotFoundError'
+import Guild from '../../../models/Guild'
 
 export const errorsMessages = {
   value: {
@@ -66,10 +67,17 @@ putInvitationsRouter.put(
       throw new NotFoundError()
     }
     const member = await Member.findOne({
-      where: { userId: user.id, guildId: invitation.guildId, isOwner: true }
+      where: { userId: user.id, guildId: invitation.guildId, isOwner: true },
+      include: [Guild]
     })
     if (member == null) {
       throw new NotFoundError()
+    }
+    if (invitation.isPublic && expiresIn != null) {
+      throw new BadRequestError('You can\'t edit "expiresIn" if it is a public invitation')
+    }
+    if (member.guild.isPublic && isPublic != null && !isPublic) {
+      throw new BadRequestError('You can\'t edit "isPublic" if the guild is still public')
     }
     let expiresInValue = expiresIn ?? invitation.expiresIn
     if (expiresInValue > 0 && expiresIn != null) {

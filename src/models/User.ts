@@ -11,9 +11,15 @@ import Member from './Member'
 import OAuth, { AuthenticationStrategy } from './OAuth'
 import RefreshToken from './RefreshToken'
 import UserSetting from './UserSetting'
+import { deleteObjectAttributes } from '../utils/deleteObjectAttributes'
 
-export interface UserToJSON
-  extends Omit<User, 'password' | 'tempToken' | 'tempExpirationToken'> {}
+export const userHiddenAttributes = [
+  'password',
+  'tempToken',
+  'tempExpirationToken'
+] as const
+export type UserHiddenAttributes = typeof userHiddenAttributes[number]
+export interface UserToJSON extends Omit<User, UserHiddenAttributes> {}
 
 export interface UserJWT {
   id: number
@@ -99,10 +105,7 @@ export default class User extends Model {
   settings!: UserSetting
 
   toJSON (): UserToJSON {
-    const attributes = Object.assign({}, this.get()) as User
-    delete attributes.password
-    delete attributes.tempToken
-    delete attributes.tempExpirationToken
-    return attributes
+    const attributes = Object.assign({}, this.get())
+    return deleteObjectAttributes(attributes, userHiddenAttributes) as UserToJSON
   }
 }

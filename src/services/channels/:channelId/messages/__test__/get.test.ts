@@ -16,5 +16,8 @@ describe('GET /channels/:channelId/messages', () => {
     expect(response.body.totalItems).toEqual(messages.length)
     expect(response.body.rows[0].value).toEqual(messages[0])
     expect(response.body.rows[1].value).toEqual(messages[1])
+    expect(response.body.rows[1].user).not.toBeNull()
+    expect(response.body.rows[1].user.id).toEqual(result.user.id)
+    expect(response.body.rows[1].user.password).not.toBeDefined()
   })
 })

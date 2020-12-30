@@ -6,6 +6,7 @@ import { putByIdGuildsRouter } from './put'
 
 import { guildsChannelsRouter } from './channels'
 import { guildsInvitationsRouter } from './invitations'
+import { guildsMembersRouter } from './members'
 
 export const guildsGetByIdRouter = Router()
 
@@ -15,3 +16,4 @@ guildsGetByIdRouter.use('/', putByIdGuildsRouter)
 
 guildsGetByIdRouter.use('/', guildsChannelsRouter)
 guildsGetByIdRouter.use('/', guildsInvitationsRouter)
+guildsGetByIdRouter.use('/', guildsMembersRouter)

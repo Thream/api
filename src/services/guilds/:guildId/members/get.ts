@@ -1,17 +1,15 @@
 import { Request, Response, Router } from 'express'
 
 import { authenticateUser } from '../../../../middlewares/authenticateUser'
-import Channel from '../../../../models/Channel'
 import Member from '../../../../models/Member'
-import Message from '../../../../models/Message'
 import { paginateModel } from '../../../../utils/database/paginateModel'
 import { ForbiddenError } from '../../../../utils/errors/ForbiddenError'
 import { NotFoundError } from '../../../../utils/errors/NotFoundError'
 
-export const getMessagesRouter = Router()
+export const getMembersRouter = Router()
 
-getMessagesRouter.get(
-  '/channels/:channelId/messages',
+getMembersRouter.get(
+  '/guilds/:guildId/members',
   authenticateUser,
   async (req: Request, res: Response) => {
     if (req.user == null) {
@@ -21,25 +19,21 @@ getMessagesRouter.get(
       itemsPerPage: string
       page: string
     }
-    const { channelId } = req.params as { channelId: string }
     const user = req.user.current
-    const channel = await Channel.findOne({ where: { id: channelId } })
-    if (channel == null) {
-      throw new NotFoundError()
-    }
+    const { guildId } = req.params as { guildId: string }
     const member = await Member.findOne({
-      where: { userId: user.id, guildId: channel.guildId }
+      where: { userId: user.id, guildId }
     })
     if (member == null) {
       throw new NotFoundError()
     }
     const { hasMore, totalItems, rows } = await paginateModel({
-      Model: Message,
+      Model: Member,
       queryOptions: { itemsPerPage, page },
       findOptions: {
-        order: [['createdAt', 'ASC']],
+        order: [['createdAt', 'DESC']],
         where: {
-          channelId: channel.id
+          guildId: member.guildId
         }
       }
     })

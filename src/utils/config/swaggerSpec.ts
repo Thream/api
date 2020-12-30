@@ -17,7 +17,8 @@ export const swaggerSpec = swaggerJsDoc({
       { name: 'guilds' },
       { name: 'channels' },
       { name: 'invitations' },
-      { name: 'messages' }
+      { name: 'messages' },
+      { name: 'members' }
     ]
   },
   apis: ['./src/services/**/__docs__/**/*.yaml']
