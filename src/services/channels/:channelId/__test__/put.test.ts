@@ -6,7 +6,6 @@ import app from '../../../../app'
 import Channel from '../../../../models/Channel'
 import { commonErrorsMessages } from '../../../../utils/config/constants'
 import { randomString } from '../../../../utils/random'
-import { errorsMessages } from '../put'
 import { createChannels } from '../../__test__/utils/createChannel'
 
 describe('PUT /channels/:channelId', () => {
@@ -42,6 +41,20 @@ describe('PUT /channels/:channelId', () => {
     expect(response.body.channel.isDefault).toBeTruthy()
   })
 
+  it('succeeds with invalid slug name', async () => {
+    const channel1 = { name: 'general1', description: 'testing' }
+    const result = await createChannels([channel1])
+    const channelToEdit = result.channels[0]
+    const name = 'random channel'
+    const response = await request(app)
+      .put(`/channels/${channelToEdit.id as number}`)
+      .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
+      .send({ name })
+      .expect(200)
+    expect(response.body.channel.name).toEqual(name)
+    expect(response.body.channel.isDefault).toBeFalsy()
+  })
+
   it('fails with too long description', async () => {
     const channel1 = { name: 'general1', description: 'testing' }
     const result = await createChannels([channel1])
@@ -60,20 +73,6 @@ describe('PUT /channels/:channelId', () => {
     )
   })
 
-  it('fails with invalid slug name', async () => {
-    const channel1 = { name: 'general1', description: 'testing' }
-    const result = await createChannels([channel1])
-    const channelToEdit = result.channels[0]
-    const response = await request(app)
-      .put(`/channels/${channelToEdit.id as number}`)
-      .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
-      .send({ name: 'random channel name' })
-      .expect(400)
-    const errors = formatErrors(response.body.errors)
-    expect(errors.length).toEqual(1)
-    expect(errors).toEqual(expect.arrayContaining(['Name must be a slug']))
-  })
-
   it('fails with too long name', async () => {
     const channel1 = { name: 'general1', description: 'testing' }
     const result = await createChannels([channel1])
@@ -84,11 +83,10 @@ describe('PUT /channels/:channelId', () => {
       .send({ name: ' random channel name ' + randomString(35) })
       .expect(400)
     const errors = formatErrors(response.body.errors)
-    expect(errors.length).toEqual(2)
+    expect(errors.length).toEqual(1)
     expect(errors).toEqual(
       expect.arrayContaining([
-        commonErrorsMessages.charactersLength('name', { max: 30, min: 3 }),
-        errorsMessages.name.mustBeSlug
+        commonErrorsMessages.charactersLength('name', { max: 30, min: 3 })
       ])
     )
   })

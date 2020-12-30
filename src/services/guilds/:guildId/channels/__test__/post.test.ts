@@ -48,6 +48,24 @@ describe('POST /guilds/:guildId/channels', () => {
     expect(response.body.channel.name).toBe(name)
   })
 
+  it('succeeds with invalid slug name', async () => {
+    const result = await createGuild({
+      guild: { description: 'description', name: 'guild' },
+      user: {
+        email: 'test@test.com',
+        name: 'Test'
+      }
+    })
+    const name = 'channel name'
+    const response = await request(app)
+      .post(`/guilds/${result.guild.id as number}/channels`)
+      .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
+      .send({ name, description: 'testing' })
+      .expect(201)
+    expect(response.body.channel).not.toBeNull()
+    expect(response.body.channel.name).toBe(name)
+  })
+
   it('fails without name', async () => {
     const result = await createGuild({
       guild: { description: 'description', name: 'guild' },
@@ -62,36 +80,13 @@ describe('POST /guilds/:guildId/channels', () => {
       .send({ description: 'testing channel creation' })
       .expect(400)
     const errors = formatErrors(response.body.errors)
+    console.log(errors)
     expect(errors.length).toEqual(3)
     expect(errors).toEqual(
       expect.arrayContaining([
         errorsMessages.name.isRequired,
-        errorsMessages.name.mustBeSlug,
         commonErrorsMessages.charactersLength('name', { min: 3, max: 30 })
       ])
-    )
-  })
-
-  it('fails with invalid slug name', async () => {
-    const result = await createGuild({
-      guild: { description: 'description', name: 'guild' },
-      user: {
-        email: 'test@test.com',
-        name: 'Test'
-      }
-    })
-    const response = await request(app)
-      .post(`/guilds/${result.guild.id as number}/channels`)
-      .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
-      .send({
-        name: 'random channel name',
-        description: 'testing channel creation'
-      })
-      .expect(400)
-    const errors = formatErrors(response.body.errors)
-    expect(errors.length).toEqual(1)
-    expect(errors).toEqual(
-      expect.arrayContaining([errorsMessages.name.mustBeSlug])
     )
   })
 

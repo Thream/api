@@ -12,7 +12,6 @@ import { NotFoundError } from '../../../../utils/errors/NotFoundError'
 
 export const errorsMessages = {
   name: {
-    mustBeSlug: 'Name must be a slug',
     isRequired: 'Name is required'
   }
 }
@@ -26,14 +25,13 @@ postChannelsRouter.post(
     body('name')
       .notEmpty()
       .withMessage(errorsMessages.name.isRequired)
+      .isString()
       .trim()
       .escape()
       .isLength({ max: 30, min: 3 })
       .withMessage(
         commonErrorsMessages.charactersLength('name', { max: 30, min: 3 })
-      )
-      .isSlug()
-      .withMessage(errorsMessages.name.mustBeSlug),
+      ),
     body('description')
       .optional({ nullable: true })
       .trim()
