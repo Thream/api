@@ -29,15 +29,25 @@ definitions:
             type: 'string'
             format: 'date-time'
 
+  Language:
+    type: 'string'
+    enum: ['en', 'fr']
+    default: 'en'
+
+  Theme:
+    type: 'string'
+    enum: ['dark', 'light']
+    default: 'dark'
+
   UserSettings:
     type: 'object'
     properties:
       language:
-        type: 'string'
-        enum: ['en', 'fr']
+        allOf:
+          - $ref: '#/definitions/Language'
       theme:
-        type: 'string'
-        enum: ['light', 'dark']
+        allOf:
+          - $ref: '#/definitions/Theme'
       isPublicEmail:
         type: 'boolean'
 

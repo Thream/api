@@ -5,9 +5,15 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { validateRequest } from '../../../middlewares/validateRequest'
 import User from '../../../models/User'
-import UserSetting from '../../../models/UserSetting'
+import UserSetting, {
+  Language,
+  languages,
+  Theme,
+  themes
+} from '../../../models/UserSetting'
 import { commonErrorsMessages } from '../../../utils/config/constants'
 import { alreadyUsedValidation } from '../../../utils/validations/alreadyUsedValidation'
+import { onlyPossibleValuesValidation } from '../../../utils/validations/onlyPossibleValuesValidation'
 import { sendConfirmEmail } from '../__utils__/sendConfirmEmail'
 
 export const errorsMessages = {
@@ -39,15 +45,35 @@ signupRouter.post(
       .custom(async (name: string) => {
         return await alreadyUsedValidation(User, 'name', name)
       }),
-    body('password').trim().notEmpty(),
+    body('password').trim().notEmpty().isString(),
+    body('theme')
+      .optional({ nullable: true })
+      .trim()
+      .isString()
+      .custom(async (theme: Theme) => {
+        return await onlyPossibleValuesValidation([...themes], 'theme', theme)
+      }),
+    body('language')
+      .optional({ nullable: true })
+      .trim()
+      .isString()
+      .custom(async (language: Language) => {
+        return await onlyPossibleValuesValidation(
+          languages,
+          'language',
+          language
+        )
+      }),
     query('redirectURI').optional({ nullable: true }).trim()
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-    const { name, email, password } = req.body as {
+    const { name, email, password, theme, language } = req.body as {
       name: string
       email: string
       password: string
+      theme?: Theme
+      language?: Language
     }
     const { redirectURI } = req.query as { redirectURI?: string }
     const hashedPassword = await bcrypt.hash(password, 12)
@@ -58,7 +84,11 @@ signupRouter.post(
       password: hashedPassword,
       tempToken
     })
-    await UserSetting.create({ userId: user.id })
+    await UserSetting.create({
+      userId: user.id,
+      theme: theme ?? 'dark',
+      language: language ?? 'en'
+    })
     await sendConfirmEmail({
       email,
       tempToken,

@@ -37,7 +37,7 @@ addLocalStrategyRouter.post(
         }
         return await alreadyUsedValidation(User, 'email', email)
       }),
-    body('password').trim().notEmpty(),
+    body('password').trim().notEmpty().isString(),
     query('redirectURI').optional({ nullable: true }).trim()
   ],
   validateRequest,

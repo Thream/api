@@ -22,6 +22,12 @@
                 type: 'string'
                 format: 'password'
                 example: 'password'
+              language:
+                allOf:
+                  - $ref: '#/definitions/Language'
+              theme:
+                allOf:
+                  - $ref: '#/definitions/Theme'
             required:
               - 'email'
               - 'name'
