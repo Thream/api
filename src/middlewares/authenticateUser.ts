@@ -1,4 +1,4 @@
-import { RequestHandler } from 'express'
+import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 
 import User, { UserJWT, UserRequest } from '../models/User'
@@ -47,7 +47,11 @@ export const getUserWithBearerToken = async (
   }
 }
 
-export const authenticateUser: RequestHandler = async (req, _res, next) => {
+export const authenticateUser = async (
+  req: Request,
+  _res: Response,
+  next: NextFunction
+): Promise<void> => {
   const authorizationHeader = req.get('Authorization')
   req.user = await getUserWithBearerToken(authorizationHeader)
   return next()

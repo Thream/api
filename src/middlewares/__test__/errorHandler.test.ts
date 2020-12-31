@@ -12,7 +12,6 @@ describe('middlewares/errorHandler', () => {
   it('should send 500 error if not custom error', () => {
     const mockedRes = mockRes()
     errorHandler(new Error('random error'), {} as any, mockedRes, () => {})
-
     expect(mockedRes.json).toHaveBeenCalledWith({
       errors: [{ message: 'Internal server error' }]
     })
@@ -22,7 +21,6 @@ describe('middlewares/errorHandler', () => {
   it('should send 404 error if NotFoundError', () => {
     const mockedRes = mockRes()
     errorHandler(new NotFoundError(), {} as any, mockedRes, () => {})
-
     expect(mockedRes.json).toHaveBeenCalledWith({
       errors: [{ message: 'Not Found' }]
     })
