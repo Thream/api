@@ -32,12 +32,12 @@ export default class Guild extends Model {
   })
   isPublic!: boolean
 
-  @HasMany(() => Member)
+  @HasMany(() => Member, { onDelete: 'CASCADE' })
   members!: Member[]
 
-  @HasMany(() => Invitation)
+  @HasMany(() => Invitation, { onDelete: 'CASCADE' })
   invitations!: Invitation[]
 
-  @HasMany(() => Channel)
+  @HasMany(() => Channel, { onDelete: 'CASCADE' })
   channels!: Channel[]
 }

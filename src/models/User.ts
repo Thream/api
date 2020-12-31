@@ -92,16 +92,16 @@ export default class User extends Model {
   })
   tempExpirationToken?: number | null
 
-  @HasMany(() => RefreshToken)
+  @HasMany(() => RefreshToken, { onDelete: 'CASCADE' })
   refreshTokens!: RefreshToken[]
 
-  @HasMany(() => OAuth)
+  @HasMany(() => OAuth, { onDelete: 'CASCADE' })
   OAuths!: OAuth[]
 
-  @HasMany(() => Member)
+  @HasMany(() => Member, { onDelete: 'CASCADE' })
   members!: Member[]
 
-  @HasOne(() => UserSetting)
+  @HasOne(() => UserSetting, { onDelete: 'CASCADE' })
   settings!: UserSetting
 
   toJSON (): UserToJSON {

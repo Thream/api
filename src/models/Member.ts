@@ -35,6 +35,6 @@ export default class Member extends Model {
   @BelongsTo(() => Guild, { onDelete: 'CASCADE' })
   guild!: Guild
 
-  @HasMany(() => Message)
+  @HasMany(() => Message, { onDelete: 'CASCADE' })
   messages!: Message[]
 }
