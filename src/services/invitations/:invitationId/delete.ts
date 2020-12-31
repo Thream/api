@@ -4,7 +4,6 @@ import { authenticateUser } from '../../../tools/middlewares/authenticateUser'
 import Guild from '../../../models/Guild'
 import Invitation from '../../../models/Invitation'
 import Member from '../../../models/Member'
-import { emitToMembers } from '../../../tools/socket/socket'
 import { BadRequestError } from '../../../tools/errors/BadRequestError'
 import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
 import { NotFoundError } from '../../../tools/errors/NotFoundError'
@@ -36,12 +35,6 @@ deleteByIdInvitationsRouter.delete(
     }
     const deletedInvitationId = invitation.id
     await invitation.destroy()
-    await emitToMembers({
-      event: 'invitations',
-      guildId: member.guildId,
-      onlyOwner: true,
-      payload: { action: 'delete', deletedInvitationId }
-    })
     return res.status(200).json({ deletedInvitationId })
   }
 )

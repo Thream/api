@@ -26,7 +26,6 @@ interface EmitEventOptions {
 
 interface EmitToMembersOptions extends EmitEventOptions {
   guildId: number
-  onlyOwner?: boolean
 }
 
 interface EmitToAuthorizedUsersOptions extends EmitEventOptions {
@@ -53,14 +52,16 @@ export const emitToAuthorizedUsers = async (
 }
 
 /** emits socket.io event to every connected members of the guild */
-export const emitToMembers = async (options: EmitToMembersOptions): Promise<void> => {
-  const { event, payload, guildId, onlyOwner = false } = options
+export const emitToMembers = async (
+  options: EmitToMembersOptions
+): Promise<void> => {
+  const { event, payload, guildId } = options
   await emitToAuthorizedUsers({
     event,
     payload,
     isAuthorizedCallback: async (userId) => {
       const member = await Member.count({
-        where: { userId, guildId, ...(onlyOwner && { isOwner: true }) }
+        where: { userId, guildId }
       })
       return member > 0
     }

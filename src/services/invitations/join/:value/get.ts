@@ -6,6 +6,7 @@ import Member from '../../../../models/Member'
 import { BadRequestError } from '../../../../tools/errors/BadRequestError'
 import { ForbiddenError } from '../../../../tools/errors/ForbiddenError'
 import { NotFoundError } from '../../../../tools/errors/NotFoundError'
+import { emitToMembers } from '../../../../tools/socket/socket'
 
 export const errorsMessages = {
   invitationExpired: 'The invitation expired',
@@ -38,11 +39,16 @@ joinInvitationsRouter.get(
     if (member != null) {
       throw new BadRequestError(errorsMessages.alreadyInGuild)
     }
-    await Member.create({
+    const createdMember = await Member.create({
       userId: user.id,
       guildId: invitation.guildId,
       isOwner: false
     })
-    return res.status(200).json({})
+    await emitToMembers({
+      event: 'members',
+      guildId: invitation.guildId,
+      payload: { action: 'create', member: createdMember }
+    })
+    return res.status(201).json({ member: createdMember })
   }
 )

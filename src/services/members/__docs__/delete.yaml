@@ -1,22 +1,20 @@
-/invitations/join/{value}:
-  get:
+/members:
+  delete:
     security:
       - bearerAuth: []
     tags:
       - 'members'
-    summary: 'Join a guild with its invitation value (create a member)'
-    parameters:
-      - name: 'value'
-        in: 'path'
-        required: true
+    summary: 'DELETE a member with its id (leave a guild)'
     responses:
       allOf:
         - $ref: '#/definitions/UnauthorizedError'
         - $ref: '#/definitions/ForbiddenError'
-        - $ref: '#/definitions/BadRequestError'
         - $ref: '#/definitions/NotFoundError'
-        - '201':
+        - '200':
             content:
               application/json:
                 schema:
                   type: 'object'
+                  properties:
+                    deletedMemberId:
+                      type: 'number'

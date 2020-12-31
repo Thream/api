@@ -6,7 +6,6 @@ import { validateRequest } from '../../../tools/middlewares/validateRequest'
 import Invitation from '../../../models/Invitation'
 import Member from '../../../models/Member'
 import { commonErrorsMessages } from '../../../tools/config/constants'
-import { emitToMembers } from '../../../tools/socket/socket'
 import { alreadyUsedValidation } from '../../../tools/validations/alreadyUsedValidation'
 import { BadRequestError } from '../../../tools/errors/BadRequestError'
 import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
@@ -93,12 +92,6 @@ putInvitationsRouter.put(
       throw new BadRequestError(errorsMessages.public.alreadyHasInvitation)
     }
     await invitation.save()
-    await emitToMembers({
-      event: 'invitations',
-      guildId: member.guildId,
-      onlyOwner: true,
-      payload: { action: 'update', invitation }
-    })
     return res.status(200).json({ invitation })
   }
 )

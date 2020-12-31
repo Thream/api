@@ -15,7 +15,7 @@ describe('GET /invitations/join/:value', () => {
       .get(`/invitations/join/${result?.invitation.value as string}`)
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send()
-      .expect(200)
+      .expect(201)
     const foundMember = await Member.findOne({
       where: { userId: userToken.userId, guildId: result?.guild.id as number }
     })
