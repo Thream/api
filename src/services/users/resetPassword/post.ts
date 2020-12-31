@@ -1,4 +1,3 @@
-import ejs from 'ejs'
 import { Request, Response, Router } from 'express'
 import { body, query } from 'express-validator'
 import ms from 'ms'
@@ -7,11 +6,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { errorsMessages as errorsConfirmed } from '../../../middlewares/authenticateUser'
 import { validateRequest } from '../../../middlewares/validateRequest'
 import User from '../../../models/User'
-import { emailTemplatePath } from '../../../utils/config/constants'
-import {
-  EMAIL_INFO,
-  emailTransporter
-} from '../../../utils/config/emailTransporter'
+import UserSetting from '../../../models/UserSetting'
+import { sendEmail } from '../../../utils/email/sendEmail'
 import { BadRequestError } from '../../../utils/errors/BadRequestError'
 
 export const errorsMessages = {
@@ -27,8 +23,6 @@ export const errorsMessages = {
   }
 }
 
-export const maximumTimeToResetPassword = '1 hour'
-
 export const postResetPasswordRouter = Router()
 
 postResetPasswordRouter.post(
@@ -38,9 +32,7 @@ postResetPasswordRouter.post(
       .trim()
       .isEmail()
       .withMessage(errorsMessages.email.mustBeValid),
-    query('redirectURI')
-      .notEmpty()
-      .trim()
+    query('redirectURI').notEmpty().trim()
   ],
   validateRequest,
   async (req: Request, res: Response) => {
@@ -62,22 +54,18 @@ postResetPasswordRouter.post(
 
     const tempToken = uuidv4()
     user.tempToken = tempToken
-    user.tempExpirationToken = Date.now() + ms(maximumTimeToResetPassword)
+    user.tempExpirationToken = Date.now() + ms('1 hour')
     await user.save()
-
-    const emailHTML = await ejs.renderFile(emailTemplatePath, {
-      subtitle: 'Please confirm password reset',
-      buttonText: 'Yes, I change my password',
+    const userSettings = await UserSetting.findOne({
+      where: { userId: user.id }
+    })
+    await sendEmail({
+      type: 'reset-password',
+      email,
       url: `${redirectURI}?tempToken=${tempToken}`,
-      footerText: `If you received this message by mistake, just delete it. Your password will not be reset if you do not click on the link above. Also, for the security of your account, the password reset is available for a period of ${maximumTimeToResetPassword}, pass this time, the reset will no longer be valid.`
+      language: userSettings?.language,
+      theme: userSettings?.theme
     })
-    await emailTransporter.sendMail({
-      from: `"Thream" <${EMAIL_INFO?.auth?.user as string}>`,
-      to: email,
-      subject: 'Thream - Reset password',
-      html: emailHTML
-    })
-
     return res.status(200).json({
       message: 'Password-reset request successful, please check your emails!'
     })

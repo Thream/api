@@ -5,10 +5,16 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { validateRequest } from '../../../middlewares/validateRequest'
 import User from '../../../models/User'
-import UserSetting from '../../../models/UserSetting'
+import UserSetting, {
+  Language,
+  languages,
+  Theme,
+  themes
+} from '../../../models/UserSetting'
 import { commonErrorsMessages } from '../../../utils/config/constants'
+import { sendEmail } from '../../../utils/email/sendEmail'
 import { alreadyUsedValidation } from '../../../utils/validations/alreadyUsedValidation'
-import { sendConfirmEmail } from '../__utils__/sendConfirmEmail'
+import { onlyPossibleValuesValidation } from '../../../utils/validations/onlyPossibleValuesValidation'
 
 export const errorsMessages = {
   email: {
@@ -39,15 +45,35 @@ signupRouter.post(
       .custom(async (name: string) => {
         return await alreadyUsedValidation(User, 'name', name)
       }),
-    body('password').trim().notEmpty(),
+    body('password').trim().notEmpty().isString(),
+    body('theme')
+      .optional({ nullable: true })
+      .trim()
+      .isString()
+      .custom(async (theme: Theme) => {
+        return await onlyPossibleValuesValidation([...themes], 'theme', theme)
+      }),
+    body('language')
+      .optional({ nullable: true })
+      .trim()
+      .isString()
+      .custom(async (language: Language) => {
+        return await onlyPossibleValuesValidation(
+          languages,
+          'language',
+          language
+        )
+      }),
     query('redirectURI').optional({ nullable: true }).trim()
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-    const { name, email, password } = req.body as {
+    const { name, email, password, theme, language } = req.body as {
       name: string
       email: string
       password: string
+      theme?: Theme
+      language?: Language
     }
     const { redirectURI } = req.query as { redirectURI?: string }
     const hashedPassword = await bcrypt.hash(password, 12)
@@ -58,18 +84,18 @@ signupRouter.post(
       password: hashedPassword,
       tempToken
     })
-    await UserSetting.create({ userId: user.id })
-    await sendConfirmEmail({
+    const userSettings = await UserSetting.create({
+      userId: user.id,
+      theme: theme ?? 'dark',
+      language: language ?? 'en'
+    })
+    const redirectQuery = redirectURI != null ? `&redirectURI=${redirectURI}` : ''
+    await sendEmail({
+      type: 'confirm-email',
       email,
-      tempToken,
-      redirectURI,
-      subject: 'Thream - Confirm signup',
-      renderOptions: {
-        subtitle: 'Please confirm signup',
-        buttonText: 'Yes, I signup',
-        footerText:
-          'If you received this message by mistake, just delete it. You will not be signed up if you do not click on the confirmation link above.'
-      }
+      url: `${process.env.API_BASE_URL}/users/confirmEmail?tempToken=${tempToken}${redirectQuery}`,
+      language: userSettings.language,
+      theme: userSettings.theme
     })
     return res.status(201).json({ user })
   }

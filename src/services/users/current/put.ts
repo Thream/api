@@ -15,8 +15,9 @@ import {
 import { alreadyUsedValidation } from '../../../utils/validations/alreadyUsedValidation'
 import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
 import { uploadImage } from '../../../utils/uploadImage'
-import { sendConfirmEmail } from '../__utils__/sendConfirmEmail'
 import { deleteEveryRefreshTokens } from '../__utils__/deleteEveryRefreshTokens'
+import UserSetting from '../../../models/UserSetting'
+import { sendEmail } from '../../../utils/email/sendEmail'
 
 const usersLogoPath = path.join(imagesPath, 'users')
 
@@ -125,17 +126,17 @@ putCurrentRouter.put(
       const tempToken = uuidv4()
       user.tempToken = tempToken
       user.isConfirmed = false
-      await sendConfirmEmail({
+      const userSettings = await UserSetting.findOne({
+        where: { userId: user.id }
+      })
+      const redirectQuery =
+        redirectURI != null ? `&redirectURI=${redirectURI}` : ''
+      await sendEmail({
+        type: 'confirm-email',
         email,
-        tempToken,
-        redirectURI,
-        subject: 'Thream - Confirm email',
-        renderOptions: {
-          subtitle: 'Please confirm your email',
-          buttonText: 'Yes, I confirm',
-          footerText:
-            'If you received this message by mistake, just delete it. Your email will not be confirmed if you do not click on the confirmation link above.'
-        }
+        url: `${process.env.API_BASE_URL}/users/confirmEmail?tempToken=${tempToken}${redirectQuery}`,
+        language: userSettings?.language,
+        theme: userSettings?.theme
       })
     }
 

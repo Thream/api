@@ -8,12 +8,10 @@ export const rootPath = path.join(srcPath, '..')
 export const tempPath = path.join(rootPath, 'temp')
 export const imagesPath = path.join(rootPath, 'public', 'images')
 export const uploadsPath = path.join(rootPath, 'public', 'uploads')
-export const emailTemplatePath = path.join(
-  rootPath,
-  'views',
-  'email-template.ejs'
-)
 export const guildsIconPath = path.join(imagesPath, 'guilds')
+export const emailPath = path.join(rootPath, 'email')
+export const emailTemplatePath = path.join(emailPath, 'email-template.ejs')
+export const emailLocalesPath = path.join(emailPath, 'locales')
 
 export const authorizedRedirectDomains = [
   ...(process.env.NODE_ENV === 'development' ? ['http://localhost:3000/'] : []),

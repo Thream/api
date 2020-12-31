@@ -80,7 +80,6 @@ describe('POST /guilds/:guildId/channels', () => {
       .send({ description: 'testing channel creation' })
       .expect(400)
     const errors = formatErrors(response.body.errors)
-    console.log(errors)
     expect(errors.length).toEqual(3)
     expect(errors).toEqual(
       expect.arrayContaining([
