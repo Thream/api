@@ -4,8 +4,8 @@ import fileUpload from 'express-fileupload'
 import { v4 as uuidv4 } from 'uuid'
 import path from 'path'
 
-import { authenticateUser } from '../../../../middlewares/authenticateUser'
-import { validateRequest } from '../../../../middlewares/validateRequest'
+import { authenticateUser } from '../../../../tools/middlewares/authenticateUser'
+import { validateRequest } from '../../../../tools/middlewares/validateRequest'
 import Channel from '../../../../models/Channel'
 import Member from '../../../../models/Member'
 import Message, { MessageType, messageTypes } from '../../../../models/Message'
@@ -14,14 +14,14 @@ import {
   fileUploadOptions,
   tempPath,
   uploadsPath
-} from '../../../../utils/config/constants'
-import { emitToMembers } from '../../../../utils/config/socket'
-import { ForbiddenError } from '../../../../utils/errors/ForbiddenError'
-import { NotFoundError } from '../../../../utils/errors/NotFoundError'
-import { onlyPossibleValuesValidation } from '../../../../utils/validations/onlyPossibleValuesValidation'
-import { deleteAllFilesInDirectory } from '../../../../utils/deleteAllFilesInDirectory'
-import { PayloadTooLargeError } from '../../../../utils/errors/PayloadTooLargeError'
-import { BadRequestError } from '../../../../utils/errors/BadRequestError'
+} from '../../../../tools/config/constants'
+import { emitToMembers } from '../../../../tools/socket/socket'
+import { ForbiddenError } from '../../../../tools/errors/ForbiddenError'
+import { NotFoundError } from '../../../../tools/errors/NotFoundError'
+import { onlyPossibleValuesValidation } from '../../../../tools/validations/onlyPossibleValuesValidation'
+import { deleteAllFilesInDirectory } from '../../../../tools/utils/deleteAllFilesInDirectory'
+import { PayloadTooLargeError } from '../../../../tools/errors/PayloadTooLargeError'
+import { BadRequestError } from '../../../../tools/errors/BadRequestError'
 
 export const errorsMessages = {
   type: {

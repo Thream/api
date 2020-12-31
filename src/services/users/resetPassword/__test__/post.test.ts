@@ -3,7 +3,7 @@ import request from 'supertest'
 
 import { authenticateUserTest } from '../../../../__test__/utils/authenticateUser'
 import app from '../../../../app'
-import { errorsMessages as errorsConfirmed } from '../../../../middlewares/authenticateUser'
+import { errorsMessages as errorsConfirmed } from '../../../../tools/middlewares/authenticateUser'
 import User from '../../../../models/User'
 import { errorsMessages } from '..'
 

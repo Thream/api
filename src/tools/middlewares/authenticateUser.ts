@@ -1,10 +1,10 @@
-import { Request, Response, NextFunction } from 'express'
+import { RequestHandler } from 'express'
 import jwt from 'jsonwebtoken'
 
-import User, { UserJWT, UserRequest } from '../models/User'
-import { BadRequestError } from '../utils/errors/BadRequestError'
-import { ForbiddenError } from '../utils/errors/ForbiddenError'
-import { UnauthorizedError } from '../utils/errors/UnauthorizedError'
+import User, { UserJWT, UserRequest } from '../../models/User'
+import { BadRequestError } from '../errors/BadRequestError'
+import { ForbiddenError } from '../errors/ForbiddenError'
+import { UnauthorizedError } from '../errors/UnauthorizedError'
 
 export const errorsMessages = {
   invalidAccount:
@@ -47,11 +47,7 @@ export const getUserWithBearerToken = async (
   }
 }
 
-export const authenticateUser = async (
-  req: Request,
-  _res: Response,
-  next: NextFunction
-): Promise<void> => {
+export const authenticateUser: RequestHandler = async (req, _res, next) => {
   const authorizationHeader = req.get('Authorization')
   req.user = await getUserWithBearerToken(authorizationHeader)
   return next()

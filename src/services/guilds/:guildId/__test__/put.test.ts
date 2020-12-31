@@ -5,8 +5,8 @@ import { formatErrors } from '../../../../__test__/utils/formatErrors'
 import app from '../../../../app'
 import Guild from '../../../../models/Guild'
 import Invitation from '../../../../models/Invitation'
-import { commonErrorsMessages } from '../../../../utils/config/constants'
-import { randomString } from '../../../../utils/random'
+import { commonErrorsMessages } from '../../../../tools/config/constants'
+import { randomString } from '../../../../tools/utils/random'
 import { createGuild } from '../../__test__/utils/createGuild'
 
 describe('PUT /guilds/:guildId', () => {

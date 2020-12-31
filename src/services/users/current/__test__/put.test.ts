@@ -4,8 +4,8 @@ import { authenticateUserTest } from '../../../../__test__/utils/authenticateUse
 import { formatErrors } from '../../../../__test__/utils/formatErrors'
 import app from '../../../../app'
 import User from '../../../../models/User'
-import { commonErrorsMessages } from '../../../../utils/config/constants'
-import { randomString } from '../../../../utils/random'
+import { commonErrorsMessages } from '../../../../tools/config/constants'
+import { randomString } from '../../../../tools/utils/random'
 import { errorsMessages } from '../index'
 
 describe('PUT /users/current', () => {

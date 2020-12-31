@@ -3,8 +3,8 @@ import request from 'supertest'
 import { authenticateUserTest } from '../../../__test__/utils/authenticateUser'
 import { formatErrors } from '../../../__test__/utils/formatErrors'
 import app from '../../../app'
-import { commonErrorsMessages } from '../../../utils/config/constants'
-import { randomString } from '../../../utils/random'
+import { commonErrorsMessages } from '../../../tools/config/constants'
+import { randomString } from '../../../tools/utils/random'
 
 describe('POST /guilds', () => {
   it('succeeds with valid name/description', async () => {

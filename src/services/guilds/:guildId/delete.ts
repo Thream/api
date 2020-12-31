@@ -1,11 +1,11 @@
 import { Request, Response, Router } from 'express'
 
-import { authenticateUser } from '../../../middlewares/authenticateUser'
+import { authenticateUser } from '../../../tools/middlewares/authenticateUser'
 import Guild from '../../../models/Guild'
 import Member from '../../../models/Member'
-import { emitToMembers } from '../../../utils/config/socket'
-import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
-import { NotFoundError } from '../../../utils/errors/NotFoundError'
+import { emitToMembers } from '../../../tools/socket/socket'
+import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
+import { NotFoundError } from '../../../tools/errors/NotFoundError'
 
 export const deleteByIdGuildsRouter = Router()
 

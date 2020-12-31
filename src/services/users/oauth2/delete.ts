@@ -1,16 +1,16 @@
 import { Request, Response, Router } from 'express'
 import { param } from 'express-validator'
 
-import { authenticateUser } from '../../../middlewares/authenticateUser'
-import { validateRequest } from '../../../middlewares/validateRequest'
+import { authenticateUser } from '../../../tools/middlewares/authenticateUser'
+import { validateRequest } from '../../../tools/middlewares/validateRequest'
 import OAuth, {
   AuthenticationStrategy,
   ProviderOAuth,
   providers
 } from '../../../models/OAuth'
-import { BadRequestError } from '../../../utils/errors/BadRequestError'
-import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
-import { onlyPossibleValuesValidation } from '../../../utils/validations/onlyPossibleValuesValidation'
+import { BadRequestError } from '../../../tools/errors/BadRequestError'
+import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
+import { onlyPossibleValuesValidation } from '../../../tools/validations/onlyPossibleValuesValidation'
 
 export const deleteOAuthStrategy = Router()
 

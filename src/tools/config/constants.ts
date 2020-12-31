@@ -1,7 +1,7 @@
 import { Options as FileUploadOptions } from 'express-fileupload'
 import path from 'path'
 
-import { capitalize } from '../capitalize'
+import { capitalize } from '../utils/capitalize'
 
 export const srcPath = path.join(__dirname, '..', '..')
 export const rootPath = path.join(srcPath, '..')

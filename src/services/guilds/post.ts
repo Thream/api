@@ -2,8 +2,8 @@ import { Request, Response, Router } from 'express'
 import fileUpload from 'express-fileupload'
 import { body } from 'express-validator'
 
-import { authenticateUser } from '../../middlewares/authenticateUser'
-import { validateRequest } from '../../middlewares/validateRequest'
+import { authenticateUser } from '../../tools/middlewares/authenticateUser'
+import { validateRequest } from '../../tools/middlewares/validateRequest'
 import Channel from '../../models/Channel'
 import Guild from '../../models/Guild'
 import Member from '../../models/Member'
@@ -11,10 +11,10 @@ import {
   commonErrorsMessages,
   guildsIconPath,
   imageFileUploadOptions
-} from '../../utils/config/constants'
-import { alreadyUsedValidation } from '../../utils/validations/alreadyUsedValidation'
-import { ForbiddenError } from '../../utils/errors/ForbiddenError'
-import { uploadImage } from '../../utils/uploadImage'
+} from '../../tools/config/constants'
+import { alreadyUsedValidation } from '../../tools/validations/alreadyUsedValidation'
+import { ForbiddenError } from '../../tools/errors/ForbiddenError'
+import { uploadImage } from '../../tools/utils/uploadImage'
 
 export const postGuildsRouter = Router()
 

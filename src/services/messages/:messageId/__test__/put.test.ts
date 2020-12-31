@@ -1,7 +1,7 @@
 import request from 'supertest'
 
 import app from '../../../../app'
-import { commonErrorsMessages } from '../../../../utils/config/constants'
+import { commonErrorsMessages } from '../../../../tools/config/constants'
 import { formatErrors } from '../../../../__test__/utils/formatErrors'
 import { createMessages } from '../../__test__/utils/createMessages'
 

@@ -1,4 +1,4 @@
-import { ObjectAny } from '../typings/utils'
+import { ObjectAny } from '../../typings/utils'
 
 export const deleteObjectAttributes = (
   object: ObjectAny,

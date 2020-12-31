@@ -1,4 +1,4 @@
-import { NotFoundError } from '../../utils/errors/NotFoundError'
+import { NotFoundError } from '../../errors/NotFoundError'
 import { errorHandler } from '../errorHandler'
 
 const mockRes = (): any => {

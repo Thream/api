@@ -3,7 +3,7 @@ import request from 'supertest'
 import { formatErrors } from '../../../../__test__/utils/formatErrors'
 import app from '../../../../app'
 import User from '../../../../models/User'
-import { commonErrorsMessages } from '../../../../utils/config/constants'
+import { commonErrorsMessages } from '../../../../tools/config/constants'
 import { errorsMessages } from '../post'
 
 describe('POST /users/signup', () => {

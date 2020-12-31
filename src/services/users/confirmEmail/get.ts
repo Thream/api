@@ -1,10 +1,10 @@
 import { Request, Response, Router } from 'express'
 import { query } from 'express-validator'
 
-import { validateRequest } from '../../../middlewares/validateRequest'
+import { validateRequest } from '../../../tools/middlewares/validateRequest'
 import User from '../../../models/User'
-import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
-import { isValidRedirectURIValidation } from '../../../utils/validations/isValidRedirectURIValidation'
+import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
+import { isValidRedirectURIValidation } from '../../../tools/validations/isValidRedirectURIValidation'
 
 export const confirmEmailRouter = Router()
 

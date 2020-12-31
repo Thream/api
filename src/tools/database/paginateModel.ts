@@ -1,7 +1,7 @@
 import { FindOptions, Model } from 'sequelize/types'
 
 import { BadRequestError } from '../errors/BadRequestError'
-import { parseIntOrDefaultValue } from '../parseIntOrDefaultValue'
+import { parseIntOrDefaultValue } from '../utils/parseIntOrDefaultValue'
 
 interface PaginateModelOptions<M extends Model> {
   findOptions?: FindOptions

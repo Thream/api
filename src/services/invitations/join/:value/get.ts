@@ -1,11 +1,11 @@
 import { Request, Response, Router } from 'express'
 
-import { authenticateUser } from '../../../../middlewares/authenticateUser'
+import { authenticateUser } from '../../../../tools/middlewares/authenticateUser'
 import Invitation from '../../../../models/Invitation'
 import Member from '../../../../models/Member'
-import { BadRequestError } from '../../../../utils/errors/BadRequestError'
-import { ForbiddenError } from '../../../../utils/errors/ForbiddenError'
-import { NotFoundError } from '../../../../utils/errors/NotFoundError'
+import { BadRequestError } from '../../../../tools/errors/BadRequestError'
+import { ForbiddenError } from '../../../../tools/errors/ForbiddenError'
+import { NotFoundError } from '../../../../tools/errors/NotFoundError'
 
 export const errorsMessages = {
   invitationExpired: 'The invitation expired',

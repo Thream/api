@@ -4,20 +4,20 @@ import { body, query } from 'express-validator'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
 
-import { authenticateUser } from '../../../middlewares/authenticateUser'
-import { validateRequest } from '../../../middlewares/validateRequest'
+import { authenticateUser } from '../../../tools/middlewares/authenticateUser'
+import { validateRequest } from '../../../tools/middlewares/validateRequest'
 import User from '../../../models/User'
 import {
   commonErrorsMessages,
   imageFileUploadOptions,
   imagesPath
-} from '../../../utils/config/constants'
-import { alreadyUsedValidation } from '../../../utils/validations/alreadyUsedValidation'
-import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
-import { uploadImage } from '../../../utils/uploadImage'
+} from '../../../tools/config/constants'
+import { alreadyUsedValidation } from '../../../tools/validations/alreadyUsedValidation'
+import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
+import { uploadImage } from '../../../tools/utils/uploadImage'
 import { deleteEveryRefreshTokens } from '../__utils__/deleteEveryRefreshTokens'
 import UserSetting from '../../../models/UserSetting'
-import { sendEmail } from '../../../utils/email/sendEmail'
+import { sendEmail } from '../../../tools/email/sendEmail'
 
 const usersLogoPath = path.join(imagesPath, 'users')
 

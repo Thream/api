@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import { validationResult } from 'express-validator'
 
-import { RequestValidationError } from '../utils/errors/RequestValidationError'
+import { RequestValidationError } from '../errors/RequestValidationError'
 
 export const validateRequest: RequestHandler = (req, _res, next) => {
   const errors = validationResult(req)

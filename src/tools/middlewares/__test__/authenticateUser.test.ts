@@ -3,11 +3,11 @@ import {
   errorsMessages,
   authenticateUser
 } from '../authenticateUser'
-import { BadRequestError } from '../../utils/errors/BadRequestError'
-import { UnauthorizedError } from '../../utils/errors/UnauthorizedError'
-import { generateAccessToken } from '../../utils/config/jwtToken'
-import { ForbiddenError } from '../../utils/errors/ForbiddenError'
-import User from '../../models/User'
+import { BadRequestError } from '../../errors/BadRequestError'
+import { UnauthorizedError } from '../../errors/UnauthorizedError'
+import { generateAccessToken } from '../../config/jwtToken'
+import { ForbiddenError } from '../../errors/ForbiddenError'
+import User from '../../../models/User'
 
 const mockReq = (accessToken: string): any => {
   const req: any = {}

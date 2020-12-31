@@ -7,10 +7,10 @@ import {
   commonErrorsMessages,
   supportedImageMimetype,
   tempPath
-} from './config/constants'
+} from '../config/constants'
 import { deleteAllFilesInDirectory } from './deleteAllFilesInDirectory'
-import { BadRequestError } from './errors/BadRequestError'
-import { PayloadTooLargeError } from './errors/PayloadTooLargeError'
+import { BadRequestError } from '../errors/BadRequestError'
+import { PayloadTooLargeError } from '../errors/PayloadTooLargeError'
 
 const fs = fsWithCallbacks.promises
 

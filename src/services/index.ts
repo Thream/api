@@ -2,7 +2,7 @@ import express, { Router } from 'express'
 import path from 'path'
 import swaggerUi from 'swagger-ui-express'
 
-import { swaggerSpec } from '../utils/config/swaggerSpec'
+import { swaggerSpec } from '../tools/config/swaggerSpec'
 import { channelsRouter } from './channels'
 import { guildsRouter } from './guilds'
 import { invitationsRouter } from './invitations'

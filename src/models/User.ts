@@ -11,7 +11,7 @@ import Member from './Member'
 import OAuth, { AuthenticationStrategy } from './OAuth'
 import RefreshToken from './RefreshToken'
 import UserSetting from './UserSetting'
-import { deleteObjectAttributes } from '../utils/deleteObjectAttributes'
+import { deleteObjectAttributes } from '../tools/utils/deleteObjectAttributes'
 
 export const userHiddenAttributes = [
   'password',

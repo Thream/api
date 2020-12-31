@@ -1,9 +1,9 @@
 import { Request, Response, Router } from 'express'
 import { body } from 'express-validator'
 
-import { validateRequest } from '../../../middlewares/validateRequest'
+import { validateRequest } from '../../../tools/middlewares/validateRequest'
 import RefreshToken from '../../../models/RefreshToken'
-import { UnauthorizedError } from '../../../utils/errors/UnauthorizedError'
+import { UnauthorizedError } from '../../../tools/errors/UnauthorizedError'
 
 export const postSignoutRouter = Router()
 

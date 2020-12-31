@@ -63,32 +63,54 @@ git commit -m "fix(messages): should emit events to connected users"
 
 ## Directory Structure
 
-Services are listed in the `src/services` directory.
+```text
+├── email
+├── public
+├── scripts
+└── src
+    ├── models
+    ├── services
+    ├── tools
+    └── typings
+```
 
-### Example
+### Each folder explained
+
+- `email` : email template(s) and translation(s)
+- `public` : public ressources like `images` or `uploads`
+- `scripts` : useful command line interfaces used in developement
+- `src` : all source files
+  - `models` : models that represent tables in database
+  - `services` : all REST API endpoints
+  - `tools` : configs and utilities
+  - `typings` : types gloablly used in the project
+
+### Services folder explained with an example
 
 We have API REST services for the `channels`.
 
 Here is what potentially look like a folder structure for this service :
 
 ```text
-└── channels
-    ├── __docs__
-    │   └── get.yaml
-    ├── __test__
-    │   └── get.test.ts
-    ├── :channelId
-    │   ├── __docs__
-    │   │   ├── delete.yaml
-    │   │   └── put.yaml
-    │   ├── __test__
-    │   │   ├── delete.test.ts
-    │   │   └── put.test.ts
-    │   ├── delete.ts
-    │   ├── index.ts
-    │   └── put.ts
-    ├── get.ts
-    └── index.ts
+└── src
+    └── services
+        └── channels
+            ├── __docs__
+            │   └── get.yaml
+            ├── __test__
+            │   └── get.test.ts
+            ├── :channelId
+            │   ├── __docs__
+            │   │   ├── delete.yaml
+            │   │   └── put.yaml
+            │   ├── __test__
+            │   │   ├── delete.test.ts
+            │   │   └── put.test.ts
+            │   ├── delete.ts
+            │   ├── index.ts
+            │   └── put.ts
+            ├── get.ts
+            └── index.ts
 ```
 
 This folder structure will map to these REST API routes :

@@ -8,7 +8,7 @@ import {
 } from 'sequelize-typescript'
 
 import User from './User'
-import { deleteObjectAttributes } from '../utils/deleteObjectAttributes'
+import { deleteObjectAttributes } from '../tools/utils/deleteObjectAttributes'
 
 export const userSettingHiddenAttributes = [
   'createdAt',

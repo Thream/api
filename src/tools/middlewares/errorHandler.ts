@@ -1,6 +1,6 @@
 import { ErrorRequestHandler } from 'express'
 
-import { CustomError } from '../utils/errors/CustomError'
+import { CustomError } from '../errors/CustomError'
 
 export const errorHandler: ErrorRequestHandler = (
   error: Error,

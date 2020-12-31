@@ -2,9 +2,9 @@ import bcrypt from 'bcryptjs'
 import { Request, Response, Router } from 'express'
 import { body } from 'express-validator'
 
-import { validateRequest } from '../../../middlewares/validateRequest'
+import { validateRequest } from '../../../tools/middlewares/validateRequest'
 import User from '../../../models/User'
-import { BadRequestError } from '../../../utils/errors/BadRequestError'
+import { BadRequestError } from '../../../tools/errors/BadRequestError'
 
 export const errorsMessages = {
   email: {

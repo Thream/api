@@ -1,4 +1,4 @@
-import { capitalize } from '../capitalize'
+import { capitalize } from '../utils/capitalize'
 
 /** returns true if the field value is one of the possible values otherwise throws an error */
 export const onlyPossibleValuesValidation = async (

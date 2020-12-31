@@ -3,9 +3,9 @@ import * as fsWithCallbacks from 'fs'
 import { UploadedFile } from 'express-fileupload'
 
 import { uploadImage } from '../uploadImage'
-import { PayloadTooLargeError } from '../errors/PayloadTooLargeError'
-import { tempPath, imagesPath } from '../config/constants'
-import { BadRequestError } from '../errors/BadRequestError'
+import { PayloadTooLargeError } from '../../errors/PayloadTooLargeError'
+import { tempPath, imagesPath } from '../../config/constants'
+import { BadRequestError } from '../../errors/BadRequestError'
 
 const fs = fsWithCallbacks.promises
 

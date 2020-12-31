@@ -2,15 +2,15 @@ import bcrypt from 'bcryptjs'
 import { Request, Response, Router } from 'express'
 import { body, query } from 'express-validator'
 import { v4 as uuidv4 } from 'uuid'
-import { authenticateUser } from '../../../middlewares/authenticateUser'
+import { authenticateUser } from '../../../tools/middlewares/authenticateUser'
 
-import { validateRequest } from '../../../middlewares/validateRequest'
+import { validateRequest } from '../../../tools/middlewares/validateRequest'
 import User from '../../../models/User'
 import UserSetting from '../../../models/UserSetting'
-import { sendEmail } from '../../../utils/email/sendEmail'
-import { BadRequestError } from '../../../utils/errors/BadRequestError'
-import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
-import { alreadyUsedValidation } from '../../../utils/validations/alreadyUsedValidation'
+import { sendEmail } from '../../../tools/email/sendEmail'
+import { BadRequestError } from '../../../tools/errors/BadRequestError'
+import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
+import { alreadyUsedValidation } from '../../../tools/validations/alreadyUsedValidation'
 
 export const errorsMessages = {
   email: {

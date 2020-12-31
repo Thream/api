@@ -2,15 +2,15 @@ import { Request, Response, Router } from 'express'
 import * as fsWithCallbacks from 'fs'
 import path from 'path'
 
-import { authenticateUser } from '../../../middlewares/authenticateUser'
+import { authenticateUser } from '../../../tools/middlewares/authenticateUser'
 import Channel from '../../../models/Channel'
 import Member from '../../../models/Member'
 import Message from '../../../models/Message'
-import { uploadsPath } from '../../../utils/config/constants'
-import { emitToMembers } from '../../../utils/config/socket'
-import { BadRequestError } from '../../../utils/errors/BadRequestError'
-import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
-import { NotFoundError } from '../../../utils/errors/NotFoundError'
+import { uploadsPath } from '../../../tools/config/constants'
+import { emitToMembers } from '../../../tools/socket/socket'
+import { BadRequestError } from '../../../tools/errors/BadRequestError'
+import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
+import { NotFoundError } from '../../../tools/errors/NotFoundError'
 
 const fs = fsWithCallbacks.promises
 
