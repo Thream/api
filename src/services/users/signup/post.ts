@@ -12,9 +12,9 @@ import UserSetting, {
   themes
 } from '../../../models/UserSetting'
 import { commonErrorsMessages } from '../../../utils/config/constants'
+import { sendEmail } from '../../../utils/email/sendEmail'
 import { alreadyUsedValidation } from '../../../utils/validations/alreadyUsedValidation'
 import { onlyPossibleValuesValidation } from '../../../utils/validations/onlyPossibleValuesValidation'
-import { sendConfirmEmail } from '../__utils__/sendConfirmEmail'
 
 export const errorsMessages = {
   email: {
@@ -84,22 +84,18 @@ signupRouter.post(
       password: hashedPassword,
       tempToken
     })
-    await UserSetting.create({
+    const userSettings = await UserSetting.create({
       userId: user.id,
       theme: theme ?? 'dark',
       language: language ?? 'en'
     })
-    await sendConfirmEmail({
+    const redirectQuery = redirectURI != null ? `&redirectURI=${redirectURI}` : ''
+    await sendEmail({
+      type: 'confirm-email',
       email,
-      tempToken,
-      redirectURI,
-      subject: 'Thream - Confirm signup',
-      renderOptions: {
-        subtitle: 'Please confirm signup',
-        buttonText: 'Yes, I signup',
-        footerText:
-          'If you received this message by mistake, just delete it. You will not be signed up if you do not click on the confirmation link above.'
-      }
+      url: `${process.env.API_BASE_URL}/users/confirmEmail?tempToken=${tempToken}${redirectQuery}`,
+      language: userSettings.language,
+      theme: userSettings.theme
     })
     return res.status(201).json({ user })
   }

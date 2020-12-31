@@ -6,10 +6,11 @@ import { authenticateUser } from '../../../middlewares/authenticateUser'
 
 import { validateRequest } from '../../../middlewares/validateRequest'
 import User from '../../../models/User'
+import UserSetting from '../../../models/UserSetting'
+import { sendEmail } from '../../../utils/email/sendEmail'
 import { BadRequestError } from '../../../utils/errors/BadRequestError'
 import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
 import { alreadyUsedValidation } from '../../../utils/validations/alreadyUsedValidation'
-import { sendConfirmEmail } from '../__utils__/sendConfirmEmail'
 
 export const errorsMessages = {
   email: {
@@ -59,18 +60,19 @@ addLocalStrategyRouter.post(
     user.email = email
     user.password = hashedPassword
     user.tempToken = tempToken
+    user.isConfirmed = false
     await user.save()
-    await sendConfirmEmail({
+    const userSettings = await UserSetting.findOne({
+      where: { userId: user.id }
+    })
+    const redirectQuery =
+      redirectURI != null ? `&redirectURI=${redirectURI}` : ''
+    await sendEmail({
+      type: 'confirm-email',
       email,
-      tempToken,
-      redirectURI,
-      subject: 'Thream - Confirm signup',
-      renderOptions: {
-        subtitle: 'Please confirm signup',
-        buttonText: 'Yes, I signup',
-        footerText:
-          'If you received this message by mistake, just delete it. You will not be signed up if you do not click on the confirmation link above.'
-      }
+      url: `${process.env.API_BASE_URL}/users/confirmEmail?tempToken=${tempToken}${redirectQuery}`,
+      language: userSettings?.language,
+      theme: userSettings?.theme
     })
     return res.status(201).json({ user })
   }

@@ -5,7 +5,7 @@
     cellspacing="0"
     height="100%"
     width="100%"
-    style="background-color: #212121"
+    style="background-color: <%= theme.backgroundPrimary %>"
   >
     <tbody>
       <tr>
@@ -33,7 +33,7 @@
                           <h1
                             style="
                               font-family: Poppins, Arial, Helvetica, sans-serif;
-                              color: #fff;
+                              color: <%= theme.colorSecondary %>;
                               font-size: 28px;
                               line-height: 110%;
                               margin-bottom: 30px;
@@ -79,12 +79,13 @@
                               font-size: 22px;
                               line-height: 28px;
                               margin: 0 0 12px 0;
+                              color: <%= theme.colorSecondary %>;
                             "
                           >
-                            <%= subtitle %>
+                            <%= text.subtitle %>
                           </h2>
                           <a
-                            href="<%= url %>"
+                            href="<%= text.url %>"
                             style="
                               display: inline-block;
                               font-weight: 500;
@@ -101,8 +102,8 @@
                               border: 0;
                               border-radius: 3px;
                               vertical-align: top;
-                              background-color: #212121;
-                              border: 1px solid #27b05e;
+                              background-color: <%= theme.backgroundPrimary %>;
+                              border: 1px solid <%= theme.colorPrimary %>;
                             "
                             target="_blank"
                             rel="noopener noreferrer"
@@ -116,14 +117,21 @@
                                 font-size: 16px;
                                 line-height: 42px;
                                 border: none;
-                                color: #27b05e;
+                                color: <%= theme.colorPrimary %>;
                               "
-                              ><%= buttonText %></span
+                              ><%= text.button %></span
                             ></a
                           >
                           <br />
                           <div>
-                            <p style="padding: 0 0 10px 0"><%= footerText %></p>
+                            <p
+                              style="
+                                padding: 0 0 10px 0;
+                                color: <%= theme.colorSecondary %>;
+                              "
+                            >
+                              <%= text.footer %>
+                            </p>
                           </div>
                         </td>
                       </tr>
