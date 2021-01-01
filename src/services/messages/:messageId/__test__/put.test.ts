@@ -31,7 +31,7 @@ describe('PUT /messages/:messageId', () => {
     expect(errors.length).toEqual(1)
     expect(errors).toEqual(
       expect.arrayContaining([
-        commonErrorsMessages.charactersLength('value', { min: 1, max: 10_000 })
+        commonErrorsMessages.charactersLength('value', { min: 1, max: 50_000 })
       ])
     )
   })

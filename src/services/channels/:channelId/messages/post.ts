@@ -42,7 +42,7 @@ postMessagesRouter.post(
       .escape()
       .isLength({ min: 1, max: 10_000 })
       .withMessage(
-        commonErrorsMessages.charactersLength('value', { min: 1, max: 10_000 })
+        commonErrorsMessages.charactersLength('value', { min: 1, max: 50_000 })
       ),
     body('type')
       .notEmpty()
