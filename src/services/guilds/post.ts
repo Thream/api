@@ -54,6 +54,12 @@ postGuildsRouter.post(
     }
     const icon = req.files?.icon
     const user = req.user.current
+    const resultUpload = await uploadImage({
+      image: icon,
+      propertyName: 'icon',
+      oldImage: `${guildsIconPath.name}/default.png`,
+      imagesPath: guildsIconPath.filePath
+    })
     const guild = await Guild.create({ name, description })
     await Member.create({
       userId: user.id,
@@ -64,12 +70,6 @@ postGuildsRouter.post(
       name: 'general',
       isDefault: true,
       guildId: guild.id
-    })
-    const resultUpload = await uploadImage({
-      image: icon,
-      propertyName: 'icon',
-      oldImage: guild.icon,
-      imagesPath: guildsIconPath.filePath
     })
     if (resultUpload != null) {
       guild.icon = `${guildsIconPath.name}/${resultUpload}`

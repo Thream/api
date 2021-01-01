@@ -39,6 +39,6 @@ export default class Guild extends Model {
   @HasMany(() => Invitation, { onDelete: 'CASCADE' })
   invitations!: Invitation[]
 
-  @HasMany(() => Channel, { onDelete: 'CASCADE' })
+  @HasMany(() => Channel)
   channels!: Channel[]
 }

@@ -1,11 +1,11 @@
 import fsMock from 'mock-fs'
 import * as fsWithCallbacks from 'fs'
 
-import { deleteAllFilesInDirectory } from '../deleteAllFilesInDirectory'
+import { deleteAllFilesInDirectory } from '../deleteFiles'
 
 const fs = fsWithCallbacks.promises
 
-describe('utils/deleteAllFilesInDirectory', () => {
+describe('utils/deleteFiles - deleteAllFilesInDirectory', () => {
   it('delete all the files expect the directories', async () => {
     fsMock({
       '/files': {

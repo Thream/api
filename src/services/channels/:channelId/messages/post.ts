@@ -19,7 +19,7 @@ import { emitToMembers } from '../../../../tools/socket/socket'
 import { ForbiddenError } from '../../../../tools/errors/ForbiddenError'
 import { NotFoundError } from '../../../../tools/errors/NotFoundError'
 import { onlyPossibleValuesValidation } from '../../../../tools/validations/onlyPossibleValuesValidation'
-import { deleteAllFilesInDirectory } from '../../../../tools/utils/deleteAllFilesInDirectory'
+import { deleteAllFilesInDirectory } from '../../../../tools/utils/deleteFiles'
 import { PayloadTooLargeError } from '../../../../tools/errors/PayloadTooLargeError'
 import { BadRequestError } from '../../../../tools/errors/BadRequestError'
 

@@ -39,13 +39,13 @@ export default class Message extends Model {
   @Column
   memberId!: number
 
-  @BelongsTo(() => Member, { onDelete: 'CASCADE' })
+  @BelongsTo(() => Member)
   member!: Member
 
   @ForeignKey(() => Channel)
   @Column
   channelId!: number
 
-  @BelongsTo(() => Channel, { onDelete: 'CASCADE' })
+  @BelongsTo(() => Channel)
   channel!: Channel
 }

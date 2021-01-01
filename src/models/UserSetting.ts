@@ -52,7 +52,7 @@ export default class UserSetting extends Model {
   @Column
   userId?: number
 
-  @BelongsTo(() => User, { onDelete: 'CASCADE' })
+  @BelongsTo(() => User)
   user!: User
 
   toJSON (): UserSettingToJSON {

@@ -8,7 +8,7 @@ import {
   supportedImageMimetype,
   tempPath
 } from '../config/constants'
-import { deleteAllFilesInDirectory } from './deleteAllFilesInDirectory'
+import { deleteAllFilesInDirectory } from './deleteFiles'
 import { BadRequestError } from '../errors/BadRequestError'
 import { PayloadTooLargeError } from '../errors/PayloadTooLargeError'
 
