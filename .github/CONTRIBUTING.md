@@ -77,13 +77,12 @@ git commit -m "fix(messages): should emit events to connected users"
 ### Each folder explained
 
 - `email` : email template(s) and translation(s)
-- `uploads` : uploaded files by users
-- `scripts` : useful command line interfaces used in developement
 - `src` : all source files
   - `models` : models that represent tables in database
   - `services` : all REST API endpoints
   - `tools` : configs and utilities
   - `typings` : types gloablly used in the project
+- `uploads` : uploaded files by users
 
 ### Services folder explained with an example
 

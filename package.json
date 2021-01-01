@@ -68,7 +68,7 @@
     "test": "jest",
     "test:watchAll": "jest --watchAll",
     "test:clearCache": "jest --clearCache",
-    "postinstall": "node ./scripts/postinstall.js",
+    "postinstall": "copy-env-cli",
     "prepare": "npm run build"
   },
   "dependencies": {
@@ -122,6 +122,7 @@
     "@types/uuid": "8.3.0",
     "@types/validator": "13.1.2",
     "concurrently": "5.3.0",
+    "copy-env-cli": "1.0.0",
     "cross-env": "7.0.3",
     "husky": "4.3.6",
     "jest": "26.6.3",
