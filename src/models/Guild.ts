@@ -1,4 +1,5 @@
 import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript'
+import { guildsIconPath } from '../tools/config/constants'
 
 import Channel from './Channel'
 import Invitation from './Invitation'
@@ -14,14 +15,15 @@ export default class Guild extends Model {
 
   @Column({
     type: DataType.STRING,
-    allowNull: false
+    allowNull: false,
+    defaultValue: ''
   })
   description!: string
 
   @Column({
     type: DataType.TEXT,
     allowNull: false,
-    defaultValue: '/images/guilds/default.png'
+    defaultValue: `${guildsIconPath.name}/default.png`
   })
   icon!: string
 
@@ -32,10 +34,10 @@ export default class Guild extends Model {
   })
   isPublic!: boolean
 
-  @HasMany(() => Member)
+  @HasMany(() => Member, { onDelete: 'CASCADE' })
   members!: Member[]
 
-  @HasMany(() => Invitation)
+  @HasMany(() => Invitation, { onDelete: 'CASCADE' })
   invitations!: Invitation[]
 
   @HasMany(() => Channel)

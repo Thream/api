@@ -1,9 +1,9 @@
 import { Request, Response, Router } from 'express'
 
-import { authenticateUser } from '../../../middlewares/authenticateUser'
+import { authenticateUser } from '../../../tools/middlewares/authenticateUser'
 import OAuth, { AuthenticationStrategy } from '../../../models/OAuth'
 import UserSetting from '../../../models/UserSetting'
-import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
+import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
 
 export const getCurrentRouter = Router()
 

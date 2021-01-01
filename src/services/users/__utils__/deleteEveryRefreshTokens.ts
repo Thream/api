@@ -1,5 +1,5 @@
 import RefreshToken from '../../../models/RefreshToken'
-import { UnauthorizedError } from '../../../utils/errors/UnauthorizedError'
+import { UnauthorizedError } from '../../../tools/errors/UnauthorizedError'
 
 export const deleteEveryRefreshTokens = async (
   userId: number

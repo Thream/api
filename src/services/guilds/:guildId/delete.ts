@@ -1,11 +1,15 @@
 import { Request, Response, Router } from 'express'
 
-import { authenticateUser } from '../../../middlewares/authenticateUser'
+import { authenticateUser } from '../../../tools/middlewares/authenticateUser'
 import Guild from '../../../models/Guild'
 import Member from '../../../models/Member'
-import { emitToMembers } from '../../../utils/config/socket'
-import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
-import { NotFoundError } from '../../../utils/errors/NotFoundError'
+import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
+import { NotFoundError } from '../../../tools/errors/NotFoundError'
+import { guildsIconPath } from '../../../tools/config/constants'
+import { deleteFile, deleteMessages } from '../../../tools/utils/deleteFiles'
+import Channel from '../../../models/Channel'
+import Message from '../../../models/Message'
+import { emitToMembers } from '../../../tools/socket/emitEvents'
 
 export const deleteByIdGuildsRouter = Router()
 
@@ -25,15 +29,25 @@ deleteByIdGuildsRouter.delete(
     if (member == null) {
       throw new NotFoundError()
     }
-
     const deletedGuildId = member.guild.id
-    await member.guild.destroy()
-
     await emitToMembers({
       event: 'guilds',
       guildId: member.guildId,
       payload: { action: 'delete', deletedGuildId }
     })
+    await deleteFile({
+      basePath: guildsIconPath,
+      valueSavedInDatabase: member.guild.icon
+    })
+    const channels = await Channel.findAll({
+      where: { guildId },
+      include: [Message]
+    })
+    for (const channel of channels) {
+      await deleteMessages(channel.messages)
+      await channel.destroy()
+    }
+    await member.guild.destroy()
     return res.status(200).json({ deletedGuildId })
   }
 )

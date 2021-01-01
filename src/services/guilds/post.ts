@@ -2,8 +2,8 @@ import { Request, Response, Router } from 'express'
 import fileUpload from 'express-fileupload'
 import { body } from 'express-validator'
 
-import { authenticateUser } from '../../middlewares/authenticateUser'
-import { validateRequest } from '../../middlewares/validateRequest'
+import { authenticateUser } from '../../tools/middlewares/authenticateUser'
+import { validateRequest } from '../../tools/middlewares/validateRequest'
 import Channel from '../../models/Channel'
 import Guild from '../../models/Guild'
 import Member from '../../models/Member'
@@ -11,10 +11,10 @@ import {
   commonErrorsMessages,
   guildsIconPath,
   imageFileUploadOptions
-} from '../../utils/config/constants'
-import { alreadyUsedValidation } from '../../utils/validations/alreadyUsedValidation'
-import { ForbiddenError } from '../../utils/errors/ForbiddenError'
-import { uploadImage } from '../../utils/uploadImage'
+} from '../../tools/config/constants'
+import { alreadyUsedValidation } from '../../tools/validations/alreadyUsedValidation'
+import { ForbiddenError } from '../../tools/errors/ForbiddenError'
+import { uploadImage } from '../../tools/utils/uploadImage'
 
 export const postGuildsRouter = Router()
 
@@ -54,6 +54,12 @@ postGuildsRouter.post(
     }
     const icon = req.files?.icon
     const user = req.user.current
+    const resultUpload = await uploadImage({
+      image: icon,
+      propertyName: 'icon',
+      oldImage: `${guildsIconPath.name}/default.png`,
+      imagesPath: guildsIconPath.filePath
+    })
     const guild = await Guild.create({ name, description })
     await Member.create({
       userId: user.id,
@@ -65,14 +71,8 @@ postGuildsRouter.post(
       isDefault: true,
       guildId: guild.id
     })
-    const resultUpload = await uploadImage({
-      image: icon,
-      propertyName: 'icon',
-      oldImage: guild.icon,
-      imagesPath: guildsIconPath
-    })
     if (resultUpload != null) {
-      guild.icon = `/images/guilds/${resultUpload}`
+      guild.icon = `${guildsIconPath.name}/${resultUpload}`
       await guild.save()
     }
     return res.status(201).json({ guild })

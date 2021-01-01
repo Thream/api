@@ -4,24 +4,24 @@ import fileUpload from 'express-fileupload'
 import { v4 as uuidv4 } from 'uuid'
 import path from 'path'
 
-import { authenticateUser } from '../../../../middlewares/authenticateUser'
-import { validateRequest } from '../../../../middlewares/validateRequest'
+import { authenticateUser } from '../../../../tools/middlewares/authenticateUser'
+import { validateRequest } from '../../../../tools/middlewares/validateRequest'
 import Channel from '../../../../models/Channel'
 import Member from '../../../../models/Member'
 import Message, { MessageType, messageTypes } from '../../../../models/Message'
 import {
   commonErrorsMessages,
   fileUploadOptions,
-  tempPath,
-  uploadsPath
-} from '../../../../utils/config/constants'
-import { emitToMembers } from '../../../../utils/config/socket'
-import { ForbiddenError } from '../../../../utils/errors/ForbiddenError'
-import { NotFoundError } from '../../../../utils/errors/NotFoundError'
-import { onlyPossibleValuesValidation } from '../../../../utils/validations/onlyPossibleValuesValidation'
-import { deleteAllFilesInDirectory } from '../../../../utils/deleteAllFilesInDirectory'
-import { PayloadTooLargeError } from '../../../../utils/errors/PayloadTooLargeError'
-import { BadRequestError } from '../../../../utils/errors/BadRequestError'
+  messagesFilePath,
+  tempPath
+} from '../../../../tools/config/constants'
+import { ForbiddenError } from '../../../../tools/errors/ForbiddenError'
+import { NotFoundError } from '../../../../tools/errors/NotFoundError'
+import { onlyPossibleValuesValidation } from '../../../../tools/validations/onlyPossibleValuesValidation'
+import { deleteAllFilesInDirectory } from '../../../../tools/utils/deleteFiles'
+import { PayloadTooLargeError } from '../../../../tools/errors/PayloadTooLargeError'
+import { BadRequestError } from '../../../../tools/errors/BadRequestError'
+import { emitToMembers } from '../../../../tools/socket/emitEvents'
 
 export const errorsMessages = {
   type: {
@@ -42,7 +42,7 @@ postMessagesRouter.post(
       .escape()
       .isLength({ min: 1, max: 10_000 })
       .withMessage(
-        commonErrorsMessages.charactersLength('value', { min: 1, max: 10_000 })
+        commonErrorsMessages.charactersLength('value', { min: 1, max: 50_000 })
       ),
     body('type')
       .notEmpty()
@@ -101,11 +101,11 @@ postMessagesRouter.post(
       const splitedMimetype = mimetype.split('/')
       const fileExtension = splitedMimetype[1]
       filename = `${uuidv4()}.${fileExtension}`
-      await file.mv(path.join(uploadsPath, filename))
+      await file.mv(path.join(messagesFilePath.filePath, filename))
       await deleteAllFilesInDirectory(tempPath)
     }
     const messageCreated = await Message.create({
-      value: filename != null ? `/uploads/${filename}` : value,
+      value: filename != null ? `${messagesFilePath.name}/${filename}` : value,
       type,
       mimetype,
       memberId: member.id,

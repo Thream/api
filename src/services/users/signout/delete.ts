@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express'
 
-import { authenticateUser } from '../../../middlewares/authenticateUser'
-import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
+import { authenticateUser } from '../../../tools/middlewares/authenticateUser'
+import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
 import { deleteEveryRefreshTokens } from '../__utils__/deleteEveryRefreshTokens'
 
 export const signoutEveryDevicesRouter = Router()

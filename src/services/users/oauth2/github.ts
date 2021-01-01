@@ -6,11 +6,11 @@ import querystring from 'querystring'
 import {
   authenticateUser,
   getUserWithBearerToken
-} from '../../../middlewares/authenticateUser'
-import { validateRequest } from '../../../middlewares/validateRequest'
-import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
+} from '../../../tools/middlewares/authenticateUser'
+import { validateRequest } from '../../../tools/middlewares/validateRequest'
+import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
 import { buildQueryURL } from '../__utils__/buildQueryURL'
-import { isValidRedirectURIValidation } from '../../../utils/validations/isValidRedirectURIValidation'
+import { isValidRedirectURIValidation } from '../../../tools/validations/isValidRedirectURIValidation'
 import { OAuthStrategy } from '../__utils__/OAuthStrategy'
 
 interface GitHubUser {

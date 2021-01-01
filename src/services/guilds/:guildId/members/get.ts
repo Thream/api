@@ -1,10 +1,10 @@
 import { Request, Response, Router } from 'express'
 
-import { authenticateUser } from '../../../../middlewares/authenticateUser'
+import { authenticateUser } from '../../../../tools/middlewares/authenticateUser'
 import Member from '../../../../models/Member'
-import { paginateModel } from '../../../../utils/database/paginateModel'
-import { ForbiddenError } from '../../../../utils/errors/ForbiddenError'
-import { NotFoundError } from '../../../../utils/errors/NotFoundError'
+import { paginateModel } from '../../../../tools/database/paginateModel'
+import { ForbiddenError } from '../../../../tools/errors/ForbiddenError'
+import { NotFoundError } from '../../../../tools/errors/NotFoundError'
 
 export const getMembersRouter = Router()
 

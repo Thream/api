@@ -3,8 +3,8 @@ import fileUpload from 'express-fileupload'
 import { body } from 'express-validator'
 import { v4 as uuidv4 } from 'uuid'
 
-import { authenticateUser } from '../../../middlewares/authenticateUser'
-import { validateRequest } from '../../../middlewares/validateRequest'
+import { authenticateUser } from '../../../tools/middlewares/authenticateUser'
+import { validateRequest } from '../../../tools/middlewares/validateRequest'
 import Guild from '../../../models/Guild'
 import Invitation from '../../../models/Invitation'
 import Member from '../../../models/Member'
@@ -13,12 +13,12 @@ import {
   commonErrorsMessages,
   guildsIconPath,
   imageFileUploadOptions
-} from '../../../utils/config/constants'
-import { emitToMembers } from '../../../utils/config/socket'
-import { alreadyUsedValidation } from '../../../utils/validations/alreadyUsedValidation'
-import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
-import { NotFoundError } from '../../../utils/errors/NotFoundError'
-import { uploadImage } from '../../../utils/uploadImage'
+} from '../../../tools/config/constants'
+import { alreadyUsedValidation } from '../../../tools/validations/alreadyUsedValidation'
+import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
+import { NotFoundError } from '../../../tools/errors/NotFoundError'
+import { uploadImage } from '../../../tools/utils/uploadImage'
+import { emitToMembers } from '../../../tools/socket/emitEvents'
 
 export const putByIdGuildsRouter = Router()
 
@@ -102,10 +102,10 @@ putByIdGuildsRouter.put(
       image: icon,
       propertyName: 'icon',
       oldImage: member.guild.icon,
-      imagesPath: guildsIconPath
+      imagesPath: guildsIconPath.filePath
     })
     if (resultUpload != null) {
-      member.guild.icon = `/images/guilds/${resultUpload}`
+      member.guild.icon = `${guildsIconPath.name}/${resultUpload}`
     }
 
     await member.guild.save()

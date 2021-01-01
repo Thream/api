@@ -3,8 +3,8 @@
     security:
       - bearerAuth: []
     tags:
-      - 'invitations'
-    summary: 'Join a guild with its invitation value'
+      - 'members'
+    summary: 'Join a guild with its invitation value (create a member)'
     parameters:
       - name: 'value'
         in: 'path'
@@ -15,7 +15,7 @@
         - $ref: '#/definitions/ForbiddenError'
         - $ref: '#/definitions/BadRequestError'
         - $ref: '#/definitions/NotFoundError'
-        - '200':
+        - '201':
             content:
               application/json:
                 schema:

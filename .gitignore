@@ -33,7 +33,6 @@ pnpm-lock.yaml
 
 # misc
 .DS_Store
-/public/images
-/public/uploads
-/tmp
-/temp
+tmp
+temp
+/uploads

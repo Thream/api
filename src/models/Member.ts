@@ -25,16 +25,16 @@ export default class Member extends Model {
   @Column
   userId!: number
 
-  @BelongsTo(() => User, { onDelete: 'CASCADE' })
+  @BelongsTo(() => User)
   user!: User
 
   @ForeignKey(() => Guild)
   @Column
   guildId!: number
 
-  @BelongsTo(() => Guild, { onDelete: 'CASCADE' })
+  @BelongsTo(() => Guild)
   guild!: Guild
 
-  @HasMany(() => Message)
+  @HasMany(() => Message, { onDelete: 'CASCADE' })
   messages!: Message[]
 }

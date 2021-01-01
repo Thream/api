@@ -1,10 +1,10 @@
 import { Request, Response, Router } from 'express'
 
-import { authenticateUser } from '../../middlewares/authenticateUser'
+import { authenticateUser } from '../../tools/middlewares/authenticateUser'
 import Guild from '../../models/Guild'
 import Member from '../../models/Member'
-import { paginateModel } from '../../utils/database/paginateModel'
-import { ForbiddenError } from '../../utils/errors/ForbiddenError'
+import { paginateModel } from '../../tools/database/paginateModel'
+import { ForbiddenError } from '../../tools/errors/ForbiddenError'
 
 export const getGuildsRouter = Router()
 

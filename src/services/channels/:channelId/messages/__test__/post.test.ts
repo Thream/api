@@ -25,6 +25,34 @@ describe('POST /channels/:channelId/messages', () => {
     expect(response.body.message.user.id).toEqual(result.user.id)
   })
 
+  it('fails with empty message', async () => {
+    const result = await createChannels([channel1])
+    expect(result.channels.length).toEqual(1)
+    const channel = result.channels[0]
+    const response1 = await request(app)
+      .post(`/channels/${channel.id as number}/messages`)
+      .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
+      .send({ type: 'text' })
+      .expect(400)
+    const response2 = await request(app)
+      .post(`/channels/${channel.id as number}/messages`)
+      .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
+      .send({ type: 'file' })
+      .expect(400)
+    expect(response1.body.errors.length).toEqual(1)
+    expect(response2.body.errors.length).toEqual(1)
+  })
+
+  it("fails if the channel doesn't exist", async () => {
+    const userToken = await authenticateUserTest()
+    const response = await request(app)
+      .post('/channels/2/messages')
+      .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
+      .send({ type: 'text', value: 'awesome' })
+      .expect(404)
+    expect(response.body.errors.length).toEqual(1)
+  })
+
   it('fails if the user is not in the guild with this channel', async () => {
     const result = await createChannels([channel1])
     const channel = result.channels[0]

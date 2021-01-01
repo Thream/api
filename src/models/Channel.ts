@@ -47,7 +47,7 @@ export default class Channel extends Model {
   @Column
   guildId!: number
 
-  @BelongsTo(() => Guild, { onDelete: 'CASCADE' })
+  @BelongsTo(() => Guild)
   guild!: Guild
 
   @HasMany(() => Message)

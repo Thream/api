@@ -11,7 +11,8 @@ import Member from './Member'
 import OAuth, { AuthenticationStrategy } from './OAuth'
 import RefreshToken from './RefreshToken'
 import UserSetting from './UserSetting'
-import { deleteObjectAttributes } from '../utils/deleteObjectAttributes'
+import { deleteObjectAttributes } from '../tools/utils/deleteObjectAttributes'
+import { usersLogoPath } from '../tools/config/constants'
 
 export const userHiddenAttributes = [
   'password',
@@ -69,7 +70,7 @@ export default class User extends Model {
   @Column({
     type: DataType.TEXT,
     allowNull: false,
-    defaultValue: '/images/users/default.png'
+    defaultValue: `${usersLogoPath.name}/default.png`
   })
   logo!: string
 
@@ -92,16 +93,16 @@ export default class User extends Model {
   })
   tempExpirationToken?: number | null
 
-  @HasMany(() => RefreshToken)
+  @HasMany(() => RefreshToken, { onDelete: 'CASCADE' })
   refreshTokens!: RefreshToken[]
 
-  @HasMany(() => OAuth)
+  @HasMany(() => OAuth, { onDelete: 'CASCADE' })
   OAuths!: OAuth[]
 
-  @HasMany(() => Member)
+  @HasMany(() => Member, { onDelete: 'CASCADE' })
   members!: Member[]
 
-  @HasOne(() => UserSetting)
+  @HasOne(() => UserSetting, { onDelete: 'CASCADE' })
   settings!: UserSetting
 
   toJSON (): UserToJSON {

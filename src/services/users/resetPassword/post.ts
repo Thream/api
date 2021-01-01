@@ -3,12 +3,12 @@ import { body, query } from 'express-validator'
 import ms from 'ms'
 import { v4 as uuidv4 } from 'uuid'
 
-import { errorsMessages as errorsConfirmed } from '../../../middlewares/authenticateUser'
-import { validateRequest } from '../../../middlewares/validateRequest'
+import { errorsMessages as errorsConfirmed } from '../../../tools/middlewares/authenticateUser'
+import { validateRequest } from '../../../tools/middlewares/validateRequest'
 import User from '../../../models/User'
 import UserSetting from '../../../models/UserSetting'
-import { sendEmail } from '../../../utils/email/sendEmail'
-import { BadRequestError } from '../../../utils/errors/BadRequestError'
+import { sendEmail } from '../../../tools/email/sendEmail'
+import { BadRequestError } from '../../../tools/errors/BadRequestError'
 
 export const errorsMessages = {
   email: {

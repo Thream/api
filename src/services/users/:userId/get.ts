@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express'
 
 import User from '../../../models/User'
 import UserSetting from '../../../models/UserSetting'
-import { NotFoundError } from '../../../utils/errors/NotFoundError'
+import { NotFoundError } from '../../../tools/errors/NotFoundError'
 
 export const getUsersRouter = Router()
 

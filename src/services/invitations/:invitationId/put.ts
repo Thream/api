@@ -1,16 +1,15 @@
 import { Request, Response, Router } from 'express'
 import { body } from 'express-validator'
 
-import { authenticateUser } from '../../../middlewares/authenticateUser'
-import { validateRequest } from '../../../middlewares/validateRequest'
+import { authenticateUser } from '../../../tools/middlewares/authenticateUser'
+import { validateRequest } from '../../../tools/middlewares/validateRequest'
 import Invitation from '../../../models/Invitation'
 import Member from '../../../models/Member'
-import { commonErrorsMessages } from '../../../utils/config/constants'
-import { emitToMembers } from '../../../utils/config/socket'
-import { alreadyUsedValidation } from '../../../utils/validations/alreadyUsedValidation'
-import { BadRequestError } from '../../../utils/errors/BadRequestError'
-import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
-import { NotFoundError } from '../../../utils/errors/NotFoundError'
+import { commonErrorsMessages } from '../../../tools/config/constants'
+import { alreadyUsedValidation } from '../../../tools/validations/alreadyUsedValidation'
+import { BadRequestError } from '../../../tools/errors/BadRequestError'
+import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
+import { NotFoundError } from '../../../tools/errors/NotFoundError'
 import Guild from '../../../models/Guild'
 
 export const errorsMessages = {
@@ -93,12 +92,6 @@ putInvitationsRouter.put(
       throw new BadRequestError(errorsMessages.public.alreadyHasInvitation)
     }
     await invitation.save()
-    await emitToMembers({
-      event: 'invitations',
-      guildId: member.guildId,
-      onlyOwner: true,
-      payload: { action: 'update', invitation }
-    })
     return res.status(200).json({ invitation })
   }
 )

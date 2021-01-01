@@ -63,32 +63,53 @@ git commit -m "fix(messages): should emit events to connected users"
 
 ## Directory Structure
 
-Services are listed in the `src/services` directory.
+```text
+├── email
+├── public
+├── scripts
+└── src
+    ├── models
+    ├── services
+    ├── tools
+    └── typings
+```
 
-### Example
+### Each folder explained
+
+- `email` : email template(s) and translation(s)
+- `src` : all source files
+  - `models` : models that represent tables in database
+  - `services` : all REST API endpoints
+  - `tools` : configs and utilities
+  - `typings` : types gloablly used in the project
+- `uploads` : uploaded files by users
+
+### Services folder explained with an example
 
 We have API REST services for the `channels`.
 
 Here is what potentially look like a folder structure for this service :
 
 ```text
-└── channels
-    ├── __docs__
-    │   └── get.yaml
-    ├── __test__
-    │   └── get.test.ts
-    ├── :channelId
-    │   ├── __docs__
-    │   │   ├── delete.yaml
-    │   │   └── put.yaml
-    │   ├── __test__
-    │   │   ├── delete.test.ts
-    │   │   └── put.test.ts
-    │   ├── delete.ts
-    │   ├── index.ts
-    │   └── put.ts
-    ├── get.ts
-    └── index.ts
+└── src
+    └── services
+        └── channels
+            ├── __docs__
+            │   └── get.yaml
+            ├── __test__
+            │   └── get.test.ts
+            ├── :channelId
+            │   ├── __docs__
+            │   │   ├── delete.yaml
+            │   │   └── put.yaml
+            │   ├── __test__
+            │   │   ├── delete.test.ts
+            │   │   └── put.test.ts
+            │   ├── delete.ts
+            │   ├── index.ts
+            │   └── put.ts
+            ├── get.ts
+            └── index.ts
 ```
 
 This folder structure will map to these REST API routes :
@@ -97,6 +118,6 @@ This folder structure will map to these REST API routes :
 - DELETE `/channels/:channelId`
 - PUT `/channels/:channelId`
 
-The folders after `src/services` : is the real name of the routes in the API except folders starting and ending with `__` like `__docs__`, `__test__` or `__utils__`.
+The folders after `src/services` : is the real path of the routes in the API except folders starting and ending with `__` like `__docs__`, `__test__` or `__utils__`.
 
-The filenames correspond to the HTTP method used (`get`, `post`, `put`, `delete`).
+The filenames correspond to the HTTP methods used (`get`, `post`, `put`, `delete`).

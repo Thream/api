@@ -1,17 +1,17 @@
 import { Request, Response, Router } from 'express'
 import { body } from 'express-validator'
 
-import { authenticateUser } from '../../../../middlewares/authenticateUser'
-import { validateRequest } from '../../../../middlewares/validateRequest'
+import { authenticateUser } from '../../../../tools/middlewares/authenticateUser'
+import { validateRequest } from '../../../../tools/middlewares/validateRequest'
 import UserSetting, {
   themes,
   Theme,
   languages,
   Language
 } from '../../../../models/UserSetting'
-import { ForbiddenError } from '../../../../utils/errors/ForbiddenError'
-import { NotFoundError } from '../../../../utils/errors/NotFoundError'
-import { onlyPossibleValuesValidation } from '../../../../utils/validations/onlyPossibleValuesValidation'
+import { ForbiddenError } from '../../../../tools/errors/ForbiddenError'
+import { NotFoundError } from '../../../../tools/errors/NotFoundError'
+import { onlyPossibleValuesValidation } from '../../../../tools/validations/onlyPossibleValuesValidation'
 
 export const putCurrentSettingsRouter = Router()
 

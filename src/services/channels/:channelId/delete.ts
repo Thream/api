@@ -1,12 +1,14 @@
 import { Request, Response, Router } from 'express'
 
-import { authenticateUser } from '../../../middlewares/authenticateUser'
+import { authenticateUser } from '../../../tools/middlewares/authenticateUser'
 import Channel from '../../../models/Channel'
 import Member from '../../../models/Member'
-import { emitToMembers } from '../../../utils/config/socket'
-import { BadRequestError } from '../../../utils/errors/BadRequestError'
-import { ForbiddenError } from '../../../utils/errors/ForbiddenError'
-import { NotFoundError } from '../../../utils/errors/NotFoundError'
+import { BadRequestError } from '../../../tools/errors/BadRequestError'
+import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
+import { NotFoundError } from '../../../tools/errors/NotFoundError'
+import { deleteMessages } from '../../../tools/utils/deleteFiles'
+import Message from '../../../models/Message'
+import { emitToMembers } from '../../../tools/socket/emitEvents'
 
 export const errorsMessages = {
   channel: {
@@ -26,7 +28,8 @@ deleteByIdChannelsRouter.delete(
     const user = req.user.current
     const { channelId } = req.params as { channelId: string }
     const channel = await Channel.findOne({
-      where: { id: channelId }
+      where: { id: channelId },
+      include: [Message]
     })
     if (channel == null) {
       throw new NotFoundError()
@@ -41,6 +44,7 @@ deleteByIdChannelsRouter.delete(
       throw new BadRequestError(errorsMessages.channel.shouldNotBeTheDefault)
     }
     const deletedChannelId = channel.id
+    await deleteMessages(channel.messages)
     await channel.destroy()
     await emitToMembers({
       event: 'channels',

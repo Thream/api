@@ -21,6 +21,6 @@ export default class RefreshToken extends Model {
   @Column
   userId!: number
 
-  @BelongsTo(() => User, { onDelete: 'CASCADE' })
+  @BelongsTo(() => User)
   user!: User
 }

@@ -3,7 +3,7 @@ import { Request, Response, Router } from 'express'
 import { body, query } from 'express-validator'
 import { v4 as uuidv4 } from 'uuid'
 
-import { validateRequest } from '../../../middlewares/validateRequest'
+import { validateRequest } from '../../../tools/middlewares/validateRequest'
 import User from '../../../models/User'
 import UserSetting, {
   Language,
@@ -11,10 +11,10 @@ import UserSetting, {
   Theme,
   themes
 } from '../../../models/UserSetting'
-import { commonErrorsMessages } from '../../../utils/config/constants'
-import { sendEmail } from '../../../utils/email/sendEmail'
-import { alreadyUsedValidation } from '../../../utils/validations/alreadyUsedValidation'
-import { onlyPossibleValuesValidation } from '../../../utils/validations/onlyPossibleValuesValidation'
+import { commonErrorsMessages } from '../../../tools/config/constants'
+import { sendEmail } from '../../../tools/email/sendEmail'
+import { alreadyUsedValidation } from '../../../tools/validations/alreadyUsedValidation'
+import { onlyPossibleValuesValidation } from '../../../tools/validations/onlyPossibleValuesValidation'
 
 export const errorsMessages = {
   email: {

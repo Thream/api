@@ -8,10 +8,10 @@ import rateLimit from 'express-rate-limit'
 import helmet from 'helmet'
 import morgan from 'morgan'
 
-import { errorHandler } from './middlewares/errorHandler'
+import { errorHandler } from './tools/middlewares/errorHandler'
 import { router } from './services'
-import { NotFoundError } from './utils/errors/NotFoundError'
-import { TooManyRequestsError } from './utils/errors/TooManyRequestsError'
+import { NotFoundError } from './tools/errors/NotFoundError'
+import { TooManyRequestsError } from './tools/errors/TooManyRequestsError'
 
 const app = express()
 dotenv.config()

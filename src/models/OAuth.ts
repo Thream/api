@@ -33,6 +33,6 @@ export default class OAuth extends Model {
   @Column
   userId!: number
 
-  @BelongsTo(() => User, { onDelete: 'CASCADE' })
+  @BelongsTo(() => User)
   user!: User
 }

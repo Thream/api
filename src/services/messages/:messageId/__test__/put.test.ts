@@ -1,7 +1,7 @@
 import request from 'supertest'
 
 import app from '../../../../app'
-import { commonErrorsMessages } from '../../../../utils/config/constants'
+import { commonErrorsMessages } from '../../../../tools/config/constants'
 import { formatErrors } from '../../../../__test__/utils/formatErrors'
 import { createMessages } from '../../__test__/utils/createMessages'
 
@@ -31,7 +31,7 @@ describe('PUT /messages/:messageId', () => {
     expect(errors.length).toEqual(1)
     expect(errors).toEqual(
       expect.arrayContaining([
-        commonErrorsMessages.charactersLength('value', { min: 1, max: 10_000 })
+        commonErrorsMessages.charactersLength('value', { min: 1, max: 50_000 })
       ])
     )
   })

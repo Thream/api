@@ -5,7 +5,7 @@ import { formatErrors } from '../../../../../__test__/utils/formatErrors'
 import app from '../../../../../app'
 import { createGuild } from '../../../__test__/utils/createGuild'
 import { errorsMessages } from '../post'
-import { commonErrorsMessages } from '../../../../../utils/config/constants'
+import { commonErrorsMessages } from '../../../../../tools/config/constants'
 
 describe('POST /guilds/:guildId/invitations', () => {
   it('succeeds and create the invitation', async () => {
