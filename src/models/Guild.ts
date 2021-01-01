@@ -15,7 +15,8 @@ export default class Guild extends Model {
 
   @Column({
     type: DataType.STRING,
-    allowNull: false
+    allowNull: false,
+    defaultValue: ''
   })
   description!: string
 

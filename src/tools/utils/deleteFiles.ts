@@ -46,10 +46,12 @@ export const deleteFile = async (options: {
 
 export const deleteMessages = async (messages: Message[]): Promise<void> => {
   for (const message of messages) {
-    await deleteFile({
-      basePath: messagesFilePath,
-      valueSavedInDatabase: message.value
-    })
+    if (message.type === 'file') {
+      await deleteFile({
+        basePath: messagesFilePath,
+        valueSavedInDatabase: message.value
+      })
+    }
     await message.destroy()
   }
 }
