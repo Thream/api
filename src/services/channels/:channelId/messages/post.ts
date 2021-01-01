@@ -15,13 +15,13 @@ import {
   messagesFilePath,
   tempPath
 } from '../../../../tools/config/constants'
-import { emitToMembers } from '../../../../tools/socket/socket'
 import { ForbiddenError } from '../../../../tools/errors/ForbiddenError'
 import { NotFoundError } from '../../../../tools/errors/NotFoundError'
 import { onlyPossibleValuesValidation } from '../../../../tools/validations/onlyPossibleValuesValidation'
 import { deleteAllFilesInDirectory } from '../../../../tools/utils/deleteFiles'
 import { PayloadTooLargeError } from '../../../../tools/errors/PayloadTooLargeError'
 import { BadRequestError } from '../../../../tools/errors/BadRequestError'
+import { emitToMembers } from '../../../../tools/socket/emitEvents'
 
 export const errorsMessages = {
   type: {

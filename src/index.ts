@@ -1,7 +1,7 @@
 import { authorize } from '@thream/socketio-jwt'
 
 import app from './app'
-import { socket } from './tools/socket/socket'
+import { socket } from './tools/socket'
 import { sequelize } from './tools/database/sequelize'
 
 const PORT = parseInt(process.env.PORT ?? '8080', 10)

@@ -6,9 +6,9 @@ import { validateRequest } from '../../../../tools/middlewares/validateRequest'
 import Channel from '../../../../models/Channel'
 import Member from '../../../../models/Member'
 import { commonErrorsMessages } from '../../../../tools/config/constants'
-import { emitToMembers } from '../../../../tools/socket/socket'
 import { ForbiddenError } from '../../../../tools/errors/ForbiddenError'
 import { NotFoundError } from '../../../../tools/errors/NotFoundError'
+import { emitToMembers } from '../../../../tools/socket/emitEvents'
 
 export const errorsMessages = {
   name: {

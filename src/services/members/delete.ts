@@ -4,7 +4,7 @@ import Member from '../../models/Member'
 import { ForbiddenError } from '../../tools/errors/ForbiddenError'
 import { NotFoundError } from '../../tools/errors/NotFoundError'
 import { authenticateUser } from '../../tools/middlewares/authenticateUser'
-import { emitToMembers } from '../../tools/socket/socket'
+import { emitToMembers } from '../../tools/socket/emitEvents'
 
 export const deleteByIdMembersRouter = Router()
 

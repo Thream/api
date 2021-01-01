@@ -14,11 +14,11 @@ import {
   guildsIconPath,
   imageFileUploadOptions
 } from '../../../tools/config/constants'
-import { emitToMembers } from '../../../tools/socket/socket'
 import { alreadyUsedValidation } from '../../../tools/validations/alreadyUsedValidation'
 import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
 import { NotFoundError } from '../../../tools/errors/NotFoundError'
 import { uploadImage } from '../../../tools/utils/uploadImage'
+import { emitToMembers } from '../../../tools/socket/emitEvents'
 
 export const putByIdGuildsRouter = Router()
 

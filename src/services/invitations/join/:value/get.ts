@@ -6,7 +6,7 @@ import Member from '../../../../models/Member'
 import { BadRequestError } from '../../../../tools/errors/BadRequestError'
 import { ForbiddenError } from '../../../../tools/errors/ForbiddenError'
 import { NotFoundError } from '../../../../tools/errors/NotFoundError'
-import { emitToMembers } from '../../../../tools/socket/socket'
+import { emitToMembers } from '../../../../tools/socket/emitEvents'
 
 export const errorsMessages = {
   invitationExpired: 'The invitation expired',

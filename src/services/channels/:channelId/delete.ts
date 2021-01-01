@@ -3,12 +3,12 @@ import { Request, Response, Router } from 'express'
 import { authenticateUser } from '../../../tools/middlewares/authenticateUser'
 import Channel from '../../../models/Channel'
 import Member from '../../../models/Member'
-import { emitToMembers } from '../../../tools/socket/socket'
 import { BadRequestError } from '../../../tools/errors/BadRequestError'
 import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
 import { NotFoundError } from '../../../tools/errors/NotFoundError'
 import { deleteMessages } from '../../../tools/utils/deleteFiles'
 import Message from '../../../models/Message'
+import { emitToMembers } from '../../../tools/socket/emitEvents'
 
 export const errorsMessages = {
   channel: {

@@ -3,13 +3,13 @@ import { Request, Response, Router } from 'express'
 import { authenticateUser } from '../../../tools/middlewares/authenticateUser'
 import Guild from '../../../models/Guild'
 import Member from '../../../models/Member'
-import { emitToMembers } from '../../../tools/socket/socket'
 import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
 import { NotFoundError } from '../../../tools/errors/NotFoundError'
 import { guildsIconPath } from '../../../tools/config/constants'
 import { deleteFile, deleteMessages } from '../../../tools/utils/deleteFiles'
 import Channel from '../../../models/Channel'
 import Message from '../../../models/Message'
+import { emitToMembers } from '../../../tools/socket/emitEvents'
 
 export const deleteByIdGuildsRouter = Router()
 

@@ -5,11 +5,11 @@ import Channel from '../../../models/Channel'
 import Member from '../../../models/Member'
 import Message from '../../../models/Message'
 import { messagesFilePath } from '../../../tools/config/constants'
-import { emitToMembers } from '../../../tools/socket/socket'
 import { BadRequestError } from '../../../tools/errors/BadRequestError'
 import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
 import { NotFoundError } from '../../../tools/errors/NotFoundError'
 import { deleteFile } from '../../../tools/utils/deleteFiles'
+import { emitToMembers } from '../../../tools/socket/emitEvents'
 
 export const deleteByIdMessagesRouter = Router()
 

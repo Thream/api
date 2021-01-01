@@ -1,20 +1,5 @@
-import { Server as HttpServer } from 'http'
-import { Server as HttpsServer } from 'https'
-import { Server as SocketIoServer } from 'socket.io'
-
 import Member from '../../models/Member'
-
-interface Socket {
-  io: null | SocketIoServer
-  init: (httpServer: HttpServer | HttpsServer) => void
-}
-
-export const socket: Socket = {
-  io: null,
-  init (httpServer) {
-    socket.io = new SocketIoServer(httpServer)
-  }
-}
+import { socket } from '.'
 
 interface EmitEventOptions {
   event: string
