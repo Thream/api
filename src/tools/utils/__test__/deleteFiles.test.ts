@@ -15,7 +15,7 @@ import User from '../../../models/User'
 
 const fs = fsWithCallbacks.promises
 
-describe('utils/deleteFiles - deleteAllFilesInDirectory', () => {
+describe('/tools/utils/deleteFiles - deleteAllFilesInDirectory', () => {
   it('delete all the files expect the directories', async () => {
     fsMock({
       '/files': {
@@ -52,7 +52,7 @@ describe('utils/deleteFiles - deleteAllFilesInDirectory', () => {
   })
 })
 
-describe('utils/deleteFiles - deleteFile', () => {
+describe('/tools/utils/deleteFiles - deleteFile', () => {
   it('should delete the file', async () => {
     fsMock({
       [usersLogoPath.filePath]: {
@@ -83,7 +83,7 @@ describe('utils/deleteFiles - deleteFile', () => {
   })
 })
 
-describe('utils/deleteFiles - deleteMessages', () => {
+describe('/tools/utils/deleteFiles - deleteMessages', () => {
   it('should delete every messages and files', async () => {
     fsMock({
       [messagesFilePath.filePath]: {

@@ -8,7 +8,7 @@ const mockRes = (): any => {
   return res
 }
 
-describe('middlewares/errorHandler', () => {
+describe('/tools/middlewares/errorHandler', () => {
   it('should send 500 error if not custom error', () => {
     const mockedRes = mockRes()
     errorHandler(new Error('random error'), {} as any, mockedRes, () => {})

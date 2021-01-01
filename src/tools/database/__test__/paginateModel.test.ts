@@ -10,7 +10,7 @@ import { createPosts } from './utils/createPosts'
 let sqlite: Database | undefined
 let sequelize: Sequelize | undefined
 
-describe('utils/database/paginateModel', () => {
+describe('/tools/database/paginateModel', () => {
   beforeAll(async () => {
     sqlite = await open({
       filename: ':memory:',

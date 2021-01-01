@@ -1,6 +1,6 @@
 import { isValidRedirectURIValidation } from '../isValidRedirectURIValidation'
 
-test('utils/validations/isValidRedirectURIValidation', async () => {
+test('/tools/validations/isValidRedirectURIValidation', async () => {
   expect(
     await isValidRedirectURIValidation('https://thream.divlo.fr/')
   ).toBeTruthy()

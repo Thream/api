@@ -9,7 +9,7 @@ import { createPosts } from '../../database/__test__/utils/createPosts'
 let sqlite: Database | undefined
 let sequelize: Sequelize | undefined
 
-describe('utils/validations/alreadyUsedValidation', () => {
+describe('/tools/validations/alreadyUsedValidation', () => {
   beforeAll(async () => {
     sqlite = await open({
       filename: ':memory:',

@@ -1,6 +1,6 @@
 import { PayloadTooLargeError } from '../PayloadTooLargeError'
 
-test('utils/errors/PayloadTooLargeError', () => {
+test('/tools/errors/PayloadTooLargeError', () => {
   const message = 'Payload Too Large'
   const empty = new PayloadTooLargeError()
   const custom = new PayloadTooLargeError(message)

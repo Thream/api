@@ -28,7 +28,7 @@ const getImage = (
   }
 }
 
-describe('utils/uploadImage', () => {
+describe('/tools/utils/uploadImage', () => {
   it('should succeeds and save the image', async () => {
     fsMock({
       [tempPath]: {

@@ -5,7 +5,7 @@ import {
   supportedImageMimetype
 } from '../constants'
 
-test('utils/config/constants', () => {
+test('/tools/config/constants', () => {
   expect(commonErrorsMessages.image.tooLarge('logo')).toEqual(
     `The logo must have a valid image, less than ${maximumImageSize}mb`
   )

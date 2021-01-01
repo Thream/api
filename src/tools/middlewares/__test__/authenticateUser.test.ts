@@ -16,7 +16,7 @@ const mockReq = (accessToken: string): any => {
   return req
 }
 
-describe('middlewares/authenticateUser', () => {
+describe('/tools/middlewares/authenticateUser', () => {
   it('succeeds with valid token', async () => {
     const user = await User.create({ name: 'user', isConfirmed: true })
     const accessToken = generateAccessToken({
