@@ -12,8 +12,8 @@ import Message, { MessageType, messageTypes } from '../../../../models/Message'
 import {
   commonErrorsMessages,
   fileUploadOptions,
-  tempPath,
-  uploadsPath
+  messagesFilePath,
+  tempPath
 } from '../../../../tools/config/constants'
 import { emitToMembers } from '../../../../tools/socket/socket'
 import { ForbiddenError } from '../../../../tools/errors/ForbiddenError'
@@ -101,11 +101,11 @@ postMessagesRouter.post(
       const splitedMimetype = mimetype.split('/')
       const fileExtension = splitedMimetype[1]
       filename = `${uuidv4()}.${fileExtension}`
-      await file.mv(path.join(uploadsPath, filename))
+      await file.mv(path.join(messagesFilePath.filePath, filename))
       await deleteAllFilesInDirectory(tempPath)
     }
     const messageCreated = await Message.create({
-      value: filename != null ? `/uploads/${filename}` : value,
+      value: filename != null ? `${messagesFilePath.name}/${filename}` : value,
       type,
       mimetype,
       memberId: member.id,

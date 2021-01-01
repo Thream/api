@@ -4,10 +4,12 @@ import { UploadedFile } from 'express-fileupload'
 
 import { uploadImage } from '../uploadImage'
 import { PayloadTooLargeError } from '../../errors/PayloadTooLargeError'
-import { tempPath, imagesPath } from '../../config/constants'
+import { tempPath, usersLogoPath } from '../../config/constants'
 import { BadRequestError } from '../../errors/BadRequestError'
 
 const fs = fsWithCallbacks.promises
+
+const imagesPath = usersLogoPath.filePath
 
 const getImage = (
   props: { truncated?: boolean, mimetype?: string } = {}

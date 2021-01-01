@@ -6,7 +6,7 @@ import { authenticateUser } from '../../../tools/middlewares/authenticateUser'
 import Channel from '../../../models/Channel'
 import Member from '../../../models/Member'
 import Message from '../../../models/Message'
-import { uploadsPath } from '../../../tools/config/constants'
+import { messagesFilePath } from '../../../tools/config/constants'
 import { emitToMembers } from '../../../tools/socket/socket'
 import { BadRequestError } from '../../../tools/errors/BadRequestError'
 import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
@@ -50,7 +50,7 @@ deleteByIdMessagesRouter.delete(
     if (message.type === 'file') {
       const filePath = message.value.split('/')
       const filename = filePath[filePath.length - 1]
-      await fs.unlink(path.join(uploadsPath, filename))
+      await fs.unlink(path.join(messagesFilePath.filePath, filename))
     }
     await message.destroy()
     await emitToMembers({

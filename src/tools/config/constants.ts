@@ -6,9 +6,19 @@ import { capitalize } from '../utils/capitalize'
 export const srcPath = path.join(__dirname, '..', '..')
 export const rootPath = path.join(srcPath, '..')
 export const tempPath = path.join(rootPath, 'temp')
-export const imagesPath = path.join(rootPath, 'public', 'images')
-export const uploadsPath = path.join(rootPath, 'public', 'uploads')
-export const guildsIconPath = path.join(imagesPath, 'guilds')
+export const uploadsPath = path.join(rootPath, 'uploads')
+export const guildsIconPath = {
+  name: '/uploads/guilds',
+  filePath: path.join(uploadsPath, 'guilds')
+} as const
+export const usersLogoPath = {
+  name: '/uploads/users',
+  filePath: path.join(uploadsPath, 'users')
+} as const
+export const messagesFilePath = {
+  name: '/uploads/messages',
+  filePath: path.join(uploadsPath, 'messages')
+} as const
 export const emailPath = path.join(rootPath, 'email')
 export const emailTemplatePath = path.join(emailPath, 'email-template.ejs')
 export const emailLocalesPath = path.join(emailPath, 'locales')
@@ -16,7 +26,7 @@ export const emailLocalesPath = path.join(emailPath, 'locales')
 export const authorizedRedirectDomains = [
   ...(process.env.NODE_ENV === 'development' ? ['http://localhost:3000/'] : []),
   'https://thream.divlo.fr/'
-]
+] as const
 
 export const supportedImageMimetype = [
   'image/png',

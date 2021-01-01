@@ -1,4 +1,5 @@
 import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript'
+import { guildsIconPath } from '../tools/config/constants'
 
 import Channel from './Channel'
 import Invitation from './Invitation'
@@ -21,7 +22,7 @@ export default class Guild extends Model {
   @Column({
     type: DataType.TEXT,
     allowNull: false,
-    defaultValue: '/images/guilds/default.png'
+    defaultValue: `${guildsIconPath.name}/default.png`
   })
   icon!: string
 

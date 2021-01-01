@@ -12,6 +12,7 @@ import OAuth, { AuthenticationStrategy } from './OAuth'
 import RefreshToken from './RefreshToken'
 import UserSetting from './UserSetting'
 import { deleteObjectAttributes } from '../tools/utils/deleteObjectAttributes'
+import { usersLogoPath } from '../tools/config/constants'
 
 export const userHiddenAttributes = [
   'password',
@@ -69,7 +70,7 @@ export default class User extends Model {
   @Column({
     type: DataType.TEXT,
     allowNull: false,
-    defaultValue: '/images/users/default.png'
+    defaultValue: `${usersLogoPath.name}/default.png`
   })
   logo!: string
 

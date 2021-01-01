@@ -1,7 +1,6 @@
 import { Request, Response, Router } from 'express'
 import fileUpload from 'express-fileupload'
 import { body, query } from 'express-validator'
-import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
 
 import { authenticateUser } from '../../../tools/middlewares/authenticateUser'
@@ -10,7 +9,7 @@ import User from '../../../models/User'
 import {
   commonErrorsMessages,
   imageFileUploadOptions,
-  imagesPath
+  usersLogoPath
 } from '../../../tools/config/constants'
 import { alreadyUsedValidation } from '../../../tools/validations/alreadyUsedValidation'
 import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
@@ -18,8 +17,6 @@ import { uploadImage } from '../../../tools/utils/uploadImage'
 import { deleteEveryRefreshTokens } from '../__utils__/deleteEveryRefreshTokens'
 import UserSetting from '../../../models/UserSetting'
 import { sendEmail } from '../../../tools/email/sendEmail'
-
-const usersLogoPath = path.join(imagesPath, 'users')
 
 export const errorsMessages = {
   email: {
@@ -108,10 +105,10 @@ putCurrentRouter.put(
       image: logo,
       propertyName: 'logo',
       oldImage: user.logo,
-      imagesPath: usersLogoPath
+      imagesPath: usersLogoPath.filePath
     })
     if (resultUpload != null) {
-      user.logo = `/images/users/${resultUpload}`
+      user.logo = `${usersLogoPath.name}/${resultUpload}`
     }
 
     // If the email changed, the user should confirm the new email

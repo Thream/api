@@ -102,10 +102,10 @@ putByIdGuildsRouter.put(
       image: icon,
       propertyName: 'icon',
       oldImage: member.guild.icon,
-      imagesPath: guildsIconPath
+      imagesPath: guildsIconPath.filePath
     })
     if (resultUpload != null) {
-      member.guild.icon = `/images/guilds/${resultUpload}`
+      member.guild.icon = `${guildsIconPath.name}/${resultUpload}`
     }
 
     await member.guild.save()

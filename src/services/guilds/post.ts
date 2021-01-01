@@ -69,10 +69,10 @@ postGuildsRouter.post(
       image: icon,
       propertyName: 'icon',
       oldImage: guild.icon,
-      imagesPath: guildsIconPath
+      imagesPath: guildsIconPath.filePath
     })
     if (resultUpload != null) {
-      guild.icon = `/images/guilds/${resultUpload}`
+      guild.icon = `${guildsIconPath.name}/${resultUpload}`
       await guild.save()
     }
     return res.status(201).json({ guild })
