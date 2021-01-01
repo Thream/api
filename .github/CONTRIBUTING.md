@@ -77,7 +77,7 @@ git commit -m "fix(messages): should emit events to connected users"
 ### Each folder explained
 
 - `email` : email template(s) and translation(s)
-- `public` : public ressources like `images` or `uploads`
+- `uploads` : uploaded files by users
 - `scripts` : useful command line interfaces used in developement
 - `src` : all source files
   - `models` : models that represent tables in database
