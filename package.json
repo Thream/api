@@ -83,7 +83,7 @@
     "express-fileupload": "1.2.0",
     "express-http-to-https": "1.1.4",
     "express-rate-limit": "5.2.3",
-    "express-validator": "6.9.0",
+    "express-validator": "6.9.1",
     "helmet": "4.3.1",
     "jsonwebtoken": "8.5.1",
     "morgan": "1.10.0",
