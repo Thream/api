@@ -133,7 +133,7 @@
     "rimraf": "3.0.2",
     "server-destroy": "1.0.1",
     "snazzy": "9.0.0",
-    "socket.io-client": "3.0.4",
+    "socket.io-client": "3.0.5",
     "sqlite": "4.0.19",
     "sqlite3": "5.0.0",
     "supertest": "6.0.1",
