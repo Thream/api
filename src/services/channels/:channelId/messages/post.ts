@@ -40,7 +40,7 @@ postMessagesRouter.post(
       .optional({ nullable: true })
       .trim()
       .escape()
-      .isLength({ min: 1, max: 10_000 })
+      .isLength({ min: 1, max: 50_000 })
       .withMessage(
         commonErrorsMessages.charactersLength('value', { min: 1, max: 50_000 })
       ),
