@@ -23,13 +23,13 @@ export const emitToAuthorizedUsers = async (
   options: EmitToAuthorizedUsersOptions
 ): Promise<void> => {
   const { event, payload, isAuthorizedCallback } = options
-  const clients = await socket.io?.sockets.allSockets()
-  if (clients != null) {
-    for (const clientId of clients) {
-      const client = socket.io?.sockets.sockets.get(clientId)
-      const userId: number = (client as any).decodedToken?.id
+  const clients = (await socket.io?.sockets.allSockets()) ?? new Set()
+  for (const clientId of clients) {
+    const client = socket.io?.sockets.sockets.get(clientId)
+    if (client != null) {
+      const userId = client.decodedToken.id
       const isAuthorized = await isAuthorizedCallback(userId)
-      if (isAuthorized && client != null) {
+      if (isAuthorized) {
         client.emit(event, payload)
       }
     }
