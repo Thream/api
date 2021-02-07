@@ -11,15 +11,15 @@ export interface ResponseJWT {
   type: 'Bearer'
 }
 
-export const expiresInMinutesString =
+export const expiresInString =
   process.env.JWT_ACCESS_EXPIRES_IN ?? '15 minutes'
 
-/** expiresIn is how long, in seconds, until the returned accessToken expires */
-export const expiresIn = ms(expiresInMinutesString) / 1000
+/** expiresIn is how long, in milliseconds, until the returned accessToken expires */
+export const expiresIn = ms(expiresInString)
 
 export const generateAccessToken = (user: UserJWT): string => {
   return jwt.sign(user, process.env.JWT_ACCESS_SECRET, {
-    expiresIn: expiresInMinutesString
+    expiresIn: expiresInString
   })
 }
 

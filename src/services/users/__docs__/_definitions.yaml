@@ -85,6 +85,7 @@ definitions:
         type: 'string'
       expiresIn:
         type: 'number'
+        description: 'expiresIn is how long, in milliseconds, until the returned accessToken expires'
       type:
         type: 'string'
         enum: ['Bearer']
