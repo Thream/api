@@ -36,6 +36,9 @@ jobs:
       - name: 'Lint'
         run: 'npm run lint'
 
+      - name: 'MarkdownLint'
+        run: 'npm run markdownlint'
+
       - name: 'Build'
         run: 'npm run build'
 
