@@ -21,6 +21,7 @@ services:
     image: 'phpmyadmin/phpmyadmin:5.0.2'
     environment:
       PMA_HOST: ${DATABASE_HOST}
+      PMA_PORT: ${DATABASE_PORT}
       PMA_USER: ${DATABASE_USER}
       PMA_PASSWORD: ${DATABASE_PASSWORD}
     ports:
