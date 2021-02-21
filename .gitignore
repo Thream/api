@@ -35,4 +35,4 @@ pnpm-lock.yaml
 .DS_Store
 tmp
 temp
-/uploads
+uploads
