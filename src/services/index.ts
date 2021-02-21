@@ -1,7 +1,6 @@
 import { Router } from 'express'
-import swaggerUi from 'swagger-ui-express'
 
-import { swaggerSpec } from '../tools/config/swaggerSpec'
+import { docsRouter } from './docs'
 import { channelsRouter } from './channels'
 import { guildsRouter } from './guilds'
 import { invitationsRouter } from './invitations'
@@ -12,7 +11,7 @@ import { usersRouter } from './users'
 
 export const router = Router()
 
-router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+router.use(docsRouter)
 router.use(uploadsRouter)
 router.use(usersRouter)
 router.use(guildsRouter)
