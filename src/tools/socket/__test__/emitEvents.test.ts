@@ -25,8 +25,8 @@ describe('/tools/socket/emitEvents', () => {
     )
     const userToken = await authenticateUserTest()
     socketClient = io('http://localhost:9000', {
-      extraHeaders: {
-        Authorization: `${userToken.type} ${userToken.accessToken}`
+      auth: {
+        token: `${userToken.type} ${userToken.accessToken}`
       }
     })
     socketClient.on('connect', () => {
