@@ -71,7 +71,7 @@
     "prepare": "npm run build"
   },
   "dependencies": {
-    "@thream/socketio-jwt": "1.1.1",
+    "@thream/socketio-jwt": "2.0.0",
     "axios": "0.21.1",
     "bcryptjs": "2.4.3",
     "cors": "2.8.5",
@@ -123,7 +123,7 @@
     "concurrently": "6.0.0",
     "copy-env-cli": "1.0.0",
     "cross-env": "7.0.3",
-    "husky": "5.0.9",
+    "husky": "5.1.0",
     "jest": "26.6.3",
     "markdownlint-cli": "0.26.0",
     "mock-fs": "4.13.0",
