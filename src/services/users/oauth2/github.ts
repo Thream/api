@@ -26,10 +26,10 @@ interface GitHubTokens {
   token_type: string
 }
 
-const GITHUB_PROVIDER = 'github'
-const GITHUB_BASE_URL = 'https://github.com'
-const GITHUB_API_BASE_URL = 'https://api.github.com'
-const githubStrategy = new OAuthStrategy(GITHUB_PROVIDER)
+export const GITHUB_PROVIDER = 'github'
+export const GITHUB_BASE_URL = 'https://github.com'
+export const GITHUB_API_BASE_URL = 'https://api.github.com'
+export const githubStrategy = new OAuthStrategy(GITHUB_PROVIDER)
 
 const getGitHubUserData = async (
   code: string,

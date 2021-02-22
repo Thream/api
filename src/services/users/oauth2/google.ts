@@ -30,11 +30,11 @@ interface GoogleTokens {
   refresh_token?: string
 }
 
-const GOOGLE_PROVIDER = 'google'
-const GOOGLE_BASE_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
-const GOOGLE_OAUTH2_TOKEN = 'https://oauth2.googleapis.com/token'
-const GOOGLE_USERINFO = 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json'
-const googleStrategy = new OAuthStrategy(GOOGLE_PROVIDER)
+export const GOOGLE_PROVIDER = 'google'
+export const GOOGLE_BASE_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
+export const GOOGLE_OAUTH2_TOKEN = 'https://oauth2.googleapis.com/token'
+export const GOOGLE_USERINFO = 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json'
+export const googleStrategy = new OAuthStrategy(GOOGLE_PROVIDER)
 
 const getGoogleUserData = async (
   code: string,

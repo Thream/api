@@ -1,5 +1,4 @@
 import RefreshToken from '../../../models/RefreshToken'
-import { UnauthorizedError } from '../../../tools/errors/UnauthorizedError'
 
 export const deleteEveryRefreshTokens = async (
   userId: number
@@ -7,9 +6,6 @@ export const deleteEveryRefreshTokens = async (
   const refreshTokens = await RefreshToken.findAll({
     where: { userId }
   })
-  if (refreshTokens == null) {
-    throw new UnauthorizedError()
-  }
   for (const refreshToken of refreshTokens) {
     await refreshToken.destroy()
   }

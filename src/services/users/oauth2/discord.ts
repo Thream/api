@@ -13,9 +13,9 @@ import { buildQueryURL } from '../__utils__/buildQueryURL'
 import { isValidRedirectURIValidation } from '../../../tools/validations/isValidRedirectURIValidation'
 import { OAuthStrategy } from '../__utils__/OAuthStrategy'
 
-const DISCORD_PROVIDER = 'discord'
-const DISCORD_BASE_URL = 'https://discordapp.com/api/v6'
-const discordStrategy = new OAuthStrategy(DISCORD_PROVIDER)
+export const DISCORD_PROVIDER = 'discord'
+export const DISCORD_BASE_URL = 'https://discordapp.com/api/v6'
+export const discordStrategy = new OAuthStrategy(DISCORD_PROVIDER)
 
 interface DiscordUser {
   id: string
