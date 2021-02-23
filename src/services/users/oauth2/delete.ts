@@ -12,6 +12,13 @@ import { BadRequestError } from '../../../tools/errors/BadRequestError'
 import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
 import { onlyPossibleValuesValidation } from '../../../tools/validations/onlyPossibleValuesValidation'
 
+export const errorsMessages = {
+  provider: {
+    notUsed: 'You are not using this provider',
+    onlyWayToAuthenticate: "You can't delete your only way to authenticate"
+  }
+}
+
 export const deleteOAuthStrategy = Router()
 
 deleteOAuthStrategy.delete(
@@ -47,13 +54,11 @@ deleteOAuthStrategy.delete(
     }
     const oauthProvider = OAuths.find((oauth) => oauth.provider === provider)
     if (oauthProvider == null) {
-      throw new BadRequestError('You are not using this provider')
+      throw new BadRequestError(errorsMessages.provider.notUsed)
     }
     const hasOthersWayToAuthenticate = strategies.length >= 2
     if (!hasOthersWayToAuthenticate) {
-      throw new BadRequestError(
-        "You can't delete your only way to authenticate"
-      )
+      throw new BadRequestError(errorsMessages.provider.onlyWayToAuthenticate)
     }
     await oauthProvider.destroy()
     return res.status(200).json({

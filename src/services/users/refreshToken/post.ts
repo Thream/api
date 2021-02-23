@@ -31,7 +31,6 @@ refreshTokenRouter.post(
     if (foundRefreshToken == null) {
       throw new UnauthorizedError()
     }
-
     jwt.verify(
       foundRefreshToken.token,
       process.env.JWT_REFRESH_SECRET,
