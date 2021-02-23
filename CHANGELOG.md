@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.0.1](https://github.com/Thream/api/compare/v1.0.0...v1.0.1) (2021-02-21)
+## [1.0.1](https://github.com/Thream/api/compare/v1.0.0...v1.0.1) (2021-02-24)
 
 ### Bug Fixes
 
