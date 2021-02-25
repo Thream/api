@@ -23,5 +23,23 @@
                     rows:
                       type: 'array'
                       items:
-                        allOf:
-                          - $ref: '#/definitions/Guild'
+                        type: 'object'
+                        properties:
+                          id:
+                            type: 'integer'
+                            description: 'Unique id'
+                          isOwner:
+                            type: 'boolean'
+                          userId:
+                            type: 'integer'
+                          guildId:
+                            type: 'integer'
+                          createdAt:
+                            type: 'string'
+                            format: 'date-time'
+                          updatedAt:
+                            type: 'string'
+                            format: 'date-time'
+                          guild:
+                            allOf:
+                              - $ref: '#/definitions/Guild'
