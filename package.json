@@ -60,7 +60,7 @@
     "build": "rimraf ./build && tsc",
     "start": "cross-env NODE_ENV=production node build/index.js",
     "dev": "concurrently -k -n \"TypeScript,Node\" -p \"[{name}]\" -c \"blue,green\" \"tsc --watch\" \"cross-env NODE_ENV=development nodemon -e js,json,yaml build/index.js\"",
-    "markdownlint": "markdownlint '**/*.md' --ignore node_modules",
+    "markdownlint": "markdownlint '**/*.md' --dot --ignore node_modules",
     "lint": "ts-standard | snazzy",
     "format": "ts-standard --fix | snazzy",
     "release": "release-it",
