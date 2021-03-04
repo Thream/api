@@ -78,7 +78,7 @@ git commit -m "fix(messages): should emit events to connected users"
 
 - `email` : email template(s) and translation(s)
 - `src` : all source files
-  - `models` : models that represent tables in database
+  - `models` : models that represent tables in database (there is a `_data.sql` file to have dummy data to work with in development mode)
   - `services` : all REST API endpoints
   - `tools` : configs and utilities
   - `typings` : types gloablly used in the project
