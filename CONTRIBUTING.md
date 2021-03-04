@@ -8,7 +8,7 @@ Thanks a lot for your interest in contributing to **Thream/api**! 🎉
 
 ## Open Development
 
-All work on **Thream** happens directly on [GitHub](https://github.com/Thream). Both core team members and external contributors send pull requests which go through the same review process.
+All work on **Thream/api** happens directly on [GitHub](https://github.com/Thream). Both core team members and external contributors send pull requests which go through the same review process.
 
 ## Types of contributions
 
