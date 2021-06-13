@@ -1,112 +1,51 @@
-import {
-  Column,
-  DataType,
-  HasMany,
-  HasOne,
-  Model,
-  Table
-} from 'sequelize-typescript'
+import { User } from '@prisma/client'
+import { Static, Type } from '@sinclair/typebox'
 
-import Member from './Member'
-import OAuth, { AuthenticationStrategy } from './OAuth'
-import RefreshToken from './RefreshToken'
-import UserSetting from './UserSetting'
-import { deleteObjectAttributes } from '../tools/utils/deleteObjectAttributes'
-import { usersLogoPath } from '../tools/configurations/constants'
-
-export const userHiddenAttributes = [
-  'password',
-  'tempToken',
-  'tempExpirationToken'
-] as const
-export type UserHiddenAttributes = typeof userHiddenAttributes[number]
-export interface UserToJSON extends Omit<User, UserHiddenAttributes> {}
+import { AuthenticationStrategy } from './OAuth'
+import { userSettingsSchema } from './UserSettings'
+import { date, id } from './utils'
 
 export interface UserJWT {
   id: number
   currentStrategy: AuthenticationStrategy
 }
 
-export interface UserRequest {
-  current: User
-  currentStrategy: AuthenticationStrategy
-  accessToken: string
+export const userSchema = {
+  id,
+  name: Type.String({ maxLength: 255 }),
+  email: Type.String({ maxLength: 255, format: 'email' }),
+  password: Type.String(),
+  logo: Type.String({ format: 'uri-reference' }),
+  status: Type.String({ maxLength: 255 }),
+  biography: Type.String(),
+  isConfirmed: Type.Boolean({ default: false }),
+  temporaryToken: Type.String(),
+  temporaryExpirationToken: Type.String({ format: 'date-time' }),
+  createdAt: date.createdAt,
+  updatedAt: date.updatedAt
 }
 
-@Table
-export default class User extends Model {
-  @Column({
-    type: DataType.STRING,
-    allowNull: false
-  })
-  name!: string
+export const bodyUserSchema = Type.Object({
+  email: userSchema.email,
+  name: userSchema.name,
+  password: userSchema.password,
+  theme: userSettingsSchema.theme,
+  language: userSettingsSchema.language
+})
 
-  @Column({
-    type: DataType.STRING,
-    allowNull: true
-  })
-  email?: string
+export type BodyUserSchemaType = Static<typeof bodyUserSchema>
 
-  @Column({
-    type: DataType.TEXT,
-    allowNull: true
-  })
-  password?: string
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    defaultValue: ''
-  })
-  status!: string
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    defaultValue: ''
-  })
-  biography!: string
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: false,
-    defaultValue: `${usersLogoPath.name}/default.png`
-  })
-  logo!: string
-
-  @Column({
-    type: DataType.BOOLEAN,
-    allowNull: false,
-    defaultValue: false
-  })
-  isConfirmed!: boolean
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: true
-  })
-  tempToken?: string | null
-
-  @Column({
-    type: DataType.BIGINT,
-    allowNull: true
-  })
-  tempExpirationToken?: number | null
-
-  @HasMany(() => RefreshToken, { onDelete: 'CASCADE' })
-  refreshTokens!: RefreshToken[]
-
-  @HasMany(() => OAuth, { onDelete: 'CASCADE' })
-  OAuths!: OAuth[]
-
-  @HasMany(() => Member, { onDelete: 'CASCADE' })
-  members!: Member[]
-
-  @HasOne(() => UserSetting, { onDelete: 'CASCADE' })
-  settings!: UserSetting
-
-  toJSON (): UserToJSON {
-    const attributes = Object.assign({}, this.get())
-    return deleteObjectAttributes(attributes, userHiddenAttributes) as UserToJSON
-  }
+export const userExample: User = {
+  id: 1,
+  name: 'Divlo',
+  email: 'contact@divlo.fr',
+  password: 'somepassword',
+  logo: null,
+  status: null,
+  biography: null,
+  isConfirmed: false,
+  temporaryToken: 'tempUUIDtoken',
+  temporaryExpirationToken: null,
+  createdAt: new Date(),
+  updatedAt: new Date()
 }

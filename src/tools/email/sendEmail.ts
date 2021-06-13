@@ -1,12 +1,11 @@
-import ejs from 'ejs'
-import * as fsWithCallbacks from 'fs'
+import fs from 'fs'
 import path from 'path'
 
-import { Language, Theme } from '../../models/UserSetting'
-import { emailLocalesPath, emailTemplatePath } from '../configurations/constants'
-import { emailTransporter, EMAIL_INFO } from './emailTransporter'
+import ejs from 'ejs'
 
-const fs = fsWithCallbacks.promises
+import { Language, Theme } from '../../models/UserSettings'
+import { EMAIL_LOCALES_PATH, EMAIL_TEMPLATE_PATH } from '../configurations'
+import { emailTransporter, EMAIL_INFO } from './emailTransporter'
 
 interface EmailTranslation {
   subject: string
@@ -53,11 +52,11 @@ const getEmailTranslation = async (
   type: EmailType
 ): Promise<EmailTranslation> => {
   const filename = `${type}.json`
-  let emailTranslationPath = path.join(emailLocalesPath, language, filename)
-  if (!fsWithCallbacks.existsSync(emailTranslationPath)) {
-    emailTranslationPath = path.join(emailLocalesPath, 'en', filename)
+  let emailTranslationPath = path.join(EMAIL_LOCALES_PATH, language, filename)
+  if (!fs.existsSync(emailTranslationPath)) {
+    emailTranslationPath = path.join(EMAIL_LOCALES_PATH, 'en', filename)
   }
-  const translationString = await fs.readFile(emailTranslationPath, {
+  const translationString = await fs.promises.readFile(emailTranslationPath, {
     encoding: 'utf-8'
   })
   return JSON.parse(translationString)
@@ -66,7 +65,7 @@ const getEmailTranslation = async (
 export const sendEmail = async (options: SendEmailOptions): Promise<void> => {
   const { email, type, url, theme = 'dark', language = 'en' } = options
   const emailTranslation = await getEmailTranslation(language, type)
-  const emailHTML = await ejs.renderFile(emailTemplatePath, {
+  const emailHTML = await ejs.renderFile(EMAIL_TEMPLATE_PATH, {
     text: { ...emailTranslation.renderOptions, url },
     theme: themeColors[theme]
   })

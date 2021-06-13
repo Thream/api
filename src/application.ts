@@ -1,45 +1,52 @@
-import 'express-async-errors'
-
-import cors from 'cors'
 import dotenv from 'dotenv'
-import express, { Request } from 'express'
-import rateLimit from 'express-rate-limit'
-import helmet from 'helmet'
-import morgan from 'morgan'
+import fastify from 'fastify'
+import fastifyCors from 'fastify-cors'
+import fastifySwagger from 'fastify-swagger'
+import fastifyUrlData from 'fastify-url-data'
+import fastifyHelmet from 'fastify-helmet'
+import fastifyRateLimit from 'fastify-rate-limit'
+import fastifySensible from 'fastify-sensible'
 
-import { errorHandler } from './tools/middlewares/errorHandler'
-import { router } from './services'
-import { NotFoundError } from './tools/errors/NotFoundError'
-import { TooManyRequestsError } from './tools/errors/TooManyRequestsError'
+import { services } from './services'
+import { swaggerOptions } from './tools/configurations/swaggerOptions'
+import fastifySocketIo from './tools/plugins/socket-io'
 
-const application = express()
+export const application = fastify({
+  logger: process.env.NODE_ENV === 'development'
+})
 dotenv.config()
 
-if (process.env.NODE_ENV === 'development') {
-  application.use(morgan<Request>('dev'))
-} else if (process.env.NODE_ENV === 'production') {
-  const requestPerSecond = 2
-  const seconds = 60
-  const windowMs = seconds * 1000
-  application.enable('trust proxy')
-  application.use(
-    rateLimit({
-      windowMs,
-      max: seconds * requestPerSecond,
-      handler: () => {
-        throw new TooManyRequestsError()
+const main = async (): Promise<void> => {
+  await application.register(fastifyCors)
+  await application.register(fastifySensible)
+  await application.register(fastifyUrlData)
+  await application.register(fastifySocketIo, {
+    cors: {
+      origin: '*',
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      preflightContinue: false,
+      optionsSuccessStatus: 204
+    }
+  })
+  await application.register(fastifyHelmet, {
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", 'data:', 'validator.swagger.io'],
+        scriptSrc: ["'self'", "https: 'unsafe-inline'"]
       }
-    })
-  )
+    }
+  })
+  await application.register(fastifyRateLimit, {
+    max: 100,
+    timeWindow: '1 minute'
+  })
+  await application.register(fastifySwagger, swaggerOptions)
+  await application.register(services)
 }
 
-application.use(express.json())
-application.use(helmet())
-application.use(cors<Request>())
-application.use(router)
-application.use(() => {
-  throw new NotFoundError()
+main().catch((error) => {
+  console.error(error)
+  process.exit(1)
 })
-application.use(errorHandler)
-
-export default application

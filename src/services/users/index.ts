@@ -1,26 +1,11 @@
-import { Router } from 'express'
+import { FastifyPluginAsync } from 'fastify'
 
-import { confirmEmailRouter } from './confirmEmail/get'
-import { currentRouter } from './current'
-import { OAuth2Router } from './oauth2'
-import { refreshTokenRouter } from './refreshToken/post'
-import { resetPasswordRouter } from './resetPassword'
-import { signinRouter } from './signin/post'
-import { signoutRouter } from './signout'
-import { signupRouter } from './signup/post'
-import { usersGetByIdRouter } from './[userId]'
-import { addLocalStrategyRouter } from './addLocalStrategy/post'
+import { postSignupUser } from './signup/post'
+import { getConfirmEmail } from './confirm-email/get'
+import { postSigninUser } from './signin/post'
 
-export const usersRouter = Router()
-
-usersRouter.use('/', confirmEmailRouter)
-usersRouter.use('/', currentRouter)
-usersRouter.use('/', refreshTokenRouter)
-usersRouter.use('/', resetPasswordRouter)
-usersRouter.use('/', signinRouter)
-usersRouter.use('/', signoutRouter)
-usersRouter.use('/', signupRouter)
-usersRouter.use('/', OAuth2Router)
-usersRouter.use('/', usersGetByIdRouter)
-usersRouter.use('/', signoutRouter)
-usersRouter.use('/', addLocalStrategyRouter)
+export const usersService: FastifyPluginAsync = async (fastify) => {
+  await fastify.register(postSignupUser)
+  await fastify.register(getConfirmEmail)
+  await fastify.register(postSigninUser)
+}

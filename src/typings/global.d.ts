@@ -1,19 +1,13 @@
-import type { Dialect } from 'sequelize'
-
-import type { UserRequest } from '../models/User'
+export {}
 
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
-      COMPOSE_PROJECT_NAME: string
+      NODE_ENV: 'development' | 'production' | 'test'
+      npm_package_version: string
+      HOST: string
       PORT: string
-      API_BASE_URL: string
-      DATABASE_DIALECT: Dialect
-      DATABASE_HOST: string
-      DATABASE_NAME: string
-      DATABASE_USER: string
-      DATABASE_PASSWORD: string
-      DATABASE_PORT: string
+      DATABASE_URL: string
       JWT_ACCESS_EXPIRES_IN: string
       JWT_ACCESS_SECRET: string
       JWT_REFRESH_SECRET: string
@@ -27,14 +21,6 @@ declare global {
       EMAIL_USER: string
       EMAIL_PASSWORD: string
       EMAIL_PORT: string
-      NODE_ENV: 'development' | 'production' | 'test'
-      npm_package_version: string
-    }
-  }
-
-  namespace Express {
-    interface Request {
-      user?: UserRequest
     }
   }
 }

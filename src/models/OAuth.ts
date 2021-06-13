@@ -1,38 +1,22 @@
-import {
-  BelongsTo,
-  Column,
-  DataType,
-  ForeignKey,
-  Model,
-  Table
-} from 'sequelize-typescript'
+import { Type } from '@sinclair/typebox'
 
-import User from './User'
+import { date, id } from './utils'
 
-export const providers = ['google', 'github', 'discord'] as const
+export const providers = [
+  Type.Literal('google'),
+  Type.Literal('github'),
+  Type.Literal('discord')
+] as const
 export const strategies = [...providers, 'local'] as const
 
 export type ProviderOAuth = typeof providers[number]
 export type AuthenticationStrategy = typeof strategies[number]
 
-@Table
-export default class OAuth extends Model {
-  @Column({
-    type: DataType.STRING,
-    allowNull: false
-  })
-  provider!: ProviderOAuth
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: false
-  })
-  providerId!: string
-
-  @ForeignKey(() => User)
-  @Column
-  userId!: number
-
-  @BelongsTo(() => User)
-  user!: User
+export const oauthSchema = {
+  id,
+  providerId: Type.String(),
+  provider: Type.Union([...providers]),
+  createdAt: date.createdAt,
+  updatedAt: date.updatedAt,
+  userId: id
 }

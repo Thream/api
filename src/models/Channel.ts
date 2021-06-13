@@ -1,55 +1,15 @@
-import {
-  BelongsTo,
-  Column,
-  DataType,
-  ForeignKey,
-  HasMany,
-  Model,
-  Table
-} from 'sequelize-typescript'
+import { Type } from '@sinclair/typebox'
 
-import Guild from './Guild'
-import Message from './Message'
+import { date, id } from './utils'
 
-export const channelTypes = ['text', 'voice'] as const
-export type ChannelType = typeof channelTypes[number]
+export const types = [Type.Literal('text')]
 
-@Table
-export default class Channel extends Model {
-  @Column({
-    type: DataType.STRING,
-    allowNull: false
-  })
-  name!: string
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    defaultValue: 'text'
-  })
-  type!: ChannelType
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    defaultValue: ''
-  })
-  description!: string
-
-  @Column({
-    type: DataType.BOOLEAN,
-    allowNull: false,
-    defaultValue: false
-  })
-  isDefault!: boolean
-
-  @ForeignKey(() => Guild)
-  @Column
-  guildId!: number
-
-  @BelongsTo(() => Guild)
-  guild!: Guild
-
-  @HasMany(() => Message)
-  messages!: Message[]
+export const channelSchema = {
+  id,
+  name: Type.String({ maxLength: 255 }),
+  type: Type.Union(types, { default: 'text' }),
+  description: Type.String(),
+  createdAt: date.createdAt,
+  updatedAt: date.updatedAt,
+  guildId: id
 }
