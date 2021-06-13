@@ -1,3 +1,5 @@
+import type { Dialect } from 'sequelize'
+
 import type { UserRequest } from '../models/User'
 
 declare global {
@@ -6,6 +8,7 @@ declare global {
       COMPOSE_PROJECT_NAME: string
       PORT: string
       API_BASE_URL: string
+      DATABASE_DIALECT: Dialect
       DATABASE_HOST: string
       DATABASE_NAME: string
       DATABASE_USER: string

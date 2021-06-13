@@ -1,7 +1,7 @@
 import request from 'supertest'
 
 import { authenticateUserTest } from '../../../../__test__/utils/authenticateUser'
-import app from '../../../../app'
+import application from '../../../../application'
 import OAuth from '../../../../models/OAuth'
 import { formatErrors } from '../../../../__test__/utils/formatErrors'
 import { errorsMessages } from '../delete'
@@ -15,7 +15,7 @@ describe('DELETE /users/oauth2/:provider', () => {
       providerId: 'randomid',
       userId: userToken.userId
     })
-    await request(app)
+    await request(application)
       .delete(`/users/oauth2/${oauth.provider}`)
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send()
@@ -24,7 +24,7 @@ describe('DELETE /users/oauth2/:provider', () => {
 
   it('fails with invalid provider', async () => {
     const userToken = await authenticateUserTest()
-    const response = await request(app)
+    const response = await request(application)
       .delete('/users/oauth2/google')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send()
@@ -41,7 +41,7 @@ describe('DELETE /users/oauth2/:provider', () => {
       id: 'randomproviderid',
       name: 'john'
     })
-    const response = await request(app)
+    const response = await request(application)
       .delete(`/users/oauth2/${GOOGLE_PROVIDER}`)
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send()

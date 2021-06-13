@@ -12,7 +12,7 @@ import OAuth, { AuthenticationStrategy } from './OAuth'
 import RefreshToken from './RefreshToken'
 import UserSetting from './UserSetting'
 import { deleteObjectAttributes } from '../tools/utils/deleteObjectAttributes'
-import { usersLogoPath } from '../tools/config/constants'
+import { usersLogoPath } from '../tools/configurations/constants'
 
 export const userHiddenAttributes = [
   'password',

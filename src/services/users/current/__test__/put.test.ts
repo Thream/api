@@ -2,9 +2,9 @@ import request from 'supertest'
 
 import { authenticateUserTest } from '../../../../__test__/utils/authenticateUser'
 import { formatErrors } from '../../../../__test__/utils/formatErrors'
-import app from '../../../../app'
+import application from '../../../../application'
 import User from '../../../../models/User'
-import { commonErrorsMessages } from '../../../../tools/config/constants'
+import { commonErrorsMessages } from '../../../../tools/configurations/constants'
 import { randomString } from '../../../../tools/utils/random'
 import { errorsMessages } from '../index'
 
@@ -13,7 +13,7 @@ describe('PUT /users/current', () => {
     const name = 'test2'
     const email = 'test2@test2.com'
     const userToken = await authenticateUserTest()
-    const response = await request(app)
+    const response = await request(application)
       .put('/users/current')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ name, email })
@@ -36,7 +36,7 @@ describe('PUT /users/current', () => {
     expect(user.name).toEqual(name)
 
     const email2 = 'test2@test2.com'
-    const response = await request(app)
+    const response = await request(application)
       .put('/users/current')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ email: email2 })
@@ -63,7 +63,7 @@ describe('PUT /users/current', () => {
     expect(user.name).toEqual(name)
 
     const name2 = 'test2'
-    const response = await request(app)
+    const response = await request(application)
       .put('/users/current')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ name: name2 })
@@ -78,7 +78,7 @@ describe('PUT /users/current', () => {
   it('succeeds and only change the status', async () => {
     const userToken = await authenticateUserTest()
     const status = '👀 Working on secret projects...'
-    const response = await request(app)
+    const response = await request(application)
       .put('/users/current')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ status })
@@ -90,7 +90,7 @@ describe('PUT /users/current', () => {
   it('succeeds and only change the biography', async () => {
     const userToken = await authenticateUserTest()
     const biography = 'My awesome biography'
-    const response = await request(app)
+    const response = await request(application)
       .put('/users/current')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ biography })
@@ -105,7 +105,7 @@ describe('PUT /users/current', () => {
       email: 'contact@john.com',
       shouldBeConfirmed: false
     })
-    const response = await request(app)
+    const response = await request(application)
       .put('/users/current')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send()
@@ -116,7 +116,7 @@ describe('PUT /users/current', () => {
   it('fails with invalid status', async () => {
     const userToken = await authenticateUserTest()
     const status = randomString(110)
-    const response = await request(app)
+    const response = await request(application)
       .put('/users/current')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ status })
@@ -130,7 +130,7 @@ describe('PUT /users/current', () => {
   it('fails with invalid biography', async () => {
     const userToken = await authenticateUserTest()
     const biography = randomString(170)
-    const response = await request(app)
+    const response = await request(application)
       .put('/users/current')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ biography })
@@ -143,7 +143,7 @@ describe('PUT /users/current', () => {
 
   it('fails with invalid name and invalid email', async () => {
     const userToken = await authenticateUserTest()
-    const response = await request(app)
+    const response = await request(application)
       .put('/users/current')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({
@@ -170,7 +170,7 @@ describe('PUT /users/current', () => {
       shouldBeConfirmed: true
     })
     const secondUserToken = await authenticateUserTest()
-    const response = await request(app)
+    const response = await request(application)
       .put('/users/current')
       .set(
         'Authorization',
@@ -195,7 +195,7 @@ describe('PUT /users/current', () => {
       name,
       email
     })
-    const response = await request(app)
+    const response = await request(application)
       .put('/users/current')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ name })
@@ -214,7 +214,7 @@ describe('PUT /users/current', () => {
       name,
       email
     })
-    const response = await request(app)
+    const response = await request(application)
       .put('/users/current')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ email })

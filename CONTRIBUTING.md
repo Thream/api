@@ -98,7 +98,7 @@ Here is what potentially look like a folder structure for this service :
             │   └── get.yaml
             ├── __test__
             │   └── get.test.ts
-            ├── :channelId
+            ├── [channelId]
             │   ├── __docs__
             │   │   ├── delete.yaml
             │   │   └── put.yaml

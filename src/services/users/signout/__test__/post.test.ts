@@ -1,7 +1,7 @@
 import request from 'supertest'
 
 import { authenticateUserTest } from '../../../../__test__/utils/authenticateUser'
-import app from '../../../../app'
+import application from '../../../../application'
 import RefreshToken from '../../../../models/RefreshToken'
 
 describe('POST /users/signout', () => {
@@ -10,7 +10,7 @@ describe('POST /users/signout', () => {
     let refreshToken = await RefreshToken.findAll()
     expect(refreshToken.length).toEqual(1)
 
-    await request(app)
+    await request(application)
       .post('/users/signout')
       .send({ refreshToken: userToken.refreshToken })
       .expect(200)
@@ -24,7 +24,7 @@ describe('POST /users/signout', () => {
     let refreshToken = await RefreshToken.findAll()
     expect(refreshToken.length).toEqual(1)
 
-    await request(app)
+    await request(application)
       .post('/users/signout')
       .send({ refreshToken: 'some invalid token' })
       .expect(401)

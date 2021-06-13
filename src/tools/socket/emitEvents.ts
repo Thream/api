@@ -5,7 +5,7 @@ interface EmitEventOptions {
   event: string
   payload: {
     action: 'create' | 'delete' | 'update'
-    [key: string]: any
+    item: object
   }
 }
 

@@ -2,7 +2,7 @@ import ms from 'ms'
 import request from 'supertest'
 
 import { authenticateUserTest } from '../../../../__test__/utils/authenticateUser'
-import app from '../../../../app'
+import application from '../../../../application'
 import User from '../../../../models/User'
 import { errorsMessages } from '..'
 
@@ -18,7 +18,7 @@ describe('PUT /users/resetPassword', () => {
       shouldBeConfirmed: true
     })
 
-    await request(app)
+    await request(application)
       .post('/users/resetPassword?redirectURI=someurl.com')
       .send({ email })
       .expect(200)
@@ -27,19 +27,19 @@ describe('PUT /users/resetPassword', () => {
     expect(user).not.toBeNull()
 
     const newPassword = 'newpassword'
-    await request(app)
+    await request(application)
       .put('/users/resetPassword')
       .send({ password: newPassword, tempToken: user?.tempToken })
       .expect(200)
 
-    await request(app)
+    await request(application)
       .post('/users/signin')
       .send({ email, password: newPassword })
       .expect(200)
   })
 
   it('fails with an invalid "tempToken"', async () => {
-    const response = await request(app)
+    const response = await request(application)
       .put('/users/resetPassword')
       .send({ password: 'newpassword', tempToken: 'sometemptoken' })
       .expect(400)
@@ -51,7 +51,7 @@ describe('PUT /users/resetPassword', () => {
   })
 
   it('fails if there is no password and tempToken provided', async () => {
-    const response = await request(app)
+    const response = await request(application)
       .put('/users/resetPassword')
       .send()
       .expect(400)
@@ -69,7 +69,7 @@ describe('PUT /users/resetPassword', () => {
       shouldBeConfirmed: true
     })
 
-    await request(app)
+    await request(application)
       .post('/users/resetPassword?redirectURI=someurl.com')
       .send({ email })
       .expect(200)
@@ -82,7 +82,7 @@ describe('PUT /users/resetPassword', () => {
     }
 
     const newPassword = 'newpassword'
-    const response = await request(app)
+    const response = await request(application)
       .put('/users/resetPassword')
       .send({ password: newPassword, tempToken: user?.tempToken })
       .expect(400)

@@ -9,7 +9,7 @@ import {
   generateAccessToken,
   generateRefreshToken,
   ResponseJWT
-} from '../../../tools/config/jwtToken'
+} from '../../../tools/configurations/jwtToken'
 import { BadRequestError } from '../../../tools/errors/BadRequestError'
 
 export const errorsMessages = {

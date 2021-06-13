@@ -1,5 +1,5 @@
 import request from 'supertest'
-import app from '../../../app'
+import application from '../../../application'
 import Member from '../../../models/Member'
 
 import { authenticateUserTest } from '../../../__test__/utils/authenticateUser'
@@ -17,9 +17,10 @@ describe('DELETE /members', () => {
     const userToken = await authenticateUserTest()
     const memberToDelete = await Member.create({
       userId: userToken.userId,
-      guildId: result.guild.id
+      guildId: result.guild.id,
+      lastVisitedChannelId: 1
     })
-    const response = await request(app)
+    const response = await request(application)
       .delete('/members')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send()

@@ -8,6 +8,7 @@ import {
   Table
 } from 'sequelize-typescript'
 
+import Channel from './Channel'
 import Guild from './Guild'
 import Message from './Message'
 import User from './User'
@@ -20,6 +21,13 @@ export default class Member extends Model {
     defaultValue: false
   })
   isOwner!: boolean
+
+  @ForeignKey(() => Channel)
+  @Column
+  lastVisitedChannelId!: number
+
+  @BelongsTo(() => Channel)
+  channel!: Channel
 
   @ForeignKey(() => User)
   @Column

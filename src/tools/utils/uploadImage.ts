@@ -7,7 +7,7 @@ import {
   commonErrorsMessages,
   supportedImageMimetype,
   tempPath
-} from '../config/constants'
+} from '../configurations/constants'
 import { deleteAllFilesInDirectory } from './deleteFiles'
 import { BadRequestError } from '../errors/BadRequestError'
 import { PayloadTooLargeError } from '../errors/PayloadTooLargeError'
@@ -48,7 +48,6 @@ export const uploadImage = async (
     const oldImagePath = oldImage.split('/')
     const oldImageName = oldImagePath[oldImagePath.length - 1]
     if (!oldImageName.startsWith('default')) {
-      // Delete old image
       await fs.unlink(path.join(imagesPath, oldImageName))
     }
     await image.mv(path.join(imagesPath, completeImageName))

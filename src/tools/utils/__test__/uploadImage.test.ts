@@ -4,7 +4,7 @@ import { UploadedFile } from 'express-fileupload'
 
 import { uploadImage } from '../uploadImage'
 import { PayloadTooLargeError } from '../../errors/PayloadTooLargeError'
-import { tempPath, usersLogoPath } from '../../config/constants'
+import { tempPath, usersLogoPath } from '../../configurations/constants'
 import { BadRequestError } from '../../errors/BadRequestError'
 
 const fs = fsWithCallbacks.promises

@@ -10,7 +10,7 @@ import {
   guildsIconPath,
   messagesFilePath,
   usersLogoPath
-} from '../../tools/config/constants'
+} from '../../tools/configurations/constants'
 import { ForbiddenError } from '../../tools/errors/ForbiddenError'
 import { NotFoundError } from '../../tools/errors/NotFoundError'
 import { authenticateUser } from '../../tools/middlewares/authenticateUser'

@@ -11,7 +11,7 @@ import UserSetting, {
   Theme,
   themes
 } from '../../../models/UserSetting'
-import { commonErrorsMessages } from '../../../tools/config/constants'
+import { commonErrorsMessages } from '../../../tools/configurations/constants'
 import { sendEmail } from '../../../tools/email/sendEmail'
 import { alreadyUsedValidation } from '../../../tools/validations/alreadyUsedValidation'
 import { onlyPossibleValuesValidation } from '../../../tools/validations/onlyPossibleValuesValidation'

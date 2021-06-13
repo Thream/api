@@ -10,6 +10,13 @@ interface Socket {
 export const socket: Socket = {
   io: null,
   init (httpServer) {
-    socket.io = new SocketIoServer(httpServer)
+    socket.io = new SocketIoServer(httpServer, {
+      cors: {
+        origin: '*',
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        preflightContinue: false,
+        optionsSuccessStatus: 204
+      }
+    })
   }
 }

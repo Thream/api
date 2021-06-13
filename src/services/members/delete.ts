@@ -25,7 +25,7 @@ deleteByIdMembersRouter.delete(
     await emitToMembers({
       event: 'members',
       guildId: member.guildId,
-      payload: { action: 'delete', deletedMemberId }
+      payload: { action: 'delete', item: member }
     })
     return res.status(200).json({ deletedMemberId })
   }

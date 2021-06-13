@@ -1,9 +1,9 @@
 import request from 'supertest'
 import fsMock from 'mock-fs'
 
-import app from '../../../app'
+import application from '../../../application'
 import Message from '../../../models/Message'
-import { messagesFilePath } from '../../../tools/config/constants'
+import { messagesFilePath } from '../../../tools/configurations/constants'
 import { createGuild } from '../../guilds/__test__/utils/createGuild'
 
 describe('GET /uploads', () => {
@@ -29,7 +29,7 @@ describe('GET /uploads', () => {
         'logo.png': ''
       }
     })
-    await request(app)
+    await request(application)
       .get(messageFileURL)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send()
@@ -52,7 +52,7 @@ describe('GET /uploads', () => {
         'logo.png': ''
       }
     })
-    await request(app)
+    await request(application)
       .get(messageFileURL)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send()

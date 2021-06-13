@@ -1,6 +1,6 @@
 import request from 'supertest'
 
-import app from '../../app'
+import application from '../../application'
 import User from '../../models/User'
 
 interface AuthenticateUserOptions {
@@ -29,18 +29,18 @@ export async function authenticateUserTest (
   } = options
 
   if (!alreadySignedUp) {
-    const { body: signupBody } = await request(app)
+    const { body: signupBody } = await request(application)
       .post('/users/signup')
       .send({ name, email, password })
       .expect(201)
     let signinResponse: any = { body: {} }
     if (shouldBeConfirmed) {
       const user = await User.findOne({ where: { id: signupBody.user.id } })
-      await request(app)
+      await request(application)
         .get(`/users/confirmEmail?tempToken=${user?.tempToken as string}`)
         .send()
         .expect(200)
-      signinResponse = await request(app)
+      signinResponse = await request(application)
         .post('/users/signin')
         .send({ email, password })
         .expect(200)
@@ -48,7 +48,7 @@ export async function authenticateUserTest (
 
     return { ...signinResponse.body, userId: signupBody.user.id }
   }
-  const signinResponse = await request(app)
+  const signinResponse = await request(application)
     .post('/users/signin')
     .send({ email, password })
     .expect(200)

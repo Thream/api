@@ -1,5 +1,5 @@
 import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript'
-import { guildsIconPath } from '../tools/config/constants'
+import { guildsIconPath } from '../tools/configurations/constants'
 
 import Channel from './Channel'
 import Invitation from './Invitation'

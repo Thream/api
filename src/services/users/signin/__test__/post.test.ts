@@ -1,6 +1,6 @@
 import request from 'supertest'
 
-import app from '../../../../app'
+import application from '../../../../application'
 import User from '../../../../models/User'
 import { errorsMessages } from '../post'
 
@@ -9,20 +9,20 @@ describe('POST /users/signin', () => {
     const email = 'contact@test.com'
     const name = 'John'
     const password = 'test'
-    const response = await request(app)
+    const response = await request(application)
       .post('/users/signup')
       .send({ name, email, password })
       .expect(201)
 
     const user = await User.findOne({ where: { id: response.body.user.id } })
     if (user != null) {
-      await request(app)
+      await request(application)
         .get(`/users/confirmEmail?tempToken=${user.tempToken as string}`)
         .send()
         .expect(200)
     }
 
-    await request(app)
+    await request(application)
       .post('/users/signin')
       .send({ email, password })
       .expect(200)
@@ -32,12 +32,12 @@ describe('POST /users/signin', () => {
     const email = 'contact@test.com'
     const name = 'John'
     const password = 'test'
-    await request(app)
+    await request(application)
       .post('/users/signup')
       .send({ name, email, password })
       .expect(201)
 
-    await request(app)
+    await request(application)
       .post('/users/signin')
       .send({ email, password })
       .expect(400)
@@ -47,12 +47,12 @@ describe('POST /users/signin', () => {
     const email = 'contact@test.com'
     const name = 'John'
     const password = 'test'
-    await request(app)
+    await request(application)
       .post('/users/signup')
       .send({ name, email, password })
       .expect(201)
 
-    const response = await request(app)
+    const response = await request(application)
       .post('/users/signin')
       .send({ email, password: 'some random password' })
       .expect(400)

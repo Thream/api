@@ -62,6 +62,7 @@ describe('/tools/database/paginateModel', () => {
     expect(result.hasMore).toBeTruthy()
     expect(result.rows.length).toEqual(parseInt(itemsPerPage))
     expect(result.totalItems).toEqual(numberOfPosts)
+    expect(result.itemsPerPage).toEqual(Number(itemsPerPage))
   })
 
   it('throws "BadRequestError" if "itemsPerPage" is more than 100', async () => {
@@ -99,6 +100,7 @@ describe('/tools/database/paginateModel', () => {
         order: [['id', 'ASC']]
       }
     })
+    expect(result2.page).toEqual(page)
     expect(result2.hasMore).toBeTruthy()
     expect(result2.rows[itemsPerPageInt - 1].title).toEqual(
       `title-${itemsPerPageInt * 2}`

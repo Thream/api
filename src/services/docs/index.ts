@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import swaggerUi from 'swagger-ui-express'
 
-import { swaggerSpec } from '../../tools/config/swaggerSpec'
+import { swaggerSpecification } from '../../tools/configurations/swaggerSpecification'
 
-export const docsRouter = Router()
+export const documentationRouter = Router()
 
-docsRouter.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+documentationRouter.use('/documentation', swaggerUi.serve, swaggerUi.setup(swaggerSpecification))

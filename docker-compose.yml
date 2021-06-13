@@ -4,17 +4,14 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}
     build:
       context: './'
-    environment:
-      WAIT_HOSTS: '${DATABASE_HOST}:${DATABASE_PORT}'
     ports:
       - '${PORT}:${PORT}'
     depends_on:
       - ${DATABASE_HOST}
       - 'thream-maildev'
     volumes:
-      - './:/app'
-      - '/app/node_modules'
-      - '/app/build'
+      - './:/api'
+    restart: 'unless-stopped'
 
   thream-phpmyadmin:
     container_name: 'thream-phpmyadmin'
@@ -28,6 +25,7 @@ services:
       - '8000:80'
     depends_on:
       - ${DATABASE_HOST}
+    restart: 'unless-stopped'
 
   thream-database:
     container_name: ${DATABASE_HOST}
@@ -41,12 +39,14 @@ services:
       - '${DATABASE_PORT}:${DATABASE_PORT}'
     volumes:
       - 'database-volume:/var/lib/mysql'
+    restart: 'unless-stopped'
 
   thream-maildev:
     container_name: 'thream-maildev'
     image: 'maildev/maildev:1.1.0'
     ports:
       - '1080:80'
+    restart: 'unless-stopped'
 
 volumes:
   database-volume:

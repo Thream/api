@@ -1,6 +1,6 @@
 import request from 'supertest'
 
-import app from '../../../app'
+import application from '../../../application'
 import { createGuild } from './utils/createGuild'
 
 describe('GET /guilds', () => {
@@ -14,17 +14,7 @@ describe('GET /guilds', () => {
         name: 'Test'
       }
     })
-
-    // Should not be included in the response because it's created by another user
-    await createGuild({
-      guild: { description, name: 'guild2' },
-      user: {
-        email: 'test@test2.com',
-        name: 'Test2'
-      }
-    })
-
-    const response = await request(app)
+    const response = await request(application)
       .get('/guilds')
       .set('Authorization', `${guild.user.type} ${guild.user.accessToken}`)
       .send()

@@ -6,6 +6,10 @@ definitions:
         type: 'boolean'
       totalItems:
         type: 'number'
+      itemsPerPage:
+        type: 'number'
+      page:
+        type: 'number'
   PaginateModelParameters:
     'parameters':
       - name: 'itemsPerPage'

@@ -2,8 +2,8 @@ import request from 'supertest'
 import axios from 'axios'
 
 import { authenticateUserTest } from '../../../../__test__/utils/authenticateUser'
-import app from '../../../../app'
-import { authorizedRedirectDomains } from '../../../../tools/config/constants'
+import application from '../../../../application'
+import { authorizedRedirectDomains } from '../../../../tools/configurations/constants'
 import { GOOGLE_PROVIDER } from '../google'
 
 jest.mock('axios')
@@ -12,7 +12,7 @@ const mockedAxios = axios as jest.Mocked<typeof axios>
 describe(`/users/oauth2/${GOOGLE_PROVIDER}`, () => {
   test(`GET /users/oauth2/${GOOGLE_PROVIDER}/add-strategy`, async () => {
     const userToken = await authenticateUserTest()
-    const response = await request(app)
+    const response = await request(application)
       .get(
         `/users/oauth2/${GOOGLE_PROVIDER}/add-strategy?redirectURI=${authorizedRedirectDomains[0]}`
       )
@@ -36,7 +36,7 @@ describe(`/users/oauth2/${GOOGLE_PROVIDER}`, () => {
       }
     })
     const userToken = await authenticateUserTest()
-    await request(app)
+    await request(application)
       .get(
         `/users/oauth2/${GOOGLE_PROVIDER}/callback-add-strategy?redirectURI=${authorizedRedirectDomains[0]}&code=randomtokencode&state=${userToken.accessToken}`
       )
@@ -46,7 +46,7 @@ describe(`/users/oauth2/${GOOGLE_PROVIDER}`, () => {
   })
 
   test(`GET /users/oauth2/${GOOGLE_PROVIDER}/signin`, async () => {
-    const response = await request(app)
+    const response = await request(application)
       .get(
         `/users/oauth2/${GOOGLE_PROVIDER}/signin?redirectURI=${authorizedRedirectDomains[0]}`
       )
@@ -68,7 +68,7 @@ describe(`/users/oauth2/${GOOGLE_PROVIDER}`, () => {
         access_token: 'randomtoken'
       }
     })
-    await request(app)
+    await request(application)
       .get(
         `/users/oauth2/${GOOGLE_PROVIDER}/callback?redirectURI=${authorizedRedirectDomains[0]}&code=randomtokencode`
       )

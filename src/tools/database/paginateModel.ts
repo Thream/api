@@ -18,6 +18,8 @@ export const paginateModel = async <M extends Model<any, any>>(
 ): Promise<{
   totalItems: number
   hasMore: boolean
+  page: number
+  itemsPerPage: number
   rows: M[]
 }> => {
   const {
@@ -40,5 +42,5 @@ export const paginateModel = async <M extends Model<any, any>>(
   })
   const { count, rows } = result
   const hasMore = page * itemsPerPage < count
-  return { totalItems: count, hasMore, rows }
+  return { page, itemsPerPage, totalItems: count, hasMore, rows }
 }

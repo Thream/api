@@ -6,7 +6,7 @@ import {
   generateAccessToken,
   generateRefreshToken,
   ResponseJWT
-} from '../../../tools/config/jwtToken'
+} from '../../../tools/configurations/jwtToken'
 
 interface ProviderData {
   name: string

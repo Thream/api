@@ -1,7 +1,7 @@
 import request from 'supertest'
 
 import { authenticateUserTest } from '../../../../__test__/utils/authenticateUser'
-import app from '../../../../app'
+import application from '../../../../application'
 import Member from '../../../../models/Member'
 
 interface CreateGuildOptions {
@@ -51,7 +51,7 @@ export const createGuild = async (
   if (user.tokenResponse != null) {
     userToken = user.tokenResponse
   }
-  let response = await request(app)
+  let response = await request(application)
     .post('/guilds')
     .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
     .send({ name: guild.name, description: guild.description })
@@ -66,7 +66,7 @@ export const createGuild = async (
   }
 
   if (guild.shouldBePublic != null && guild.shouldBePublic) {
-    response = await request(app)
+    response = await request(application)
       .put(`/guilds/${response.body.guild.id as string}`)
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ isPublic: true })

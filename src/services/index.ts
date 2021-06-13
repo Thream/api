@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-import { docsRouter } from './docs'
+import { documentationRouter } from './docs'
 import { channelsRouter } from './channels'
 import { guildsRouter } from './guilds'
 import { invitationsRouter } from './invitations'
@@ -11,7 +11,7 @@ import { usersRouter } from './users'
 
 export const router = Router()
 
-router.use(docsRouter)
+router.use(documentationRouter)
 router.use(uploadsRouter)
 router.use(usersRouter)
 router.use(guildsRouter)

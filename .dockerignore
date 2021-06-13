@@ -1,6 +1,8 @@
-node_modules
+.vscode
+.git
 build
 coverage
+node_modules
 tmp
 temp
-uploads
+**/__test__/**

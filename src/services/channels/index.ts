@@ -1,8 +1,8 @@
 import { Router } from 'express'
 
-import { deleteByIdChannelsRouter } from './:channelId/delete'
-import { messagesChannelsRouter } from './:channelId/messages'
-import { putByIdChannelsRouter } from './:channelId/put'
+import { deleteByIdChannelsRouter } from './[channelId]/delete'
+import { messagesChannelsRouter } from './[channelId]/messages'
+import { putByIdChannelsRouter } from './[channelId]/put'
 
 export const channelsRouter = Router()
 

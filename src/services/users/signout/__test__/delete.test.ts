@@ -1,7 +1,7 @@
 import request from 'supertest'
 
 import { authenticateUserTest } from '../../../../__test__/utils/authenticateUser'
-import app from '../../../../app'
+import application from '../../../../application'
 import RefreshToken from '../../../../models/RefreshToken'
 
 describe('DELETE /users/signout', () => {
@@ -18,7 +18,7 @@ describe('DELETE /users/signout', () => {
     await authenticateUserTest({ name, email, password, alreadySignedUp: true })
     let refreshToken = await RefreshToken.findAll()
     expect(refreshToken.length).toEqual(2)
-    await request(app)
+    await request(application)
       .delete('/users/signout')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send()

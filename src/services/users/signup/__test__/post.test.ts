@@ -1,9 +1,9 @@
 import request from 'supertest'
 
 import { formatErrors } from '../../../../__test__/utils/formatErrors'
-import app from '../../../../app'
+import application from '../../../../application'
 import User from '../../../../models/User'
-import { commonErrorsMessages } from '../../../../tools/config/constants'
+import { commonErrorsMessages } from '../../../../tools/configurations/constants'
 import { errorsMessages } from '../post'
 
 describe('POST /users/signup', () => {
@@ -11,7 +11,7 @@ describe('POST /users/signup', () => {
     let users = await User.findAll()
     expect(users.length).toEqual(0)
 
-    await request(app)
+    await request(application)
       .post('/users/signup')
       .send({
         name: 'John',
@@ -28,7 +28,7 @@ describe('POST /users/signup', () => {
     let users = await User.findAll()
     expect(users.length).toEqual(0)
 
-    const response = await request(app)
+    const response = await request(application)
       .post('/users/signup')
       .send({
         name: 'Divlo',
@@ -50,7 +50,7 @@ describe('POST /users/signup', () => {
     let users = await User.findAll()
     expect(users.length).toEqual(0)
 
-    const response = await request(app)
+    const response = await request(application)
       .post('/users/signup')
       .send({
         name: 'jo',
@@ -72,7 +72,7 @@ describe('POST /users/signup', () => {
     let users = await User.findAll()
     expect(users.length).toEqual(0)
 
-    const response = await request(app)
+    const response = await request(application)
       .post('/users/signup')
       .send({
         name: 'jo',
@@ -97,7 +97,7 @@ describe('POST /users/signup', () => {
   it('fails with name and email already used', async () => {
     const name = 'John'
     const email = 'contact@test.com'
-    await request(app)
+    await request(application)
       .post('/users/signup')
       .send({
         name,
@@ -106,7 +106,7 @@ describe('POST /users/signup', () => {
       })
       .expect(201)
 
-    const response = await request(app)
+    const response = await request(application)
       .post('/users/signup')
       .send({
         name,

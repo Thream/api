@@ -5,7 +5,7 @@ import {
   guildsIconPath,
   messagesFilePath,
   usersLogoPath
-} from '../config/constants'
+} from '../configurations/constants'
 import Message from '../../models/Message'
 
 const fs = fsWithCallbacks.promises

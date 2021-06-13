@@ -1,12 +1,12 @@
 import request from 'supertest'
 
 import { authenticateUserTest } from '../../../../__test__/utils/authenticateUser'
-import app from '../../../../app'
+import application from '../../../../application'
 
 describe('GET /users/current', () => {
   it('succeeds with valid Bearer accessToken', async () => {
     const userToken = await authenticateUserTest()
-    const response = await request(app)
+    const response = await request(application)
       .get('/users/current')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send()
@@ -20,7 +20,7 @@ describe('GET /users/current', () => {
 
   it('fails with unconfirmed account', async () => {
     const userToken = await authenticateUserTest({ shouldBeConfirmed: false })
-    const response = await request(app)
+    const response = await request(application)
       .get('/users/current')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send()
@@ -29,7 +29,7 @@ describe('GET /users/current', () => {
   })
 
   it('fails ForbiddenError with invalid Bearer accessToken', async () => {
-    await request(app)
+    await request(application)
       .get('/users/current')
       .set('Authorization', 'Bearer invalidtoken')
       .send()
@@ -37,7 +37,7 @@ describe('GET /users/current', () => {
   })
 
   it('fails NotAuthorizedError with invalid accessToken', async () => {
-    await request(app)
+    await request(application)
       .get('/users/current')
       .set('Authorization', 'invalidtoken')
       .send()

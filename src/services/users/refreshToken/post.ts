@@ -9,7 +9,7 @@ import {
   expiresIn,
   generateAccessToken,
   ResponseJWT
-} from '../../../tools/config/jwtToken'
+} from '../../../tools/configurations/jwtToken'
 import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
 import { UnauthorizedError } from '../../../tools/errors/UnauthorizedError'
 

@@ -10,7 +10,7 @@ import {
   commonErrorsMessages,
   imageFileUploadOptions,
   usersLogoPath
-} from '../../../tools/config/constants'
+} from '../../../tools/configurations/constants'
 import { alreadyUsedValidation } from '../../../tools/validations/alreadyUsedValidation'
 import { ForbiddenError } from '../../../tools/errors/ForbiddenError'
 import { uploadImage } from '../../../tools/utils/uploadImage'
@@ -111,15 +111,11 @@ putCurrentRouter.put(
       user.logo = `${usersLogoPath.name}/${resultUpload}`
     }
 
-    // If the email changed, the user should confirm the new email
     if (email != null) {
       user.email = email
-
-      // Signout the user if he is using local strategy
       if (req.user.currentStrategy === 'local') {
         await deleteEveryRefreshTokens(user.id)
       }
-
       const tempToken = uuidv4()
       user.tempToken = tempToken
       user.isConfirmed = false

@@ -2,15 +2,15 @@ import request from 'supertest'
 
 import { authenticateUserTest } from '../../../__test__/utils/authenticateUser'
 import { formatErrors } from '../../../__test__/utils/formatErrors'
-import app from '../../../app'
-import { commonErrorsMessages } from '../../../tools/config/constants'
+import application from '../../../application'
+import { commonErrorsMessages } from '../../../tools/configurations/constants'
 import { randomString } from '../../../tools/utils/random'
 
 describe('POST /guilds', () => {
   it('succeeds with valid name/description', async () => {
     const name = 'Test'
     const userToken = await authenticateUserTest()
-    const response = await request(app)
+    const response = await request(application)
       .post('/guilds')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ name, description: 'testing guild creation' })
@@ -21,7 +21,7 @@ describe('POST /guilds', () => {
 
   it('fails with invalid name', async () => {
     const userToken = await authenticateUserTest()
-    const response = await request(app)
+    const response = await request(application)
       .post('/guilds')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ name: randomString(35), description: 'testing guild creation' })
@@ -38,14 +38,14 @@ describe('POST /guilds', () => {
   it('fails with name already used', async () => {
     const userToken = await authenticateUserTest()
     const name = 'guild'
-    const response1 = await request(app)
+    const response1 = await request(application)
       .post('/guilds')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ name, description: 'testing guild creation' })
       .expect(201)
     expect(response1.body.guild.name).toBe(name)
 
-    const response2 = await request(app)
+    const response2 = await request(application)
       .post('/guilds')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ name, description: 'testing guild creation' })
@@ -58,7 +58,7 @@ describe('POST /guilds', () => {
 
   it('fails with invalid description', async () => {
     const userToken = await authenticateUserTest()
-    const response = await request(app)
+    const response = await request(application)
       .post('/guilds')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ name: 'Test', description: randomString(165) })

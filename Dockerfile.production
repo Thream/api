@@ -1,0 +1,27 @@
+ARG NODE_VERSION=14.16.1
+
+FROM node:${NODE_VERSION} AS dependencies
+RUN npm install --global npm@7
+WORKDIR /api
+COPY ./package*.json ./
+RUN npm clean-install
+
+FROM node:${NODE_VERSION} AS builder
+WORKDIR /api
+COPY ./ ./
+COPY --from=dependencies /api/node_modules ./node_modules
+RUN npm run build
+
+FROM node:${NODE_VERSION} AS runner
+WORKDIR /api
+ENV NODE_ENV=production
+
+COPY --from=builder /api/node_modules ./node_modules
+COPY --from=builder /api/build ./build
+COPY --from=builder /api/email ./email
+COPY --from=builder /api/uploads ./uploads
+
+RUN chown --recursive node /api/build
+USER node
+
+CMD ["node", "build/index.js"]

@@ -5,7 +5,7 @@ import {
 } from '../authenticateUser'
 import { BadRequestError } from '../../errors/BadRequestError'
 import { UnauthorizedError } from '../../errors/UnauthorizedError'
-import { generateAccessToken } from '../../config/jwtToken'
+import { generateAccessToken } from '../../configurations/jwtToken'
 import { ForbiddenError } from '../../errors/ForbiddenError'
 import User from '../../../models/User'
 

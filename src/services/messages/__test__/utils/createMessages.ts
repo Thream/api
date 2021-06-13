@@ -1,6 +1,6 @@
 import request from 'supertest'
 
-import app from '../../../../app'
+import application from '../../../../application'
 import Channel from '../../../../models/Channel'
 import Message from '../../../../models/Message'
 import { createChannels } from '../../../channels/__test__/utils/createChannel'
@@ -20,7 +20,7 @@ export const createMessages = async (
   const messagesResponses: Message[] = []
   const channelId = result.channels[0].id as number
   for (const message of messages) {
-    const response = await request(app)
+    const response = await request(application)
       .post(`/channels/${channelId}/messages`)
       .set('Authorization', `${result.user.type} ${result.user.accessToken}`)
       .send({ value: message, type: 'text' })

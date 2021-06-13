@@ -6,7 +6,7 @@ import {
   deleteFile,
   deleteMessages
 } from '../deleteFiles'
-import { messagesFilePath, usersLogoPath } from '../../config/constants'
+import { messagesFilePath, usersLogoPath } from '../../configurations/constants'
 import Message from '../../../models/Message'
 import Guild from '../../../models/Guild'
 import Member from '../../../models/Member'
@@ -94,15 +94,16 @@ describe('/tools/utils/deleteFiles - deleteMessages', () => {
     })
     const user = await User.create({ name: 'John' })
     const guild = await Guild.create({ name: 'testing' })
-    const member = await Member.create({
-      userId: user.id,
-      guildId: guild.id,
-      isOwner: true
-    })
     const channel = await Channel.create({
       name: 'general',
       isDefault: true,
       guildId: guild.id
+    })
+    const member = await Member.create({
+      userId: user.id,
+      guildId: guild.id,
+      isOwner: true,
+      lastVisitedChannelId: channel.id
     })
     const messagesToCreate = [
       { value: `${messagesFilePath.name}/logo.png`, type: 'file' },

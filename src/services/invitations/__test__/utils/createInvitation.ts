@@ -1,6 +1,6 @@
 import request from 'supertest'
 
-import app from '../../../../app'
+import application from '../../../../application'
 import Guild from '../../../../models/Guild'
 import Invitation from '../../../../models/Invitation'
 import { authenticateUserTest } from '../../../../__test__/utils/authenticateUser'
@@ -60,7 +60,7 @@ export const createInvitation = async (
     }
   }
   if (result != null) {
-    const response = await request(app)
+    const response = await request(application)
       .post(`/guilds/${guildId as number}/invitations`)
       .set('Authorization', `${result?.user.type} ${result?.user.accessToken}`)
       .send({ value, expiresIn, isPublic })

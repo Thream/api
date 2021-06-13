@@ -3,7 +3,7 @@ import * as fsWithCallbacks from 'fs'
 import path from 'path'
 
 import { Language, Theme } from '../../models/UserSetting'
-import { emailLocalesPath, emailTemplatePath } from '../config/constants'
+import { emailLocalesPath, emailTemplatePath } from '../configurations/constants'
 import { emailTransporter, EMAIL_INFO } from './emailTransporter'
 
 const fs = fsWithCallbacks.promises

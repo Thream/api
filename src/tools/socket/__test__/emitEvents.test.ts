@@ -44,14 +44,15 @@ describe('/tools/socket/emitEvents', () => {
   it('should emit the event to authenticated users - emitToAuthorizedUsers', async (done) => {
     socketClient?.on('messages', (data: any) => {
       expect(data.action).toEqual('create')
-      expect(data.message).toEqual('awesome')
+      expect(data.item.id).toEqual(1)
+      expect(data.item.message).toEqual('awesome')
       socketClient?.close()
       done()
     })
     await emitToAuthorizedUsers({
       event: 'messages',
       isAuthorizedCallback: async () => true,
-      payload: { action: 'create', message: 'awesome' }
+      payload: { action: 'create', item: { id: 1, message: 'awesome' } }
     })
   })
 })

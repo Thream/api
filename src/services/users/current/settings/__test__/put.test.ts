@@ -1,7 +1,7 @@
 import request from 'supertest'
 
 import { authenticateUserTest } from '../../../../../__test__/utils/authenticateUser'
-import app from '../../../../../app'
+import application from '../../../../../application'
 
 describe('PUT /users/current/settings', () => {
   it('should succeeds and edit theme, language and isPublicEmail', async () => {
@@ -9,7 +9,7 @@ describe('PUT /users/current/settings', () => {
     const theme = 'light'
     const language = 'fr'
     const userToken = await authenticateUserTest()
-    const response = await request(app)
+    const response = await request(application)
       .put('/users/current/settings')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ isPublicEmail, theme, language })
@@ -26,7 +26,7 @@ describe('PUT /users/current/settings', () => {
       email: 'contact@john.com',
       shouldBeConfirmed: false
     })
-    const response = await request(app)
+    const response = await request(application)
       .put('/users/current/settings')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send()
@@ -36,7 +36,7 @@ describe('PUT /users/current/settings', () => {
 
   it('fails with invalid theme', async () => {
     const userToken = await authenticateUserTest()
-    const response = await request(app)
+    const response = await request(application)
       .put('/users/current/settings')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ theme: 'random theme value' })
@@ -46,7 +46,7 @@ describe('PUT /users/current/settings', () => {
 
   it('fails with invalid language', async () => {
     const userToken = await authenticateUserTest()
-    const response = await request(app)
+    const response = await request(application)
       .put('/users/current/settings')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ language: 'random language value' })
@@ -56,7 +56,7 @@ describe('PUT /users/current/settings', () => {
 
   it('fails with invalid isPublicEmail', async () => {
     const userToken = await authenticateUserTest()
-    const response = await request(app)
+    const response = await request(application)
       .put('/users/current/settings')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send({ isPublicEmail: 'not a boolean value' })

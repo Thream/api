@@ -1,8 +1,8 @@
 import request from 'supertest'
 
-import app from '../../../../app'
+import application from '../../../../application'
 import User from '../../../../models/User'
-import { generateAccessToken } from '../../../../tools/config/jwtToken'
+import { generateAccessToken } from '../../../../tools/configurations/jwtToken'
 
 describe('POST /users/addLocalStrategy', () => {
   it('succeeds and add local strategy', async () => {
@@ -12,7 +12,7 @@ describe('POST /users/addLocalStrategy', () => {
       id: user.id
     })
     const email = 'johndoe@example.com'
-    const response = await request(app)
+    const response = await request(application)
       .post('/users/addLocalStrategy')
       .send({
         email,
@@ -32,7 +32,7 @@ describe('POST /users/addLocalStrategy', () => {
       id: user.id
     })
     const email = 'johndoe@example.com'
-    const response = await request(app)
+    const response = await request(application)
       .post('/users/addLocalStrategy')
       .send({
         email,
@@ -50,7 +50,7 @@ describe('POST /users/addLocalStrategy', () => {
       id: user.id
     })
     const email = 'johndoecom'
-    const response = await request(app)
+    const response = await request(application)
       .post('/users/addLocalStrategy')
       .send({
         email,
@@ -63,7 +63,7 @@ describe('POST /users/addLocalStrategy', () => {
 
   it('fails if the user is not connected', async () => {
     const email = 'johndoecom'
-    const response = await request(app)
+    const response = await request(application)
       .post('/users/addLocalStrategy')
       .send({
         email,

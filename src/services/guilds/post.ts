@@ -11,7 +11,7 @@ import {
   commonErrorsMessages,
   guildsIconPath,
   imageFileUploadOptions
-} from '../../tools/config/constants'
+} from '../../tools/configurations/constants'
 import { alreadyUsedValidation } from '../../tools/validations/alreadyUsedValidation'
 import { ForbiddenError } from '../../tools/errors/ForbiddenError'
 import { uploadImage } from '../../tools/utils/uploadImage'
@@ -61,15 +61,16 @@ postGuildsRouter.post(
       imagesPath: guildsIconPath.filePath
     })
     const guild = await Guild.create({ name, description })
-    await Member.create({
-      userId: user.id,
-      guildId: guild.id,
-      isOwner: true
-    })
-    await Channel.create({
+    const channel = await Channel.create({
       name: 'general',
       isDefault: true,
       guildId: guild.id
+    })
+    await Member.create({
+      userId: user.id,
+      guildId: guild.id,
+      isOwner: true,
+      lastVisitedChannelId: channel.id
     })
     if (resultUpload != null) {
       guild.icon = `${guildsIconPath.name}/${resultUpload}`

@@ -1,7 +1,7 @@
 import request from 'supertest'
 
 import { authenticateUserTest } from '../../../../../__test__/utils/authenticateUser'
-import app from '../../../../../app'
+import application from '../../../../../application'
 import { createGuild } from '../../../__test__/utils/createGuild'
 
 describe('GET /guilds/public/discover', () => {
@@ -15,18 +15,8 @@ describe('GET /guilds/public/discover', () => {
         name: 'Test'
       }
     })
-
-    // Should not be included in the response because it isn't public
-    await createGuild({
-      guild: { description, name: 'guild2' },
-      user: {
-        email: 'test@test2.com',
-        name: 'Test2'
-      }
-    })
-
     const userToken = await authenticateUserTest()
-    const response = await request(app)
+    const response = await request(application)
       .get('/guilds/public/discover')
       .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
       .send()

@@ -1,4 +1,4 @@
-import { authorizedRedirectDomains } from '../config/constants'
+import { authorizedRedirectDomains } from '../configurations/constants'
 
 export const isValidRedirectURIValidation = async (
   redirectURI: string

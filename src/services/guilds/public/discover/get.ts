@@ -19,7 +19,7 @@ getPublicDiscoverGuildsRouter.get(
       search?: string
     }
     const searchLowerCase = search?.toLowerCase()
-    const { hasMore, totalItems, rows } = await paginateModel({
+    const result = await paginateModel({
       Model: Guild,
       queryOptions: { itemsPerPage, page },
       findOptions: {
@@ -42,11 +42,13 @@ getPublicDiscoverGuildsRouter.get(
       }
     })
     return res.status(200).json({
-      hasMore,
-      totalItems,
-      rows: rows.map(row => {
+      hasMore: result.hasMore,
+      totalItems: result.totalItems,
+      itemsPerPage: result.itemsPerPage,
+      page: result.page,
+      rows: result.rows.map((row) => {
         const publicInvitation = row.invitations.find(
-          invitation => invitation.isPublic
+          (invitation) => invitation.isPublic
         )
         const attributes = row.toJSON() as ObjectAny
         delete attributes.invitations
