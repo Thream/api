@@ -1,11 +1,11 @@
 import dotenv from 'dotenv'
 
-import { SwaggerOptions } from 'fastify-swagger'
-import { PORT } from '.'
+import { FastifyDynamicSwaggerOptions } from 'fastify-swagger'
+import { PORT } from './'
 
 dotenv.config()
 
-export const swaggerOptions: SwaggerOptions = {
+export const swaggerOptions: FastifyDynamicSwaggerOptions = {
   routePrefix: '/documentation',
   swagger: {
     info: {

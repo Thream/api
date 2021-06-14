@@ -10,6 +10,12 @@ export interface UserJWT {
   currentStrategy: AuthenticationStrategy
 }
 
+export interface UserRequest {
+  current: User
+  currentStrategy: AuthenticationStrategy
+  accessToken: string
+}
+
 export const userSchema = {
   id,
   name: Type.String({ maxLength: 255 }),
@@ -43,8 +49,8 @@ export const userExample: User = {
   logo: null,
   status: null,
   biography: null,
-  isConfirmed: false,
-  temporaryToken: 'tempUUIDtoken',
+  isConfirmed: true,
+  temporaryToken: 'temporaryUUIDtoken',
   temporaryExpirationToken: null,
   createdAt: new Date(),
   updatedAt: new Date()

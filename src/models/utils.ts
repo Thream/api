@@ -21,6 +21,11 @@ export const fastifyErrors = {
     error: Type.Literal('Bad Request'),
     message: Type.String()
   }),
+  401: Type.Object({
+    statusCode: Type.Literal(401),
+    error: Type.Literal('Unauthorized'),
+    message: Type.Literal('Unauthorized')
+  }),
   403: Type.Object({
     statusCode: Type.Literal(403),
     error: Type.Literal('Forbidden'),
