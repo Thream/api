@@ -56,12 +56,12 @@ the root of the project (see `.env.example`).
 ```sh
 # Create a new user and database
 psql
-create database thream-database;
-create user thream-user with encrypted password 'password';
-ALTER USER thream-user WITH SUPERUSER;
+create database thream_database;
+create user thream_user with encrypted password 'password';
+ALTER USER thream_user WITH SUPERUSER;
 ```
 
-Replace `DATABASE_URL` inside `.env` with `postgresql://thream-user:password@localhost:5432/thream-database`
+Replace `DATABASE_URL` inside `.env` with `postgresql://thream_user:password@localhost:5432/thream_database`
 
 ```sh
 # Run Prisma migrations
