@@ -4,6 +4,7 @@
   <a href="./CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/licence-MIT-blue.svg" alt="Licence MIT"/></a>
   <a href="./CODE_OF_CONDUCT.md"><img src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg" alt="Contributor Covenant" /></a>
+  <a href="https://github.com/semantic-release/semantic-release"><img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg" alt="semantic-release" /></a>
   <br />
   <a href="https://github.com/Thream/api/actions/workflows/analyze.yml"><img src="https://github.com/Thream/api/actions/workflows/analyze.yml/badge.svg?branch=develop" /></a>
   <a href="https://github.com/Thream/api/actions/workflows/build.yml"><img src="https://github.com/Thream/api/actions/workflows/build.yml/badge.svg?branch=develop" /></a>
@@ -58,12 +59,14 @@ psql
 create database thream-database;
 create user thream-user with encrypted password 'password';
 ALTER USER thream-user WITH SUPERUSER;
-
-# Run Prisma migrations
-npm run prisma:migrate:dev
 ```
 
 Replace `DATABASE_URL` inside `.env` with `postgresql://thream-user:password@localhost:5432/thream-database`
+
+```sh
+# Run Prisma migrations
+npm run prisma:migrate:dev
+```
 
 #### Usage
 
