@@ -28,16 +28,7 @@ const main = async (): Promise<void> => {
       optionsSuccessStatus: 204
     }
   })
-  await application.register(fastifyHelmet, {
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: ["'self'", 'data:', 'validator.swagger.io'],
-        scriptSrc: ["'self'", "https: 'unsafe-inline'"]
-      }
-    }
-  })
+  await application.register(fastifyHelmet)
   await application.register(fastifyRateLimit, {
     max: 100,
     timeWindow: '1 minute'

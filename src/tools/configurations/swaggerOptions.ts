@@ -12,11 +12,12 @@ export const swaggerOptions: SwaggerOptions = {
       title: 'Thream',
       description:
         "Thream's application programming interface to stay close with your friends and communities.",
-      version: process.env.npm_package_version
+      version: '0.0.0-development'
     },
     host: `localhost:${PORT}`,
     basePath: '/',
     tags: [{ name: 'users' }]
   },
-  exposeRoute: true
+  exposeRoute: true,
+  staticCSP: true
 }
