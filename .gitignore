@@ -35,4 +35,4 @@ npm-debug.log*
 .DS_Store
 tmp
 temp
-uploads
+./uploads
