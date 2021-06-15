@@ -1,18 +1,13 @@
 import { application } from '../../../../application'
-import { userExample } from '../../../../models/User'
-import { generateAccessToken } from '../../../../tools/utils/jwtToken'
 import { prismaMock } from '../../../../__test__/setup'
+import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest'
 
 describe('DELETE /users/signout', () => {
   it('should succeeds', async () => {
     prismaMock.refreshToken.deleteMany.mockResolvedValue({
       count: 1
     })
-    prismaMock.user.findUnique.mockResolvedValue(userExample)
-    const accessToken = generateAccessToken({
-      currentStrategy: 'local',
-      id: 1
-    })
+    const { accessToken } = await authenticateUserTest()
     const response = await application.inject({
       method: 'DELETE',
       url: '/users/signout',
