@@ -51,7 +51,7 @@ export const userExample: User = {
   biography: null,
   isConfirmed: true,
   temporaryToken: 'temporaryUUIDtoken',
-  temporaryExpirationToken: null,
+  temporaryExpirationToken: new Date(),
   createdAt: new Date(),
   updatedAt: new Date()
 }
