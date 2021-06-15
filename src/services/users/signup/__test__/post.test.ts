@@ -23,8 +23,8 @@ describe('POST /users/signup', () => {
     })
     const responseJson = response.json()
     expect(response.statusCode).toEqual(201)
-    expect(responseJson.name).toEqual(userExample.name)
-    expect(responseJson.email).toEqual(userExample.email)
+    expect(responseJson.user.name).toEqual(userExample.name)
+    expect(responseJson.user.email).toEqual(userExample.email)
   })
 
   it('should fails with invalid email', async () => {

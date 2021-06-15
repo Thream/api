@@ -8,6 +8,7 @@ import { deleteSignoutUser } from './signout/delete'
 import { postRefreshTokenUser } from './refresh-token/post'
 import { putResetPasswordUser } from './reset-password/put'
 import { postResetPasswordUser } from './reset-password/post'
+import { getCurrentUser } from './current/get'
 
 export const usersService: FastifyPluginAsync = async (fastify) => {
   await fastify.register(postSignupUser)
@@ -18,4 +19,5 @@ export const usersService: FastifyPluginAsync = async (fastify) => {
   await fastify.register(postRefreshTokenUser)
   await fastify.register(putResetPasswordUser)
   await fastify.register(postResetPasswordUser)
+  await fastify.register(getCurrentUser)
 }

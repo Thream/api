@@ -31,6 +31,19 @@ export const userSchema = {
   updatedAt: date.updatedAt
 }
 
+export const userPublicSchema = {
+  id,
+  name: userSchema.name,
+  email: userSchema.email,
+  logo: Type.Union([userSchema.logo, Type.Null()]),
+  status: Type.Union([userSchema.status, Type.Null()]),
+  biography: Type.Union([userSchema.biography, Type.Null()]),
+  isConfirmed: userSchema.isConfirmed,
+  createdAt: date.createdAt,
+  updatedAt: date.updatedAt,
+  settings: Type.Object(userSettingsSchema)
+}
+
 export const bodyUserSchema = Type.Object({
   email: userSchema.email,
   name: userSchema.name,

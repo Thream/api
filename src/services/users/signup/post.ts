@@ -5,13 +5,12 @@ import bcrypt from 'bcryptjs'
 import { FastifyPluginAsync, FastifySchema } from 'fastify'
 
 import prisma from '../../../tools/database/prisma'
-import { id, date, fastifyErrors } from '../../../models/utils'
+import { fastifyErrors } from '../../../models/utils'
 import {
   bodyUserSchema,
   BodyUserSchemaType,
-  userSchema
+  userPublicSchema
 } from '../../../models/User'
-import { userSettingsSchema } from '../../../models/UserSettings'
 import { sendEmail } from '../../../tools/email/sendEmail'
 
 const queryPostSignupSchema = Type.Object({
@@ -27,18 +26,7 @@ const postSignupSchema: FastifySchema = {
   body: bodyUserSchema,
   querystring: queryPostSignupSchema,
   response: {
-    201: Type.Object({
-      id,
-      name: userSchema.name,
-      email: userSchema.email,
-      logo: Type.Union([userSchema.logo, Type.Null()]),
-      status: Type.Union([userSchema.status, Type.Null()]),
-      biography: Type.Union([userSchema.biography, Type.Null()]),
-      isConfirmed: userSchema.isConfirmed,
-      createdAt: date.createdAt,
-      updatedAt: date.updatedAt,
-      settings: Type.Object(userSettingsSchema)
-    }),
+    201: Type.Object({ user: Type.Object(userPublicSchema) }),
     400: fastifyErrors[400],
     500: fastifyErrors[500]
   }
@@ -93,8 +81,10 @@ export const postSignupUser: FastifyPluginAsync = async (fastify) => {
       })
       reply.statusCode = 201
       return {
-        ...user,
-        settings: { ...userSettings }
+        user: {
+          ...user,
+          settings: { ...userSettings }
+        }
       }
     }
   })

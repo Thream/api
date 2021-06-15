@@ -1,6 +1,7 @@
 import { User } from '@prisma/client'
 import { refreshTokenExample } from '../../models/RefreshToken'
 import { userExample, UserJWT } from '../../models/User'
+import { userSettingsExample } from '../../models/UserSettings'
 import {
   generateAccessToken,
   generateRefreshToken
@@ -13,6 +14,8 @@ export const authenticateUserTest = async (): Promise<{
   user: User
 }> => {
   prismaMock.user.findUnique.mockResolvedValue(userExample)
+  prismaMock.userSetting.findFirst.mockResolvedValue(userSettingsExample)
+  prismaMock.oAuth.findMany.mockResolvedValue([])
   prismaMock.refreshToken.create.mockResolvedValue(refreshTokenExample)
   const userJWT: UserJWT = {
     currentStrategy: 'local',
