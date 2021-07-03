@@ -16,15 +16,10 @@ jobs:
         uses: 'actions/setup-node@v2.2.0'
         with:
           node-version: '16.x'
-
-      - name: 'Cache dependencies'
-        uses: 'actions/cache@v2.1.6'
-        with:
-          path: '.npm'
-          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          cache: 'npm'
 
       - name: 'Install'
-        run: 'npm ci --cache .npm --prefer-offline'
+        run: 'npm install'
 
       - run: 'npm run lint:commit -- --to "${{ github.sha }}"'
       - run: 'npm run lint:editorconfig'
