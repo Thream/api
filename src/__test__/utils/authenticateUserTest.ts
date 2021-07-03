@@ -1,4 +1,5 @@
 import { User } from '@prisma/client'
+
 import { refreshTokenExample } from '../../models/RefreshToken'
 import { userExample, UserJWT } from '../../models/User'
 import { userSettingsExample } from '../../models/UserSettings'

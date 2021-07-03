@@ -4,7 +4,6 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       NODE_ENV: 'development' | 'production' | 'test'
-      npm_package_version: string
       HOST: string
       PORT: string
       DATABASE_URL: string

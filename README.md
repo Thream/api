@@ -26,8 +26,8 @@ This project was bootstrapped with [create-fullstack-app](https://github.com/Div
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) >= 16
-- [npm](https://www.npmjs.com/) >= 7
+- [Node.js](https://nodejs.org/) >= 16.0.0
+- [npm](https://www.npmjs.com/) >= 7.0.0
 - [PostgreSQL](https://www.postgresql.org/)
 
 ### Installation

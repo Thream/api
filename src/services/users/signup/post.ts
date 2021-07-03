@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto'
+import { randomUUID } from 'node:crypto'
 
 import { Static, Type } from '@sinclair/typebox'
 import bcrypt from 'bcryptjs'
