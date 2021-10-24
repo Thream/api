@@ -1,0 +1,8 @@
+{
+  "subject": "Confirmez votre email",
+  "renderOptions": {
+    "subtitle": "Veuillez confirmer votre adresse email pour vous connecter",
+    "button": "Oui, je confirme",
+    "footer": "Si vous avez reçu ce message par erreur, supprimez-le simplement. Votre email ne sera pas confirmé si vous ne cliquez pas sur le lien de confirmation ci-dessus."
+  }
+}

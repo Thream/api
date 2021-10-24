@@ -1,0 +1,22 @@
+/users/confirmEmail:
+  get:
+    tags:
+      - 'users'
+    summary: 'Confirm the account of the user'
+    parameters:
+      - name: 'tempToken'
+        in: 'query'
+        required: true
+      - name: 'redirectURI'
+        description: 'The redirect URI to redirect the user when he successfuly confirm his email.'
+        in: 'query'
+        required: false
+    responses:
+      allOf:
+        - $ref: '#/definitions/BadRequestError'
+        - $ref: '#/definitions/ForbiddenError'
+        - '200':
+            content:
+              application/json:
+                schema:
+                  $ref: '#/definitions/AccessTokenResponse'

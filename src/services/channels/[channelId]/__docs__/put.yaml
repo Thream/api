@@ -1,0 +1,41 @@
+/channels/{channelId}:
+  put:
+    security:
+      - bearerAuth: []
+    tags:
+      - 'channels'
+    summary: 'UPDATE a channel with its id'
+    parameters:
+      - name: 'channelId'
+        in: 'path'
+        required: true
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: 'object'
+            properties:
+              name:
+                type: 'string'
+                minLength: 3
+                maxLength: 30
+              description:
+                type: 'string'
+                maxLength: 160
+              isDefault:
+                type: 'boolean'
+    responses:
+      allOf:
+        - $ref: '#/definitions/BadRequestError'
+        - $ref: '#/definitions/UnauthorizedError'
+        - $ref: '#/definitions/ForbiddenError'
+        - $ref: '#/definitions/NotFoundError'
+        - '200':
+            content:
+              application/json:
+                schema:
+                  type: 'object'
+                  properties:
+                    channel:
+                      allOf:
+                        - $ref: '#/definitions/Channel'

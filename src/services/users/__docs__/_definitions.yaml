@@ -1,0 +1,99 @@
+definitions:
+  User:
+    type: 'object'
+    properties:
+      user:
+        type: object
+        properties:
+          id:
+            type: 'integer'
+            description: 'Unique id'
+          name:
+            type: 'string'
+            description: 'Unique name'
+          email:
+            type: 'string'
+            description: 'Unique email address'
+          status:
+            type: 'string'
+          biography:
+            type: 'string'
+          logo:
+            type: 'string'
+          isConfirmed:
+            type: 'boolean'
+          createdAt:
+            type: 'string'
+            format: 'date-time'
+          updatedAt:
+            type: 'string'
+            format: 'date-time'
+
+  Language:
+    type: 'string'
+    enum: ['en', 'fr']
+    default: 'en'
+
+  Theme:
+    type: 'string'
+    enum: ['dark', 'light']
+    default: 'dark'
+
+  UserSettings:
+    type: 'object'
+    properties:
+      language:
+        allOf:
+          - $ref: '#/definitions/Language'
+      theme:
+        allOf:
+          - $ref: '#/definitions/Theme'
+      isPublicEmail:
+        type: 'boolean'
+
+  UserSettingsObject:
+    type: 'object'
+    properties:
+      settings:
+        allOf:
+          - $ref: '#/definitions/UserSettings'
+
+  AuthenticationStrategy:
+    type: 'string'
+    enum: ['local', 'google', 'github', 'discord']
+
+  UserStrategies:
+    type: 'object'
+    properties:
+      strategies:
+        type: 'array'
+        items:
+          allOf:
+            - $ref: '#/definitions/AuthenticationStrategy'
+
+  UserCurrentStrategy:
+    type: 'object'
+    properties:
+      currentStrategy:
+        allOf:
+          - $ref: '#/definitions/AuthenticationStrategy'
+
+  AccessTokenResponse:
+    type: 'object'
+    properties:
+      accessToken:
+        type: 'string'
+      expiresIn:
+        type: 'number'
+        description: 'expiresIn is how long, in milliseconds, until the returned accessToken expires'
+      type:
+        type: 'string'
+        enum: ['Bearer']
+
+  RefreshTokenResponse:
+    allOf:
+      - $ref: '#/definitions/AccessTokenResponse'
+      - type: 'object'
+        properties:
+          refreshToken:
+            type: 'string'

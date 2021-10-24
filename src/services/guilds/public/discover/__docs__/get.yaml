@@ -1,0 +1,35 @@
+/guilds/public/discover:
+  get:
+    security:
+      - bearerAuth: []
+    tags:
+      - 'guilds'
+    summary: 'GET all the public guilds'
+    allOf:
+      - $ref: '#/definitions/PaginateModelParameters'
+    parameters:
+      - name: 'search'
+        in: 'query'
+        required: false
+    responses:
+      allOf:
+        - $ref: '#/definitions/UnauthorizedError'
+        - $ref: '#/definitions/ForbiddenError'
+        - $ref: '#/definitions/BadRequestError'
+        - '200':
+            content:
+              application/json:
+                schema:
+                  allOf:
+                    - $ref: '#/definitions/PaginateModel'
+                  type: 'object'
+                  properties:
+                    rows:
+                      type: 'array'
+                      items:
+                        allOf:
+                          - $ref: '#/definitions/Guild'
+                        type: 'object'
+                        properties:
+                          publicInvitation:
+                            type: 'string'

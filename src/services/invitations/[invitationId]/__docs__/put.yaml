@@ -1,0 +1,40 @@
+/invitations/{invitationId}:
+  put:
+    security:
+      - bearerAuth: []
+    tags:
+      - 'invitations'
+    summary: 'Update an invitation with its id'
+    parameters:
+      - name: 'invitationId'
+        in: 'path'
+        required: true
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: 'object'
+            properties:
+              value:
+                type: 'string'
+                minLength: 1
+                maxLength: 250
+              expiresIn:
+                type: 'integer'
+              isPublic:
+                type: 'boolean'
+    responses:
+      allOf:
+        - $ref: '#/definitions/UnauthorizedError'
+        - $ref: '#/definitions/ForbiddenError'
+        - $ref: '#/definitions/BadRequestError'
+        - $ref: '#/definitions/NotFoundError'
+        - '200':
+            content:
+              application/json:
+                schema:
+                  type: 'object'
+                  properties:
+                    invitation:
+                      allOf:
+                        - $ref: '#/definitions/Invitation'

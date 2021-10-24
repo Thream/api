@@ -1,0 +1,21 @@
+/users/current:
+  get:
+    security:
+      - bearerAuth: []
+    tags:
+      - 'users'
+    summary: 'GET the current connected user'
+    responses:
+      allOf:
+        - $ref: '#/definitions/BadRequestError'
+        - $ref: '#/definitions/UnauthorizedError'
+        - $ref: '#/definitions/ForbiddenError'
+        - '200':
+            content:
+              application/json:
+                schema:
+                  allOf:
+                    - $ref: '#/definitions/User'
+                    - $ref: '#/definitions/UserSettingsObject'
+                    - $ref: '#/definitions/UserCurrentStrategy'
+                    - $ref: '#/definitions/UserStrategies'

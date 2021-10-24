@@ -1,0 +1,8 @@
+{
+  "subject": "Confirm email",
+  "renderOptions": {
+    "subtitle": "Please confirm your email to signin",
+    "button": "Yes, I confirm",
+    "footer": "If you received this message by mistake, just delete it. Your email will not be confirmed if you do not click on the confirmation link above."
+  }
+}

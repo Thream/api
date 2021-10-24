@@ -1,0 +1,16 @@
+/users/signout:
+  delete:
+    security:
+      - bearerAuth: []
+    tags:
+      - 'users'
+    summary: 'Signout the user to every connected devices'
+    responses:
+      allOf:
+        - $ref: '#/definitions/ForbiddenError'
+        - $ref: '#/definitions/UnauthorizedError'
+        - '200':
+            content:
+              application/json:
+                schema:
+                  type: 'object'

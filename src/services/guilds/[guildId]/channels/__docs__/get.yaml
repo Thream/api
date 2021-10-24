@@ -1,0 +1,31 @@
+/guilds/{guildId}/channels:
+  get:
+    security:
+      - bearerAuth: []
+    tags:
+      - 'channels'
+    summary: 'GET all the channels of a guild'
+    parameters:
+      - name: 'guildId'
+        in: 'path'
+        required: true
+    allOf:
+      - $ref: '#/definitions/PaginateModelParameters'
+    responses:
+      allOf:
+        - $ref: '#/definitions/UnauthorizedError'
+        - $ref: '#/definitions/ForbiddenError'
+        - $ref: '#/definitions/BadRequestError'
+        - '200':
+            content:
+              application/json:
+                schema:
+                  allOf:
+                    - $ref: '#/definitions/PaginateModel'
+                  type: 'object'
+                  properties:
+                    rows:
+                      type: 'array'
+                      items:
+                        allOf:
+                          - $ref: '#/definitions/Channel'

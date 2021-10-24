@@ -1,0 +1,37 @@
+/users/resetPassword:
+  post:
+    tags:
+      - 'users'
+    summary: 'Request a password-reset change'
+    description: 'Allows a user to reset his password, if he forgets thanks to his email address.'
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: 'object'
+            properties:
+              email:
+                type: 'string'
+                format: 'email'
+            required:
+              - 'email'
+    parameters:
+      - name: 'redirectURI'
+        description: 'The redirect URI to redirect the user when he clicks on the button of the email, so he can change his password with a form on the frontend.'
+        in: 'query'
+        required: true
+    responses:
+      allOf:
+        - $ref: '#/definitions/BadRequestError'
+        - '200':
+            content:
+              application/json:
+                schema:
+                  type: 'object'
+                  properties:
+                    message:
+                      type: 'string'
+                      enum:
+                        [
+                          'Password-reset request successful, please check your emails!'
+                        ]

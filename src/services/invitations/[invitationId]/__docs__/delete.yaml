@@ -1,0 +1,25 @@
+/invitations/{invitationId}:
+  delete:
+    security:
+      - bearerAuth: []
+    tags:
+      - 'invitations'
+    summary: 'DELETE an invitation with its id'
+    parameters:
+      - name: 'invitationId'
+        in: 'path'
+        required: true
+    responses:
+      allOf:
+        - $ref: '#/definitions/UnauthorizedError'
+        - $ref: '#/definitions/ForbiddenError'
+        - $ref: '#/definitions/BadRequestError'
+        - $ref: '#/definitions/NotFoundError'
+        - '200':
+            content:
+              application/json:
+                schema:
+                  type: 'object'
+                  properties:
+                    deletedInvitationId:
+                      type: 'number'

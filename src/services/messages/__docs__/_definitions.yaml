@@ -1,0 +1,29 @@
+definitions:
+  MessageType:
+    type: 'string'
+    enum: ['text', 'file']
+
+  Message:
+    type: 'object'
+    properties:
+      id:
+        type: 'integer'
+        description: 'Unique id'
+      value:
+        type: 'string'
+      type:
+        allOf:
+          - $ref: '#/definitions/MessageType'
+      mimetype:
+        type: 'string'
+        example: 'text/plain'
+      memberId:
+        type: 'integer'
+      channelId:
+        type: 'integer'
+      createdAt:
+        type: 'string'
+        format: 'date-time'
+      updatedAt:
+        type: 'string'
+        format: 'date-time'
