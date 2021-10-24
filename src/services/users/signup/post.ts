@@ -1,102 +1,92 @@
+import { randomUUID } from 'node:crypto'
+
+import { Static, Type } from '@sinclair/typebox'
 import bcrypt from 'bcryptjs'
-import { Request, Response, Router } from 'express'
-import { body, query } from 'express-validator'
-import { v4 as uuidv4 } from 'uuid'
+import { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import { validateRequest } from '../../../tools/middlewares/validateRequest'
-import User from '../../../models/User'
-import UserSetting, {
-  Language,
-  languages,
-  Theme,
-  themes
-} from '../../../models/UserSetting'
-import { commonErrorsMessages } from '../../../tools/configurations/constants'
-import { sendEmail } from '../../../tools/email/sendEmail'
-import { alreadyUsedValidation } from '../../../tools/validations/alreadyUsedValidation'
-import { onlyPossibleValuesValidation } from '../../../tools/validations/onlyPossibleValuesValidation'
+import prisma from '../../../tools/database/prisma.js'
+import { fastifyErrors } from '../../../models/utils.js'
+import {
+  bodyUserSchema,
+  BodyUserSchemaType,
+  userPublicSchema
+} from '../../../models/User.js'
+import { sendEmail } from '../../../tools/email/sendEmail.js'
+import { HOST, PORT } from '../../../tools/configurations/index.js'
 
-export const errorsMessages = {
-  email: {
-    mustBeValid: 'Email must be valid'
+const queryPostSignupSchema = Type.Object({
+  redirectURI: Type.Optional(Type.String({ format: 'uri-reference' }))
+})
+
+type QueryPostSignupSchemaType = Static<typeof queryPostSignupSchema>
+
+const postSignupSchema: FastifySchema = {
+  description:
+    'Allows a new user to signup, if success he would need to confirm his email.',
+  tags: ['users'] as string[],
+  body: bodyUserSchema,
+  querystring: queryPostSignupSchema,
+  response: {
+    201: Type.Object({ user: Type.Object(userPublicSchema) }),
+    400: fastifyErrors[400],
+    500: fastifyErrors[500]
   }
-}
+} as const
 
-export const signupRouter = Router()
-
-signupRouter.post(
-  '/users/signup',
-  [
-    body('email')
-      .trim()
-      .notEmpty()
-      .isEmail()
-      .withMessage(errorsMessages.email.mustBeValid)
-      .custom(async (email: string) => {
-        return await alreadyUsedValidation(User, 'email', email)
-      }),
-    body('name')
-      .trim()
-      .notEmpty()
-      .isLength({ max: 30, min: 3 })
-      .withMessage(
-        commonErrorsMessages.charactersLength('name', { max: 30, min: 3 })
-      )
-      .custom(async (name: string) => {
-        return await alreadyUsedValidation(User, 'name', name)
-      }),
-    body('password').trim().notEmpty().isString(),
-    body('theme')
-      .optional({ nullable: true })
-      .trim()
-      .isString()
-      .custom(async (theme: Theme) => {
-        return await onlyPossibleValuesValidation([...themes], 'theme', theme)
-      }),
-    body('language')
-      .optional({ nullable: true })
-      .trim()
-      .isString()
-      .custom(async (language: Language) => {
-        return await onlyPossibleValuesValidation(
-          languages,
-          'language',
-          language
+export const postSignupUser: FastifyPluginAsync = async (fastify) => {
+  fastify.route<{
+    Body: BodyUserSchemaType
+    Querystring: QueryPostSignupSchemaType
+  }>({
+    method: 'POST',
+    url: '/users/signup',
+    schema: postSignupSchema,
+    handler: async (request, reply) => {
+      const { name, email, password, theme, language } = request.body
+      const { redirectURI } = request.query
+      const userValidation = await prisma.user.findFirst({
+        where: {
+          OR: [{ email }, { name }]
+        }
+      })
+      if (userValidation != null) {
+        throw fastify.httpErrors.badRequest(
+          'body.email or body.name already taken.'
         )
-      }),
-    query('redirectURI').optional({ nullable: true }).trim()
-  ],
-  validateRequest,
-  async (req: Request, res: Response) => {
-    const { name, email, password, theme, language } = req.body as {
-      name: string
-      email: string
-      password: string
-      theme?: Theme
-      language?: Language
+      }
+      const hashedPassword = await bcrypt.hash(password, 12)
+      const temporaryToken = randomUUID()
+      const user = await prisma.user.create({
+        data: {
+          name,
+          email,
+          password: hashedPassword,
+          temporaryToken
+        }
+      })
+      const userSettings = await prisma.userSetting.create({
+        data: {
+          userId: user.id,
+          theme,
+          language
+        }
+      })
+      const redirectQuery =
+        redirectURI != null ? `&redirectURI=${redirectURI}` : ''
+      await sendEmail({
+        type: 'confirm-email',
+        email,
+        url: `${request.protocol}://${HOST}:${PORT}/users/confirm-email?temporaryToken=${temporaryToken}${redirectQuery}`,
+        language,
+        theme
+      })
+      reply.statusCode = 201
+      return {
+        user: {
+          ...user,
+          settings: { ...userSettings }
+        }
+      }
     }
-    const { redirectURI } = req.query as { redirectURI?: string }
-    const hashedPassword = await bcrypt.hash(password, 12)
-    const tempToken = uuidv4()
-    const user = await User.create({
-      email,
-      name,
-      password: hashedPassword,
-      tempToken
-    })
-    const userSettings = await UserSetting.create({
-      userId: user.id,
-      theme: theme ?? 'dark',
-      language: language ?? 'en'
-    })
-    const redirectQuery = redirectURI != null ? `&redirectURI=${redirectURI}` : ''
-    await sendEmail({
-      type: 'confirm-email',
-      email,
-      url: `${process.env.API_BASE_URL}/users/confirmEmail?tempToken=${tempToken}${redirectQuery}`,
-      language: userSettings.language,
-      theme: userSettings.theme
-    })
-    return res.status(201).json({ user })
-  }
-)
+  })
+}

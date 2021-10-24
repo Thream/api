@@ -4,7 +4,7 @@ Thanks a lot for your interest in contributing to **Thream/api**! 🎉
 
 ## Code of Conduct
 
-**Thream** has adopted the [Contributor Covenant](https://www.contributor-covenant.org/) as its Code of Conduct, and we expect project participants to adhere to it. Please read [the full text](https://github.com/Thream/Thream/blob/master/.github/CODE_OF_CONDUCT.md) so that you can understand what actions will and will not be tolerated.
+**Thream** has adopted the [Contributor Covenant](https://www.contributor-covenant.org/) as its Code of Conduct, and we expect project participants to adhere to it. Please read [the full text](./CODE_OF_CONDUCT.md) so that you can understand what actions will and will not be tolerated.
 
 ## Open Development
 
@@ -14,14 +14,14 @@ All work on **Thream/api** happens directly on [GitHub](https://github.com/Threa
 
 - Reporting a bug.
 - Suggest a new feature idea.
-- Correct spelling errors, improvements or additions to documentation files (README, CONTRIBUTING...).
+- Correct spelling errors, improvements or additions to documentation files.
 - Improve structure/format/performance/refactor/tests of the code.
 
 ## Pull Requests
 
-- **Please first discuss** the change you wish to make via [issue](https://github.com/Thream/api/issues) before making a change. It might avoid a waste of your time.
+- **Please first discuss** the change you wish to make via issues.
 
-- Ensure your code respect [Typescript Standard Style](https://www.npmjs.com/package/ts-standard).
+- Ensure your code respect `eslint` and `prettier`.
 
 - Make sure your **code passes the tests**.
 
@@ -29,7 +29,9 @@ If you're adding new features to **Thream/api**, please include tests.
 
 ## Commits
 
-The commit message guidelines respect [@commitlint/config-conventional](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional) and [Semantic Versioning](https://semver.org/) for releases.
+The commit message guidelines respect
+[@commitlint/config-conventional](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional)
+and [Semantic Versioning](https://semver.org/) for releases.
 
 ### Types
 
@@ -56,17 +58,16 @@ Scopes define what part of the code changed.
 ### Examples
 
 ```sh
-git commit -m "feat(users): add POST /users/signup"
+git commit -m "feat(services): add POST /users/signup"
 git commit -m "docs(readme): update installation process"
-git commit -m "fix(messages): should emit events to connected users"
+git commit -m "fix(services): should emit events to connected users"
 ```
 
 ## Directory Structure
 
 ```text
 ├── email
-├── public
-├── scripts
+├── prisma
 └── src
     ├── models
     ├── services
@@ -77,8 +78,9 @@ git commit -m "fix(messages): should emit events to connected users"
 ### Each folder explained
 
 - `email` : email template(s) and translation(s)
+- `prisma` : contains the prisma schema and migrations
 - `src` : all source files
-  - `models` : models that represent tables in database (there is a `_data.sql` file to have dummy data to work with in development mode)
+  - `models` : models that represent tables in database as JSON schema
   - `services` : all REST API endpoints
   - `tools` : configs and utilities
   - `typings` : types gloablly used in the project
@@ -94,14 +96,9 @@ Here is what potentially look like a folder structure for this service :
 └── src
     └── services
         └── channels
-            ├── __docs__
-            │   └── get.yaml
             ├── __test__
             │   └── get.test.ts
             ├── [channelId]
-            │   ├── __docs__
-            │   │   ├── delete.yaml
-            │   │   └── put.yaml
             │   ├── __test__
             │   │   ├── delete.test.ts
             │   │   └── put.test.ts
@@ -118,6 +115,7 @@ This folder structure will map to these REST API routes :
 - DELETE `/channels/:channelId`
 - PUT `/channels/:channelId`
 
-The folders after `src/services` : is the real path of the routes in the API except folders starting and ending with `__` like `__docs__`, `__test__` or `__utils__`.
+The folders after `src/services` : is the real path of the routes in the API except
+folders starting and ending with `__` like `__test__` or `__utils__`.
 
 The filenames correspond to the HTTP methods used (`get`, `post`, `put`, `delete`).

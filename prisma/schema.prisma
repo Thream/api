@@ -1,0 +1,105 @@
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                       Int            @id @default(autoincrement())
+  name                     String         @unique @db.VarChar(255)
+  email                    String?        @unique @db.VarChar(255)
+  password                 String?        @db.Text
+  logo                     String?        @db.Text
+  status                   String?        @db.VarChar(255)
+  biography                String?        @db.Text
+  website                  String?        @db.VarChar(255)
+  isConfirmed              Boolean        @default(false)
+  temporaryToken           String?
+  temporaryExpirationToken DateTime?
+  createdAt                DateTime       @default(now())
+  updatedAt                DateTime       @default(now()) @updatedAt
+  settings                 UserSetting?
+  refreshTokens            RefreshToken[]
+  oauths                   OAuth[]
+  members                  Member[]
+}
+
+model UserSetting {
+  id             Int      @id @default(autoincrement())
+  language       String   @default("en") @db.VarChar(255)
+  theme          String   @default("dark") @db.VarChar(255)
+  isPublicEmail  Boolean  @default(false)
+  isPublicGuilds Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+  userId         Int      @unique
+  user           User?    @relation(fields: [userId], references: [id])
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  userId    Int      @unique
+  user      User?    @relation(fields: [userId], references: [id])
+}
+
+model OAuth {
+  id         Int      @id @default(autoincrement())
+  providerId String   @db.Text
+  provider   String   @db.VarChar(255)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+  userId     Int      @unique
+  user       User?    @relation(fields: [userId], references: [id])
+}
+
+model Member {
+  id        Int       @id @default(autoincrement())
+  isOwner   Boolean   @default(false)
+  Message   Message[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  userId    Int       @unique
+  user      User?     @relation(fields: [userId], references: [id])
+  guildId   Int       @unique
+  guild     Guild?    @relation(fields: [guildId], references: [id])
+}
+
+model Guild {
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(255)
+  icon        String?   @db.Text
+  description String?   @db.Text
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+  members     Member[]
+  channels    Channel[]
+}
+
+model Channel {
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(255)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  guildId   Int       @unique
+  guild     Guild?    @relation(fields: [guildId], references: [id])
+  messages  Message[]
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  value     String   @db.Text
+  type      String   @default("text") @db.VarChar(255)
+  mimetype  String   @default("text/plain") @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  memberId  Int      @unique
+  member    Member?  @relation(fields: [memberId], references: [id])
+  channelId Int      @unique
+  channel   Channel? @relation(fields: [channelId], references: [id])
+}

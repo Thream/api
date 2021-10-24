@@ -1,21 +1,11 @@
-import { Router } from 'express'
+import { FastifyPluginAsync } from 'fastify'
 
-import { documentationRouter } from './docs'
-import { channelsRouter } from './channels'
-import { guildsRouter } from './guilds'
-import { invitationsRouter } from './invitations'
-import { membersRouter } from './members'
-import { messagesRouter } from './messages'
-import { uploadsRouter } from './uploads'
-import { usersRouter } from './users'
+import { usersService } from './users/index.js'
+import { guildsService } from './guilds/index.js'
+import { uploadsService } from './uploads/index.js'
 
-export const router = Router()
-
-router.use(documentationRouter)
-router.use(uploadsRouter)
-router.use(usersRouter)
-router.use(guildsRouter)
-router.use(channelsRouter)
-router.use(invitationsRouter)
-router.use(messagesRouter)
-router.use(membersRouter)
+export const services: FastifyPluginAsync = async (fastify) => {
+  await fastify.register(usersService)
+  await fastify.register(guildsService)
+  await fastify.register(uploadsService)
+}

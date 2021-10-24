@@ -1,50 +1,27 @@
-import {
-  Request,
-  Response,
-  NextFunction,
-  Router,
-  static as staticExpress
-} from 'express'
+import path from 'node:path'
 
-import {
-  guildsIconPath,
-  messagesFilePath,
-  usersLogoPath
-} from '../../tools/configurations/constants'
-import { ForbiddenError } from '../../tools/errors/ForbiddenError'
-import { NotFoundError } from '../../tools/errors/NotFoundError'
-import { authenticateUser } from '../../tools/middlewares/authenticateUser'
-import Channel from '../../models/Channel'
-import Member from '../../models/Member'
-import Message from '../../models/Message'
+import { FastifyPluginAsync, FastifySchema } from 'fastify'
+import { Static, Type } from '@sinclair/typebox'
 
-export const uploadsRouter = Router()
+const parametersUploadsSchema = Type.Object({
+  image: Type.String()
+})
 
-uploadsRouter.use(guildsIconPath.name, staticExpress(guildsIconPath.filePath))
-uploadsRouter.use(usersLogoPath.name, staticExpress(usersLogoPath.filePath))
-uploadsRouter.use(
-  messagesFilePath.name,
-  authenticateUser,
-  async (req: Request, _res: Response, next: NextFunction) => {
-    if (req.user == null) {
-      throw new ForbiddenError()
+type ParametersUploadsSchemaType = Static<typeof parametersUploadsSchema>
+
+const getUploadsSchema: FastifySchema = {
+  tags: ['uploads'] as string[],
+  params: parametersUploadsSchema
+} as const
+
+export const uploadsService: FastifyPluginAsync = async (fastify) => {
+  fastify.route<{ Params: ParametersUploadsSchemaType }>({
+    method: 'GET',
+    url: '/uploads/users/:image',
+    schema: getUploadsSchema,
+    handler: async (request, reply) => {
+      const { image } = request.params
+      return await reply.sendFile(path.join('users', image))
     }
-    const user = req.user.current
-    const messageValue = messagesFilePath.name + req.path
-    const message = await Message.findOne({
-      where: { type: 'file', value: messageValue },
-      include: [Channel]
-    })
-    if (message == null) {
-      throw new NotFoundError()
-    }
-    const member = await Member.findOne({
-      where: { userId: user.id, guildId: message.channel.guildId }
-    })
-    if (member == null) {
-      throw new NotFoundError()
-    }
-    return next()
-  },
-  staticExpress(messagesFilePath.filePath)
-)
+  })
+}

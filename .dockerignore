@@ -1,8 +1,8 @@
 .vscode
 .git
+.env
 build
 coverage
 node_modules
 tmp
 temp
-**/__test__/**

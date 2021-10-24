@@ -1,29 +1,52 @@
-import { Request, Response, Router } from 'express'
-import { body } from 'express-validator'
+import { Static, Type } from '@sinclair/typebox'
+import { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import { validateRequest } from '../../../tools/middlewares/validateRequest'
-import RefreshToken from '../../../models/RefreshToken'
-import { UnauthorizedError } from '../../../tools/errors/UnauthorizedError'
+import prisma from '../../../tools/database/prisma.js'
+import { fastifyErrors } from '../../../models/utils.js'
+import { refreshTokensSchema } from '../../../models/RefreshToken.js'
 
-export const postSignoutRouter = Router()
+const bodyPostSignoutSchema = Type.Object({
+  refreshToken: refreshTokensSchema.token
+})
 
-postSignoutRouter.post(
-  '/users/signout',
-  [
-    body('refreshToken')
-      .trim()
-      .notEmpty()
-  ],
-  validateRequest,
-  async (req: Request, res: Response) => {
-    const { refreshToken } = req.body as { refreshToken: string }
-    const foundRefreshToken = await RefreshToken.findOne({
-      where: { token: refreshToken }
-    })
-    if (foundRefreshToken == null) {
-      throw new UnauthorizedError()
-    }
-    await foundRefreshToken.destroy()
-    res.status(200).json({})
+type BodyPostSignoutSchemaType = Static<typeof bodyPostSignoutSchema>
+
+const postSignoutSchema: FastifySchema = {
+  description: 'Signout the user',
+  tags: ['users'] as string[],
+  body: bodyPostSignoutSchema,
+  response: {
+    200: Type.Object({}),
+    400: fastifyErrors[400],
+    404: fastifyErrors[404],
+    500: fastifyErrors[500]
   }
-)
+} as const
+
+export const postSignoutUser: FastifyPluginAsync = async (fastify) => {
+  fastify.route<{
+    Body: BodyPostSignoutSchemaType
+  }>({
+    method: 'POST',
+    url: '/users/signout',
+    schema: postSignoutSchema,
+    handler: async (request, reply) => {
+      const { refreshToken } = request.body
+      const token = await prisma.refreshToken.findFirst({
+        where: {
+          token: refreshToken
+        }
+      })
+      if (token == null) {
+        throw fastify.httpErrors.notFound()
+      }
+      await prisma.refreshToken.delete({
+        where: {
+          id: token.id
+        }
+      })
+      reply.statusCode = 200
+      return {}
+    }
+  })
+}

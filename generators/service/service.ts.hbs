@@ -1,0 +1,59 @@
+import { Static, Type } from '@sinclair/typebox'
+import { FastifyPluginAsync, FastifySchema } from 'fastify'
+
+import prisma from 'tools/database/prisma.js'
+import { fastifyErrors } from 'models/utils.js'
+{{#if shouldBeAuthenticated}}
+import authenticateUser from 'tools/plugins/authenticateUser.js'
+{{/if}}
+
+const body{{sentenceCase httpMethod}}ServiceSchema = Type.Object({
+  property: Type.String()
+})
+
+type Body{{sentenceCase httpMethod}}ServiceSchemaType = Static<typeof body{{sentenceCase httpMethod}}ServiceSchema>
+
+const {{lowerCase httpMethod}}ServiceSchema: FastifySchema = {
+  description: '{{description}}',
+  tags: ['{{tag}}'] as string[],
+  {{#if shouldBeAuthenticated}}
+  security: [
+    {
+      bearerAuth: []
+    }
+  ] as Array<{ [key: string]: [] }>,
+  {{/if}}
+  body: body{{sentenceCase httpMethod}}ServiceSchema,
+  response: {
+    200: Type.Object({}),
+    400: fastifyErrors[400],
+    {{#if shouldBeAuthenticated}}
+    401: fastifyErrors[401],
+    403: fastifyErrors[403],
+    {{/if}}
+    500: fastifyErrors[500]
+  }
+} as const
+
+export const {{lowerCase httpMethod}}Service: FastifyPluginAsync = async (fastify) => {
+  {{#if shouldBeAuthenticated}}
+  await fastify.register(authenticateUser)
+
+  {{/if}}
+  fastify.route<{
+    Body: Body{{sentenceCase httpMethod}}ServiceSchemaType
+  }>({
+    method: '{{httpMethod}}',
+    url: '{{url}}',
+    schema: {{lowerCase httpMethod}}ServiceSchema,
+    handler: async (request, reply) => {
+      {{#if shouldBeAuthenticated}}
+      if (request.user == null) {
+        throw fastify.httpErrors.forbidden()
+      }
+      {{/if}}
+      reply.statusCode = 200
+      return {}
+    }
+  })
+}

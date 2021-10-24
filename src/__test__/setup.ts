@@ -1,11 +1,8 @@
-import fsMock from 'mock-fs'
-import path from 'path'
-import { Sequelize } from 'sequelize-typescript'
-import { Database, open } from 'sqlite'
-import sqlite3 from 'sqlite3'
+import { PrismaClient } from '@prisma/client'
+import { mockDeep, mockReset } from 'jest-mock-extended'
+import { DeepMockProxy } from 'jest-mock-extended/lib/cjs/Mock'
 
-let sqlite: Database | undefined
-let sequelize: Sequelize | undefined
+import prisma from '../tools/database/prisma.js'
 
 jest.mock('nodemailer', () => ({
   createTransport: () => {
@@ -15,28 +12,13 @@ jest.mock('nodemailer', () => ({
   }
 }))
 
-beforeAll(async () => {
-  sqlite = await open({
-    filename: ':memory:',
-    driver: sqlite3.Database
-  })
-  sequelize = new Sequelize({
-    dialect: process.env.DATABASE_DIALECT,
-    storage: process.env.DATABASE_DIALECT === 'sqlite' ? ':memory:' : undefined,
-    logging: false,
-    models: [path.join(__dirname, '..', 'models')]
-  })
+jest.mock('../tools/database/prisma.js', () => ({
+  __esModule: true,
+  default: mockDeep<PrismaClient>()
+}))
+
+beforeEach(() => {
+  mockReset(prismaMock)
 })
 
-beforeEach(async () => {
-  await sequelize?.sync({ force: true })
-})
-
-afterEach(async () => {
-  fsMock.restore()
-})
-
-afterAll(async () => {
-  await sqlite?.close()
-  await sequelize?.close()
-})
+export const prismaMock = prisma as unknown as DeepMockProxy<PrismaClient>

@@ -1,66 +1,56 @@
-import request from 'supertest'
-
-import { authenticateUserTest } from '../../../../../__test__/utils/authenticateUser'
-import application from '../../../../../application'
+import { application } from '../../../../../application.js'
+import { authenticateUserTest } from '../../../../../__test__/utils/authenticateUserTest.js'
+import { prismaMock } from '../../../../../__test__/setup.js'
+import { userSettingsExample } from '../../../../../models/UserSettings.js'
 
 describe('PUT /users/current/settings', () => {
-  it('should succeeds and edit theme, language and isPublicEmail', async () => {
-    const isPublicEmail = true
-    const theme = 'light'
-    const language = 'fr'
-    const userToken = await authenticateUserTest()
-    const response = await request(application)
-      .put('/users/current/settings')
-      .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
-      .send({ isPublicEmail, theme, language })
-      .expect(200)
-    expect(response.body.settings).not.toBeNull()
-    expect(response.body.settings.theme).toEqual(theme)
-    expect(response.body.settings.language).toEqual(language)
-    expect(response.body.settings.isPublicEmail).toEqual(isPublicEmail)
-  })
-
-  it('fails with unconfirmed account', async () => {
-    const userToken = await authenticateUserTest({
-      name: 'John',
-      email: 'contact@john.com',
-      shouldBeConfirmed: false
+  it('succeeds and edit the theme, language, isPublicEmail and isPublicGuilds', async () => {
+    const newSettings = {
+      theme: 'light',
+      language: 'fr',
+      isPublicEmail: true,
+      isPublicGuilds: true
+    }
+    prismaMock.userSetting.findFirst.mockResolvedValue(userSettingsExample)
+    prismaMock.userSetting.update.mockResolvedValue({
+      ...userSettingsExample,
+      ...newSettings
     })
-    const response = await request(application)
-      .put('/users/current/settings')
-      .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
-      .send()
-      .expect(401)
-    expect(response.body.errors.length).toEqual(1)
-  })
-
-  it('fails with invalid theme', async () => {
-    const userToken = await authenticateUserTest()
-    const response = await request(application)
-      .put('/users/current/settings')
-      .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
-      .send({ theme: 'random theme value' })
-      .expect(400)
-    expect(response.body.errors.length).toEqual(1)
+    const { accessToken } = await authenticateUserTest()
+    const response = await application.inject({
+      method: 'PUT',
+      url: '/users/current/settings',
+      headers: {
+        authorization: `Bearer ${accessToken}`
+      },
+      payload: newSettings
+    })
+    const responseJson = response.json()
+    expect(response.statusCode).toEqual(200)
+    expect(responseJson.settings.theme).toEqual(newSettings.theme)
+    expect(responseJson.settings.language).toEqual(newSettings.language)
+    expect(responseJson.settings.isPublicEmail).toEqual(
+      newSettings.isPublicEmail
+    )
+    expect(responseJson.settings.isPublicGuilds).toEqual(
+      newSettings.isPublicGuilds
+    )
   })
 
   it('fails with invalid language', async () => {
-    const userToken = await authenticateUserTest()
-    const response = await request(application)
-      .put('/users/current/settings')
-      .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
-      .send({ language: 'random language value' })
-      .expect(400)
-    expect(response.body.errors.length).toEqual(1)
-  })
-
-  it('fails with invalid isPublicEmail', async () => {
-    const userToken = await authenticateUserTest()
-    const response = await request(application)
-      .put('/users/current/settings')
-      .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
-      .send({ isPublicEmail: 'not a boolean value' })
-      .expect(400)
-    expect(response.body.errors.length).toEqual(1)
+    const newSettings = {
+      language: 'somerandomlanguage'
+    }
+    prismaMock.userSetting.findFirst.mockResolvedValue(userSettingsExample)
+    const { accessToken } = await authenticateUserTest()
+    const response = await application.inject({
+      method: 'PUT',
+      url: '/users/current/settings',
+      headers: {
+        authorization: `Bearer ${accessToken}`
+      },
+      payload: newSettings
+    })
+    expect(response.statusCode).toEqual(400)
   })
 })

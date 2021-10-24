@@ -4,48 +4,25 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}
     build:
       context: './'
+    env_file:
+      - '.env'
     ports:
       - '${PORT}:${PORT}'
     depends_on:
-      - ${DATABASE_HOST}
-      - 'thream-maildev'
+      - 'thream-database'
     volumes:
-      - './:/api'
-    restart: 'unless-stopped'
-
-  thream-phpmyadmin:
-    container_name: 'thream-phpmyadmin'
-    image: 'phpmyadmin/phpmyadmin:5.0.4'
-    environment:
-      PMA_HOST: ${DATABASE_HOST}
-      PMA_PORT: ${DATABASE_PORT}
-      PMA_USER: ${DATABASE_USER}
-      PMA_PASSWORD: ${DATABASE_PASSWORD}
-    ports:
-      - '8000:80'
-    depends_on:
-      - ${DATABASE_HOST}
+      - './uploads:/usr/src/app/uploads'
     restart: 'unless-stopped'
 
   thream-database:
-    container_name: ${DATABASE_HOST}
-    image: 'mysql:8.0.23'
-    command: '--default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci'
+    container_name: 'thream-database'
+    image: 'postgres:14.0'
     environment:
-      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
-      MYSQL_DATABASE: ${DATABASE_NAME}
-      MYSQL_TCP_PORT: ${DATABASE_PORT}
-    ports:
-      - '${DATABASE_PORT}:${DATABASE_PORT}'
+      POSTGRES_USER: 'user'
+      POSTGRES_PASSWORD: 'password'
+      POSTGRES_DB: 'thream'
     volumes:
-      - 'database-volume:/var/lib/mysql'
-    restart: 'unless-stopped'
-
-  thream-maildev:
-    container_name: 'thream-maildev'
-    image: 'maildev/maildev:1.1.0'
-    ports:
-      - '1080:80'
+      - 'database-volume:/var/lib/postgresql/data'
     restart: 'unless-stopped'
 
 volumes:

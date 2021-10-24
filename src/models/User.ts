@@ -1,26 +1,9 @@
-import {
-  Column,
-  DataType,
-  HasMany,
-  HasOne,
-  Model,
-  Table
-} from 'sequelize-typescript'
+import { User } from '@prisma/client'
+import { Static, Type } from '@sinclair/typebox'
 
-import Member from './Member'
-import OAuth, { AuthenticationStrategy } from './OAuth'
-import RefreshToken from './RefreshToken'
-import UserSetting from './UserSetting'
-import { deleteObjectAttributes } from '../tools/utils/deleteObjectAttributes'
-import { usersLogoPath } from '../tools/configurations/constants'
-
-export const userHiddenAttributes = [
-  'password',
-  'tempToken',
-  'tempExpirationToken'
-] as const
-export type UserHiddenAttributes = typeof userHiddenAttributes[number]
-export interface UserToJSON extends Omit<User, UserHiddenAttributes> {}
+import { AuthenticationStrategy, strategiesTypebox } from './OAuth.js'
+import { userSettingsSchema } from './UserSettings.js'
+import { date, id } from './utils.js'
 
 export interface UserJWT {
   id: number
@@ -33,80 +16,66 @@ export interface UserRequest {
   accessToken: string
 }
 
-@Table
-export default class User extends Model {
-  @Column({
-    type: DataType.STRING,
-    allowNull: false
+export const userSchema = {
+  id,
+  name: Type.String({ minLength: 1, maxLength: 30 }),
+  email: Type.String({ minLength: 1, maxLength: 255, format: 'email' }),
+  password: Type.String(),
+  logo: Type.String({ format: 'uri-reference' }),
+  status: Type.String({ maxLength: 255 }),
+  biography: Type.String(),
+  website: Type.String({ maxLength: 255, format: 'uri-reference' }),
+  isConfirmed: Type.Boolean({ default: false }),
+  temporaryToken: Type.String(),
+  temporaryExpirationToken: Type.String({ format: 'date-time' }),
+  createdAt: date.createdAt,
+  updatedAt: date.updatedAt
+}
+
+export const userPublicSchema = {
+  id,
+  name: userSchema.name,
+  email: Type.Optional(userSchema.email),
+  logo: Type.Optional(userSchema.logo),
+  status: Type.Optional(userSchema.status),
+  biography: Type.Optional(userSchema.biography),
+  website: Type.Optional(userSchema.website),
+  isConfirmed: userSchema.isConfirmed,
+  createdAt: date.createdAt,
+  updatedAt: date.updatedAt,
+  settings: Type.Optional(Type.Object(userSettingsSchema))
+}
+
+export const userCurrentSchema = Type.Object({
+  user: Type.Object({
+    ...userPublicSchema,
+    currentStrategy: Type.Union([...strategiesTypebox]),
+    strategies: Type.Array(Type.Union([...strategiesTypebox]))
   })
-  name!: string
+})
 
-  @Column({
-    type: DataType.STRING,
-    allowNull: true
-  })
-  email?: string
+export const bodyUserSchema = Type.Object({
+  email: userSchema.email,
+  name: userSchema.name,
+  password: userSchema.password,
+  theme: userSettingsSchema.theme,
+  language: userSettingsSchema.language
+})
 
-  @Column({
-    type: DataType.TEXT,
-    allowNull: true
-  })
-  password?: string
+export type BodyUserSchemaType = Static<typeof bodyUserSchema>
 
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    defaultValue: ''
-  })
-  status!: string
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    defaultValue: ''
-  })
-  biography!: string
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: false,
-    defaultValue: `${usersLogoPath.name}/default.png`
-  })
-  logo!: string
-
-  @Column({
-    type: DataType.BOOLEAN,
-    allowNull: false,
-    defaultValue: false
-  })
-  isConfirmed!: boolean
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: true
-  })
-  tempToken?: string | null
-
-  @Column({
-    type: DataType.BIGINT,
-    allowNull: true
-  })
-  tempExpirationToken?: number | null
-
-  @HasMany(() => RefreshToken, { onDelete: 'CASCADE' })
-  refreshTokens!: RefreshToken[]
-
-  @HasMany(() => OAuth, { onDelete: 'CASCADE' })
-  OAuths!: OAuth[]
-
-  @HasMany(() => Member, { onDelete: 'CASCADE' })
-  members!: Member[]
-
-  @HasOne(() => UserSetting, { onDelete: 'CASCADE' })
-  settings!: UserSetting
-
-  toJSON (): UserToJSON {
-    const attributes = Object.assign({}, this.get())
-    return deleteObjectAttributes(attributes, userHiddenAttributes) as UserToJSON
-  }
+export const userExample: User = {
+  id: 1,
+  name: 'Divlo',
+  email: 'contact@divlo.fr',
+  password: 'somepassword',
+  logo: null,
+  status: null,
+  biography: null,
+  website: null,
+  isConfirmed: true,
+  temporaryToken: 'temporaryUUIDtoken',
+  temporaryExpirationToken: new Date(),
+  createdAt: new Date(),
+  updatedAt: new Date()
 }

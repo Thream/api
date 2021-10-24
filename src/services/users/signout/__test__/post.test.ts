@@ -1,35 +1,25 @@
-import request from 'supertest'
-
-import { authenticateUserTest } from '../../../../__test__/utils/authenticateUser'
-import application from '../../../../application'
-import RefreshToken from '../../../../models/RefreshToken'
+import { application } from '../../../../application.js'
+import { refreshTokenExample } from '../../../../models/RefreshToken.js'
+import { prismaMock } from '../../../../__test__/setup.js'
 
 describe('POST /users/signout', () => {
-  it('succeeds and signout', async () => {
-    const userToken = await authenticateUserTest()
-    let refreshToken = await RefreshToken.findAll()
-    expect(refreshToken.length).toEqual(1)
-
-    await request(application)
-      .post('/users/signout')
-      .send({ refreshToken: userToken.refreshToken })
-      .expect(200)
-
-    refreshToken = await RefreshToken.findAll()
-    expect(refreshToken.length).toEqual(0)
+  it('succeeds', async () => {
+    prismaMock.refreshToken.findFirst.mockResolvedValue(refreshTokenExample)
+    const response = await application.inject({
+      method: 'POST',
+      url: '/users/signout',
+      payload: { refreshToken: refreshTokenExample.token }
+    })
+    expect(response.statusCode).toEqual(200)
   })
 
   it('fails with invalid refreshToken', async () => {
-    await authenticateUserTest()
-    let refreshToken = await RefreshToken.findAll()
-    expect(refreshToken.length).toEqual(1)
-
-    await request(application)
-      .post('/users/signout')
-      .send({ refreshToken: 'some invalid token' })
-      .expect(401)
-
-    refreshToken = await RefreshToken.findAll()
-    expect(refreshToken.length).toEqual(1)
+    prismaMock.refreshToken.findFirst.mockResolvedValue(null)
+    const response = await application.inject({
+      method: 'POST',
+      url: '/users/signout',
+      payload: { refreshToken: 'somerandomtoken' }
+    })
+    expect(response.statusCode).toEqual(404)
   })
 })

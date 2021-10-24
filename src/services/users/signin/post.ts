@@ -1,72 +1,72 @@
+import { Static, Type } from '@sinclair/typebox'
+import { FastifyPluginAsync, FastifySchema } from 'fastify'
 import bcrypt from 'bcryptjs'
-import { Request, Response, Router } from 'express'
-import { body } from 'express-validator'
 
-import { validateRequest } from '../../../tools/middlewares/validateRequest'
-import User from '../../../models/User'
+import prisma from '../../../tools/database/prisma.js'
+import { fastifyErrors } from '../../../models/utils.js'
+import { userSchema } from '../../../models/User.js'
 import {
-  expiresIn,
   generateAccessToken,
   generateRefreshToken,
-  ResponseJWT
-} from '../../../tools/configurations/jwtToken'
-import { BadRequestError } from '../../../tools/errors/BadRequestError'
+  jwtSchema,
+  expiresIn
+} from '../../../tools/utils/jwtToken.js'
 
-export const errorsMessages = {
-  email: {
-    mustBeValid: 'Email must be valid'
-  },
-  password: {
-    required: 'Password is required'
-  },
-  invalidCredentials: 'Invalid credentials'
-}
+const bodyPostSigninSchema = Type.Object({
+  email: userSchema.email,
+  password: userSchema.password
+})
 
-export const signinRouter = Router()
+type BodyPostSigninSchemaType = Static<typeof bodyPostSigninSchema>
 
-signinRouter.post(
-  '/users/signin',
-  [
-    body('email')
-      .trim()
-      .isEmail()
-      .withMessage(errorsMessages.email.mustBeValid),
-    body('password')
-      .notEmpty()
-      .withMessage(errorsMessages.password.required)
-  ],
-  validateRequest,
-  async (req: Request, res: Response) => {
-    const { email, password } = req.body as {
-      email: string
-      password: string
-    }
-    const user = await User.findOne({ where: { email, isConfirmed: true } })
-    if (user == null) {
-      throw new BadRequestError(errorsMessages.invalidCredentials)
-    }
-
-    if (user.password == null) {
-      throw new BadRequestError(errorsMessages.invalidCredentials)
-    }
-    const isCorrectPassword = await bcrypt.compare(password, user.password)
-    if (!isCorrectPassword) {
-      throw new BadRequestError(errorsMessages.invalidCredentials)
-    }
-    const accessToken = generateAccessToken({
-      currentStrategy: 'local',
-      id: user.id
-    })
-    const refreshToken = await generateRefreshToken({
-      currentStrategy: 'local',
-      id: user.id
-    })
-    const responseJWT: ResponseJWT = {
-      accessToken,
-      refreshToken,
-      expiresIn,
-      type: 'Bearer'
-    }
-    return res.status(200).json(responseJWT)
+const postSigninSchema: FastifySchema = {
+  description: 'Signin the user',
+  tags: ['users'] as string[],
+  body: bodyPostSigninSchema,
+  response: {
+    200: Type.Object(jwtSchema),
+    400: fastifyErrors[400],
+    500: fastifyErrors[500]
   }
-)
+} as const
+
+export const postSigninUser: FastifyPluginAsync = async (fastify) => {
+  fastify.route<{
+    Body: BodyPostSigninSchemaType
+  }>({
+    method: 'POST',
+    url: '/users/signin',
+    schema: postSigninSchema,
+    handler: async (request, reply) => {
+      const { email, password } = request.body
+      const user = await prisma.user.findUnique({
+        where: { email }
+      })
+      if (user == null) {
+        throw fastify.httpErrors.badRequest('Invalid credentials.')
+      }
+      if (user.password == null) {
+        throw fastify.httpErrors.badRequest('Invalid credentials.')
+      }
+      const isCorrectPassword = await bcrypt.compare(password, user.password)
+      if (!isCorrectPassword) {
+        throw fastify.httpErrors.badRequest('Invalid credentials.')
+      }
+      const accessToken = generateAccessToken({
+        currentStrategy: 'local',
+        id: user.id
+      })
+      const refreshToken = await generateRefreshToken({
+        currentStrategy: 'local',
+        id: user.id
+      })
+      reply.statusCode = 200
+      return {
+        accessToken,
+        refreshToken,
+        expiresIn,
+        type: 'Bearer'
+      }
+    }
+  })
+}

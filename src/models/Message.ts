@@ -1,51 +1,20 @@
-import {
-  BelongsTo,
-  Column,
-  DataType,
-  ForeignKey,
-  Model,
-  Table
-} from 'sequelize-typescript'
+import { Type } from '@sinclair/typebox'
 
-import Channel from './Channel'
-import Member from './Member'
+import { date, id } from './utils.js'
 
-export const messageTypes = ['text', 'file'] as const
-export type MessageType = typeof messageTypes[number]
+export const types = [Type.Literal('text'), Type.Literal('file')]
 
-@Table
-export default class Message extends Model {
-  @Column({
-    type: DataType.TEXT,
-    allowNull: false
-  })
-  value!: string
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    defaultValue: 'text'
-  })
-  type!: MessageType
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    defaultValue: 'text/plain'
-  })
-  mimetype!: string
-
-  @ForeignKey(() => Member)
-  @Column
-  memberId!: number
-
-  @BelongsTo(() => Member)
-  member!: Member
-
-  @ForeignKey(() => Channel)
-  @Column
-  channelId!: number
-
-  @BelongsTo(() => Channel)
-  channel!: Channel
+export const messageSchema = {
+  id,
+  value: Type.String(),
+  type: Type.Union(types, { default: 'text' }),
+  mimetype: Type.String({
+    maxLength: 255,
+    default: 'text/plain',
+    format: 'mimetype'
+  }),
+  createdAt: date.createdAt,
+  updatedAt: date.updatedAt,
+  memberId: id,
+  channelId: id
 }

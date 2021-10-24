@@ -1,13 +1,7 @@
-import { Router } from 'express'
+import { FastifyPluginAsync } from 'fastify'
 
-import { getGuildsRouter } from './get'
-import { getPublicDiscoverGuildsRouter } from './public/discover/get'
-import { postGuildsRouter } from './post'
-import { guildsGetByIdRouter } from './[guildId]'
+import { postGuilds } from './post.js'
 
-export const guildsRouter = Router()
-
-guildsRouter.use('/', postGuildsRouter)
-guildsRouter.use('/', getGuildsRouter)
-guildsRouter.use('/', getPublicDiscoverGuildsRouter)
-guildsRouter.use('/', guildsGetByIdRouter)
+export const guildsService: FastifyPluginAsync = async (fastify) => {
+  await fastify.register(postGuilds)
+}

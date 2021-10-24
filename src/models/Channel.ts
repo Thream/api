@@ -1,55 +1,23 @@
-import {
-  BelongsTo,
-  Column,
-  DataType,
-  ForeignKey,
-  HasMany,
-  Model,
-  Table
-} from 'sequelize-typescript'
+import { Type } from '@sinclair/typebox'
+import { Channel } from '@prisma/client'
 
-import Guild from './Guild'
-import Message from './Message'
+import { date, id } from './utils.js'
+import { guildExample } from './Guild.js'
 
-export const channelTypes = ['text', 'voice'] as const
-export type ChannelType = typeof channelTypes[number]
+export const types = [Type.Literal('text')]
 
-@Table
-export default class Channel extends Model {
-  @Column({
-    type: DataType.STRING,
-    allowNull: false
-  })
-  name!: string
+export const channelSchema = {
+  id,
+  name: Type.String({ maxLength: 255 }),
+  createdAt: date.createdAt,
+  updatedAt: date.updatedAt,
+  guildId: id
+}
 
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    defaultValue: 'text'
-  })
-  type!: ChannelType
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    defaultValue: ''
-  })
-  description!: string
-
-  @Column({
-    type: DataType.BOOLEAN,
-    allowNull: false,
-    defaultValue: false
-  })
-  isDefault!: boolean
-
-  @ForeignKey(() => Guild)
-  @Column
-  guildId!: number
-
-  @BelongsTo(() => Guild)
-  guild!: Guild
-
-  @HasMany(() => Message)
-  messages!: Message[]
+export const channelExample: Channel = {
+  id: 1,
+  name: 'general',
+  guildId: guildExample.id,
+  createdAt: new Date(),
+  updatedAt: new Date()
 }

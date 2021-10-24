@@ -1,11 +1,22 @@
-FROM node:14.16.1
-RUN npm install --global npm@7
-
-WORKDIR /api
-
+FROM node:16.11.0 AS dependencies
+WORKDIR /usr/src/app
 COPY ./package*.json ./
-RUN npm install
+RUN npm clean-install
+
+FROM node:16.11.0 AS builder
+WORKDIR /usr/src/app
+COPY --from=dependencies /usr/src/app/node_modules ./node_modules
 COPY ./ ./
+RUN npx prisma generate
 RUN npm run build
 
-CMD ["npm", "run", "dev"]
+FROM node:16.11.0 AS runner
+WORKDIR /usr/src/app
+ENV NODE_ENV=production
+COPY --from=builder /usr/src/app/node_modules ./node_modules
+COPY --from=builder /usr/src/app/email ./email
+COPY --from=builder /usr/src/app/build ./build
+COPY --from=builder /usr/src/app/prisma ./prisma
+COPY --from=builder /usr/src/app/uploads ./uploads
+USER node
+CMD npm run prisma:migrate:deploy && node build/index.js

@@ -1,63 +1,71 @@
-import { Request, Response, Router } from 'express'
-import { body } from 'express-validator'
+import { Static, Type } from '@sinclair/typebox'
+import { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import { authenticateUser } from '../../../../tools/middlewares/authenticateUser'
-import { validateRequest } from '../../../../tools/middlewares/validateRequest'
-import UserSetting, {
-  themes,
-  Theme,
-  languages,
-  Language
-} from '../../../../models/UserSetting'
-import { ForbiddenError } from '../../../../tools/errors/ForbiddenError'
-import { NotFoundError } from '../../../../tools/errors/NotFoundError'
-import { onlyPossibleValuesValidation } from '../../../../tools/validations/onlyPossibleValuesValidation'
+import prisma from '../../../../tools/database/prisma.js'
+import { fastifyErrors } from '../../../../models/utils.js'
+import authenticateUser from '../../../../tools/plugins/authenticateUser.js'
+import { userSettingsSchema } from '../../../../models/UserSettings.js'
 
-export const putCurrentSettingsRouter = Router()
+const bodyPutServiceSchema = Type.Object({
+  theme: Type.Optional(userSettingsSchema.theme),
+  language: Type.Optional(userSettingsSchema.language),
+  isPublicEmail: Type.Optional(userSettingsSchema.isPublicEmail),
+  isPublicGuilds: Type.Optional(userSettingsSchema.isPublicGuilds)
+})
 
-putCurrentSettingsRouter.put(
-  '/users/current/settings',
-  authenticateUser,
-  [
-    body('isPublicEmail').optional({ nullable: true }).isBoolean(),
-    body('theme')
-      .optional({ nullable: true })
-      .trim()
-      .isString()
-      .custom(async (theme: Theme) => {
-        return await onlyPossibleValuesValidation([...themes], 'theme', theme)
-      }),
-    body('language')
-      .optional({ nullable: true })
-      .trim()
-      .isString()
-      .custom(async (language: Language) => {
-        return await onlyPossibleValuesValidation(
-          languages,
-          'language',
-          language
-        )
-      })
-  ],
-  validateRequest,
-  async (req: Request, res: Response) => {
-    if (req.user == null) {
-      throw new ForbiddenError()
+type BodyPutServiceSchemaType = Static<typeof bodyPutServiceSchema>
+
+const putServiceSchema: FastifySchema = {
+  description: 'Edit the current connected user settings',
+  tags: ['users'] as string[],
+  security: [
+    {
+      bearerAuth: []
     }
-    const { isPublicEmail, theme, language } = req.body as {
-      isPublicEmail?: boolean
-      theme?: Theme
-      language?: Language
-    }
-    const user = req.user.current
-    const settings = await UserSetting.findOne({ where: { id: user.id } })
-    if (settings == null) {
-      throw new NotFoundError()
-    }
-    settings.isPublicEmail = isPublicEmail ?? settings.isPublicEmail
-    settings.theme = theme ?? settings.theme
-    settings.language = language ?? settings.language
-    await settings.save()
-    return res.status(200).json({ settings })
+  ] as Array<{ [key: string]: [] }>,
+  body: bodyPutServiceSchema,
+  response: {
+    200: Type.Object({
+      settings: Type.Object(userSettingsSchema)
+    }),
+    400: fastifyErrors[400],
+    401: fastifyErrors[401],
+    403: fastifyErrors[403],
+    500: fastifyErrors[500]
   }
-)
+} as const
+
+export const putCurrentUserSettings: FastifyPluginAsync = async (fastify) => {
+  await fastify.register(authenticateUser)
+
+  fastify.route<{
+    Body: BodyPutServiceSchemaType
+  }>({
+    method: 'PUT',
+    url: '/users/current/settings',
+    schema: putServiceSchema,
+    handler: async (request, reply) => {
+      if (request.user == null) {
+        throw fastify.httpErrors.forbidden()
+      }
+      const { theme, language, isPublicEmail, isPublicGuilds } = request.body
+      const settings = await prisma.userSetting.findFirst({
+        where: { userId: request.user.current.id }
+      })
+      if (settings == null) {
+        throw fastify.httpErrors.internalServerError()
+      }
+      const newSettings = await prisma.userSetting.update({
+        where: { id: request.user.current.id },
+        data: {
+          theme: theme ?? settings.theme,
+          language: language ?? settings.language,
+          isPublicEmail: isPublicEmail ?? settings.isPublicEmail,
+          isPublicGuilds: isPublicGuilds ?? settings.isPublicGuilds
+        }
+      })
+      reply.statusCode = 200
+      return { settings: newSettings }
+    }
+  })
+}

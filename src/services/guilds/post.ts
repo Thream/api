@@ -1,81 +1,94 @@
-import { Request, Response, Router } from 'express'
-import fileUpload from 'express-fileupload'
-import { body } from 'express-validator'
+import { Static, Type } from '@sinclair/typebox'
+import { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import { authenticateUser } from '../../tools/middlewares/authenticateUser'
-import { validateRequest } from '../../tools/middlewares/validateRequest'
-import Channel from '../../models/Channel'
-import Guild from '../../models/Guild'
-import Member from '../../models/Member'
-import {
-  commonErrorsMessages,
-  guildsIconPath,
-  imageFileUploadOptions
-} from '../../tools/configurations/constants'
-import { alreadyUsedValidation } from '../../tools/validations/alreadyUsedValidation'
-import { ForbiddenError } from '../../tools/errors/ForbiddenError'
-import { uploadImage } from '../../tools/utils/uploadImage'
+import prisma from '../../tools/database/prisma.js'
+import { fastifyErrors } from '../../models/utils.js'
+import authenticateUser from '../../tools/plugins/authenticateUser.js'
+import { guildSchema } from '../../models/Guild.js'
+import { channelSchema } from '../../models/Channel.js'
+import { memberSchema } from '../../models/Member.js'
+import { userPublicSchema } from '../../models/User.js'
 
-export const postGuildsRouter = Router()
+const bodyPostServiceSchema = Type.Object({
+  name: guildSchema.name,
+  description: guildSchema.description
+})
 
-postGuildsRouter.post(
-  '/guilds',
-  authenticateUser,
-  fileUpload(imageFileUploadOptions),
-  [
-    body('name')
-      .trim()
-      .escape()
-      .notEmpty()
-      .isLength({ max: 30, min: 3 })
-      .withMessage(
-        commonErrorsMessages.charactersLength('name', { max: 30, min: 3 })
-      )
-      .custom(async (name: string) => {
-        return await alreadyUsedValidation(Guild, 'name', name)
-      }),
-    body('description')
-      .optional({ nullable: true })
-      .trim()
-      .escape()
-      .isLength({ max: 160 })
-      .withMessage(
-        commonErrorsMessages.charactersLength('description', { max: 160 })
-      )
-  ],
-  validateRequest,
-  async (req: Request, res: Response) => {
-    if (req.user == null) {
-      throw new ForbiddenError()
+type BodyPostServiceSchemaType = Static<typeof bodyPostServiceSchema>
+
+const postServiceSchema: FastifySchema = {
+  description: 'Create a guild.',
+  tags: ['guilds'] as string[],
+  security: [
+    {
+      bearerAuth: []
     }
-    const { name, description = '' } = req.body as {
-      name: string
-      description?: string
-    }
-    const icon = req.files?.icon
-    const user = req.user.current
-    const resultUpload = await uploadImage({
-      image: icon,
-      propertyName: 'icon',
-      oldImage: `${guildsIconPath.name}/default.png`,
-      imagesPath: guildsIconPath.filePath
-    })
-    const guild = await Guild.create({ name, description })
-    const channel = await Channel.create({
-      name: 'general',
-      isDefault: true,
-      guildId: guild.id
-    })
-    await Member.create({
-      userId: user.id,
-      guildId: guild.id,
-      isOwner: true,
-      lastVisitedChannelId: channel.id
-    })
-    if (resultUpload != null) {
-      guild.icon = `${guildsIconPath.name}/${resultUpload}`
-      await guild.save()
-    }
-    return res.status(201).json({ guild })
+  ] as Array<{ [key: string]: [] }>,
+  body: bodyPostServiceSchema,
+  response: {
+    201: Type.Object({
+      guild: Type.Object({
+        ...guildSchema,
+        channels: Type.Array(Type.Object(channelSchema)),
+        members: Type.Array(
+          Type.Object({
+            ...memberSchema,
+            user: Type.Object(userPublicSchema)
+          })
+        )
+      })
+    }),
+    400: fastifyErrors[400],
+    401: fastifyErrors[401],
+    403: fastifyErrors[403],
+    500: fastifyErrors[500]
   }
-)
+} as const
+
+export const postGuilds: FastifyPluginAsync = async (fastify) => {
+  await fastify.register(authenticateUser)
+
+  fastify.route<{
+    Body: BodyPostServiceSchemaType
+  }>({
+    method: 'POST',
+    url: '/guilds',
+    schema: postServiceSchema,
+    handler: async (request, reply) => {
+      if (request.user == null) {
+        throw fastify.httpErrors.forbidden()
+      }
+      const { name, description } = request.body
+      const guild = await prisma.guild.create({ data: { name, description } })
+      const channel = await prisma.channel.create({
+        data: { name: 'general', guildId: guild.id }
+      })
+      const memberCreated = await prisma.member.create({
+        data: {
+          userId: request.user.current.id,
+          isOwner: true,
+          guildId: guild.id
+        }
+      })
+      const members = await Promise.all(
+        [memberCreated].map(async (member) => {
+          const user = await prisma.user.findUnique({
+            where: { id: member?.userId }
+          })
+          return {
+            ...member,
+            user
+          }
+        })
+      )
+      reply.statusCode = 201
+      return {
+        guild: {
+          ...guild,
+          channels: [channel],
+          members
+        }
+      }
+    }
+  })
+}

@@ -1,72 +1,58 @@
-import request from 'supertest'
-
-import { authenticateUserTest } from '../../../__test__/utils/authenticateUser'
-import { formatErrors } from '../../../__test__/utils/formatErrors'
-import application from '../../../application'
-import { commonErrorsMessages } from '../../../tools/configurations/constants'
-import { randomString } from '../../../tools/utils/random'
+import { application } from '../../../application.js'
+import { authenticateUserTest } from '../../../__test__/utils/authenticateUserTest.js'
+import { prismaMock } from '../../../__test__/setup.js'
+import { guildExample } from '../../../models/Guild.js'
+import { memberExample } from '../../../models/Member.js'
+import { channelExample } from '../../../models/Channel.js'
+import { userExample } from '../../../models/User.js'
 
 describe('POST /guilds', () => {
-  it('succeeds with valid name/description', async () => {
-    const name = 'Test'
-    const userToken = await authenticateUserTest()
-    const response = await request(application)
-      .post('/guilds')
-      .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
-      .send({ name, description: 'testing guild creation' })
-      .expect(201)
-    expect(response.body.guild).not.toBeNull()
-    expect(response.body.guild.name).toBe(name)
+  it('succeeds', async () => {
+    prismaMock.guild.create.mockResolvedValue(guildExample)
+    prismaMock.member.create.mockResolvedValue(memberExample)
+    prismaMock.member.findUnique.mockResolvedValue({
+      ...memberExample,
+      ...userExample
+    })
+    prismaMock.channel.create.mockResolvedValue(channelExample)
+    const { accessToken, user } = await authenticateUserTest()
+    const response = await application.inject({
+      method: 'POST',
+      url: '/guilds',
+      headers: {
+        authorization: `Bearer ${accessToken}`
+      },
+      payload: {
+        name: guildExample.name,
+        description: guildExample.description
+      }
+    })
+    const responseJson = response.json()
+    expect(response.statusCode).toEqual(201)
+    expect(responseJson.guild.id).toEqual(guildExample.id)
+    expect(responseJson.guild.name).toEqual(guildExample.name)
+    expect(responseJson.guild.members.length).toEqual(1)
+    expect(responseJson.guild.members[0].userId).toEqual(user.id)
+    expect(responseJson.guild.members[0].user.name).toEqual(user.name)
+    expect(responseJson.guild.members[0].guildId).toEqual(guildExample.id)
+    expect(responseJson.guild.members[0].isOwner).toEqual(memberExample.isOwner)
+    expect(responseJson.guild.channels.length).toEqual(1)
+    expect(responseJson.guild.channels[0].id).toEqual(channelExample.id)
+    expect(responseJson.guild.channels[0].guildId).toEqual(guildExample.id)
   })
 
-  it('fails with invalid name', async () => {
-    const userToken = await authenticateUserTest()
-    const response = await request(application)
-      .post('/guilds')
-      .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
-      .send({ name: randomString(35), description: 'testing guild creation' })
-      .expect(400)
-    const errors = formatErrors(response.body.errors)
-    expect(errors.length).toEqual(1)
-    expect(errors).toEqual(
-      expect.arrayContaining([
-        commonErrorsMessages.charactersLength('name', { max: 30, min: 3 })
-      ])
-    )
-  })
-
-  it('fails with name already used', async () => {
-    const userToken = await authenticateUserTest()
-    const name = 'guild'
-    const response1 = await request(application)
-      .post('/guilds')
-      .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
-      .send({ name, description: 'testing guild creation' })
-      .expect(201)
-    expect(response1.body.guild.name).toBe(name)
-
-    const response2 = await request(application)
-      .post('/guilds')
-      .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
-      .send({ name, description: 'testing guild creation' })
-      .expect(400)
-
-    const errors = formatErrors(response2.body.errors)
-    expect(errors.length).toEqual(1)
-    expect(errors).toEqual(expect.arrayContaining(['Name already used']))
-  })
-
-  it('fails with invalid description', async () => {
-    const userToken = await authenticateUserTest()
-    const response = await request(application)
-      .post('/guilds')
-      .set('Authorization', `${userToken.type} ${userToken.accessToken}`)
-      .send({ name: 'Test', description: randomString(165) })
-      .expect(400)
-    const errors = formatErrors(response.body.errors)
-    expect(errors.length).toEqual(1)
-    expect(errors).toEqual([
-      commonErrorsMessages.charactersLength('description', { max: 160 })
-    ])
+  it('fails with empty name and description', async () => {
+    prismaMock.guild.create.mockResolvedValue(guildExample)
+    prismaMock.member.create.mockResolvedValue(memberExample)
+    prismaMock.channel.create.mockResolvedValue(channelExample)
+    const { accessToken } = await authenticateUserTest()
+    const response = await application.inject({
+      method: 'POST',
+      url: '/guilds',
+      headers: {
+        authorization: `Bearer ${accessToken}`
+      }
+    })
+    expect(response.statusCode).toEqual(400)
   })
 })

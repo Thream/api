@@ -1,45 +1,22 @@
-import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript'
-import { guildsIconPath } from '../tools/configurations/constants'
+import { Guild } from '@prisma/client'
+import { Type } from '@sinclair/typebox'
 
-import Channel from './Channel'
-import Invitation from './Invitation'
-import Member from './Member'
+import { date, id } from './utils.js'
 
-@Table
-export default class Guild extends Model {
-  @Column({
-    type: DataType.STRING,
-    allowNull: false
-  })
-  name!: string
+export const guildSchema = {
+  id,
+  name: Type.String({ minLength: 3, maxLength: 30 }),
+  icon: Type.String({ format: 'uri-reference' }),
+  description: Type.String({ maxLength: 160 }),
+  createdAt: date.createdAt,
+  updatedAt: date.updatedAt
+}
 
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    defaultValue: ''
-  })
-  description!: string
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: false,
-    defaultValue: `${guildsIconPath.name}/default.png`
-  })
-  icon!: string
-
-  @Column({
-    type: DataType.BOOLEAN,
-    allowNull: false,
-    defaultValue: false
-  })
-  isPublic!: boolean
-
-  @HasMany(() => Member, { onDelete: 'CASCADE' })
-  members!: Member[]
-
-  @HasMany(() => Invitation, { onDelete: 'CASCADE' })
-  invitations!: Invitation[]
-
-  @HasMany(() => Channel)
-  channels!: Channel[]
+export const guildExample: Guild = {
+  id: 1,
+  name: 'GuildExample',
+  description: 'guild example.',
+  icon: null,
+  createdAt: new Date(),
+  updatedAt: new Date()
 }

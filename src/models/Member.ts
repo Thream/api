@@ -1,48 +1,24 @@
-import {
-  BelongsTo,
-  Column,
-  DataType,
-  ForeignKey,
-  HasMany,
-  Model,
-  Table
-} from 'sequelize-typescript'
+import { Type } from '@sinclair/typebox'
+import { Member } from '@prisma/client'
 
-import Channel from './Channel'
-import Guild from './Guild'
-import Message from './Message'
-import User from './User'
+import { date, id } from './utils.js'
+import { guildExample } from './Guild.js'
+import { userExample } from './User.js'
 
-@Table
-export default class Member extends Model {
-  @Column({
-    type: DataType.BOOLEAN,
-    allowNull: false,
-    defaultValue: false
-  })
-  isOwner!: boolean
+export const memberSchema = {
+  id,
+  isOwner: Type.Boolean({ default: false }),
+  createdAt: date.createdAt,
+  updatedAt: date.updatedAt,
+  userId: id,
+  guildId: id
+}
 
-  @ForeignKey(() => Channel)
-  @Column
-  lastVisitedChannelId!: number
-
-  @BelongsTo(() => Channel)
-  channel!: Channel
-
-  @ForeignKey(() => User)
-  @Column
-  userId!: number
-
-  @BelongsTo(() => User)
-  user!: User
-
-  @ForeignKey(() => Guild)
-  @Column
-  guildId!: number
-
-  @BelongsTo(() => Guild)
-  guild!: Guild
-
-  @HasMany(() => Message, { onDelete: 'CASCADE' })
-  messages!: Message[]
+export const memberExample: Member = {
+  id: 1,
+  isOwner: true,
+  userId: userExample.id,
+  guildId: guildExample.id,
+  createdAt: new Date(),
+  updatedAt: new Date()
 }

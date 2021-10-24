@@ -1,30 +1,84 @@
-import { Request, Response, Router } from 'express'
+import { Static, Type } from '@sinclair/typebox'
+import { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import User from '../../../models/User'
-import UserSetting from '../../../models/UserSetting'
-import { NotFoundError } from '../../../tools/errors/NotFoundError'
+import prisma from '../../../tools/database/prisma.js'
+import { fastifyErrors } from '../../../models/utils.js'
+import { userPublicSchema } from '../../../models/User.js'
+import { guildSchema } from '../../../models/Guild.js'
 
-export const getUsersRouter = Router()
+const parametersGetUserSchema = Type.Object({
+  userId: userPublicSchema.id
+})
 
-getUsersRouter.get(
-  '/users/:userId',
-  [],
-  async (req: Request, res: Response) => {
-    const { userId } = req.params as { userId: string }
-    const user = await User.findOne({ where: { id: userId } })
-    if (user == null) {
-      throw new NotFoundError()
-    }
-    const userSettings = await UserSetting.findOne({
-      where: { userId: user.id }
-    })
-    if (userSettings == null) {
-      throw new NotFoundError()
-    }
-    const result = Object.assign({}, user.toJSON())
-    if (!userSettings.isPublicEmail) {
-      delete result.email
-    }
-    return res.status(200).json({ user: result })
+export type ParametersGetUser = Static<typeof parametersGetUserSchema>
+
+const getServiceSchema: FastifySchema = {
+  description: 'GET the public user informations with its id',
+  tags: ['users'] as string[],
+  params: parametersGetUserSchema,
+  response: {
+    200: Type.Object({
+      user: Type.Object(userPublicSchema),
+      guilds: Type.Union([Type.Array(Type.Object(guildSchema)), Type.Null()])
+    }),
+    400: fastifyErrors[400],
+    404: fastifyErrors[404],
+    500: fastifyErrors[500]
   }
-)
+} as const
+
+export const getUserById: FastifyPluginAsync = async (fastify) => {
+  fastify.route<{
+    Params: ParametersGetUser
+  }>({
+    method: 'GET',
+    url: '/users/:userId',
+    schema: getServiceSchema,
+    handler: async (request, reply) => {
+      const { userId } = request.params
+      const settings = await prisma.userSetting.findFirst({
+        where: { userId }
+      })
+      if (settings == null) {
+        throw fastify.httpErrors.notFound('User not found')
+      }
+      const user = await prisma.user.findUnique({
+        where: {
+          id: userId
+        },
+        select: {
+          id: true,
+          name: true,
+          email: settings.isPublicEmail,
+          logo: true,
+          status: true,
+          biography: true,
+          website: true,
+          createdAt: true,
+          updatedAt: true
+        }
+      })
+      if (user == null) {
+        throw fastify.httpErrors.notFound('User not found')
+      }
+      reply.statusCode = 200
+      return {
+        user: {
+          ...user,
+          settings
+        },
+        guilds: !settings.isPublicGuilds
+          ? null
+          : await prisma.guild.findMany({
+              where: {
+                members: {
+                  some: {
+                    userId
+                  }
+                }
+              }
+            })
+      }
+    }
+  })
+}

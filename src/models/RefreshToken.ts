@@ -1,26 +1,21 @@
-import {
-  BelongsTo,
-  Column,
-  DataType,
-  ForeignKey,
-  Model,
-  Table
-} from 'sequelize-typescript'
+import { RefreshToken } from '@prisma/client'
+import { Type } from '@sinclair/typebox'
 
-import User from './User'
+import { userExample } from './User.js'
+import { date, id } from './utils.js'
 
-@Table
-export default class RefreshToken extends Model {
-  @Column({
-    type: DataType.TEXT,
-    allowNull: false
-  })
-  token!: string
+export const refreshTokensSchema = {
+  id,
+  token: Type.String(),
+  createdAt: date.createdAt,
+  updatedAt: date.updatedAt,
+  userId: id
+}
 
-  @ForeignKey(() => User)
-  @Column
-  userId!: number
-
-  @BelongsTo(() => User)
-  user!: User
+export const refreshTokenExample: RefreshToken = {
+  id: 1,
+  userId: userExample.id,
+  token: 'sometoken',
+  createdAt: new Date(),
+  updatedAt: new Date()
 }

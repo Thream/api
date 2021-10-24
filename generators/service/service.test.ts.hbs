@@ -1,0 +1,26 @@
+import { application } from 'application.js'
+{{#if shouldBeAuthenticated}}
+import { authenticateUserTest } from '__test__/utils/authenticateUserTest.js'
+{{/if}}
+import { prismaMock } from '__test__/setup.js'
+
+describe('{{httpMethod}} {{url}}', () => {
+  it('succeeds', async () => {
+    // prismaMock.service.findUnique.mockResolvedValue(null)
+    {{#if shouldBeAuthenticated}}
+    const { accessToken, user } = await authenticateUserTest()
+    {{/if}}
+    const response = await application.inject({
+      method: '{{httpMethod}}',
+      url: '{{url}}',
+      {{#if shouldBeAuthenticated}}
+      headers: {
+        authorization: `Bearer ${accessToken}`
+      },
+      {{/if}}
+      payload: {}
+    })
+    // const responseJson = response.json()
+    expect(response.statusCode).toEqual(200)
+  })
+})
