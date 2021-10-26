@@ -1,6 +1,6 @@
 import { buildQueryURL } from '../buildQueryURL.js'
 
-test('controllers/users/utils/buildQueryUrl', () => {
+test('/tools/utils/buildQueryUrl', () => {
   expect(
     buildQueryURL('http://localhost:8080', {
       test: 'query'

@@ -7,7 +7,8 @@ import authenticateUser from '../../tools/plugins/authenticateUser.js'
 import { guildSchema } from '../../models/Guild.js'
 import { channelSchema } from '../../models/Channel.js'
 import { memberSchema } from '../../models/Member.js'
-import { userPublicSchema } from '../../models/User.js'
+import { userPublicWithoutSettingsSchema } from '../../models/User.js'
+import { parseStringNullish } from '../../tools/utils/parseStringNullish.js'
 
 const bodyPostServiceSchema = Type.Object({
   name: guildSchema.name,
@@ -33,7 +34,7 @@ const postServiceSchema: FastifySchema = {
         members: Type.Array(
           Type.Object({
             ...memberSchema,
-            user: Type.Object(userPublicSchema)
+            user: Type.Object(userPublicWithoutSettingsSchema)
           })
         )
       })
@@ -59,7 +60,9 @@ export const postGuilds: FastifyPluginAsync = async (fastify) => {
         throw fastify.httpErrors.forbidden()
       }
       const { name, description } = request.body
-      const guild = await prisma.guild.create({ data: { name, description } })
+      const guild = await prisma.guild.create({
+        data: { name, description: parseStringNullish(description) }
+      })
       const channel = await prisma.channel.create({
         data: { name: 'general', guildId: guild.id }
       })

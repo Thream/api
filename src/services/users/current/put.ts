@@ -10,6 +10,7 @@ import { userCurrentSchema, userSchema } from '../../../models/User.js'
 import { sendEmail } from '../../../tools/email/sendEmail.js'
 import { HOST, PORT } from '../../../tools/configurations/index.js'
 import { Language, Theme } from '../../../models/UserSettings.js'
+import { parseStringNullish } from '../../../tools/utils/parseStringNullish.js'
 
 const bodyPutServiceSchema = Type.Object({
   name: Type.Optional(userSchema.name),
@@ -117,9 +118,12 @@ export const putCurrentUser: FastifyPluginAsync = async (fastify) => {
         where: { id: request.user.current.id },
         data: {
           name: name ?? request.user.current.name,
-          status: status ?? request.user.current.status,
-          biography: biography ?? request.user.current.biography,
-          website: website ?? request.user.current.website
+          status: parseStringNullish(request.user.current.status, status),
+          biography: parseStringNullish(
+            request.user.current.biography,
+            biography
+          ),
+          website: parseStringNullish(request.user.current.website, website)
         }
       })
       reply.statusCode = 200

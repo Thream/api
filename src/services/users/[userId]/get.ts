@@ -10,7 +10,7 @@ const parametersGetUserSchema = Type.Object({
   userId: userPublicSchema.id
 })
 
-export type ParametersGetUser = Static<typeof parametersGetUserSchema>
+type ParametersGetUser = Static<typeof parametersGetUserSchema>
 
 const getServiceSchema: FastifySchema = {
   description: 'GET the public user informations with its id',

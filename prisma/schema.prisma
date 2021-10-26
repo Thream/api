@@ -9,12 +9,12 @@ generator client {
 
 model User {
   id                       Int            @id @default(autoincrement())
-  name                     String         @unique @db.VarChar(255)
-  email                    String?        @unique @db.VarChar(255)
+  name                     String         @unique @db.VarChar(30)
+  email                    String?        @unique @db.VarChar(254)
   password                 String?        @db.Text
   logo                     String?        @db.Text
-  status                   String?        @db.VarChar(255)
-  biography                String?        @db.Text
+  status                   String?        @db.VarChar(50)
+  biography                String?        @db.VarChar(160)
   website                  String?        @db.VarChar(255)
   isConfirmed              Boolean        @default(false)
   temporaryToken           String?
@@ -29,8 +29,8 @@ model User {
 
 model UserSetting {
   id             Int      @id @default(autoincrement())
-  language       String   @default("en") @db.VarChar(255)
-  theme          String   @default("dark") @db.VarChar(255)
+  language       String   @default("en") @db.VarChar(10)
+  theme          String   @default("dark") @db.VarChar(10)
   isPublicEmail  Boolean  @default(false)
   isPublicGuilds Boolean  @default(false)
   createdAt      DateTime @default(now())
@@ -51,7 +51,7 @@ model RefreshToken {
 model OAuth {
   id         Int      @id @default(autoincrement())
   providerId String   @db.Text
-  provider   String   @db.VarChar(255)
+  provider   String   @db.VarChar(20)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now()) @updatedAt
   userId     Int      @unique
@@ -72,7 +72,7 @@ model Member {
 
 model Guild {
   id          Int       @id @default(autoincrement())
-  name        String    @db.VarChar(255)
+  name        String    @db.VarChar(30)
   icon        String?   @db.Text
   description String?   @db.Text
   createdAt   DateTime  @default(now())
@@ -83,7 +83,7 @@ model Guild {
 
 model Channel {
   id        Int       @id @default(autoincrement())
-  name      String    @db.VarChar(255)
+  name      String    @db.VarChar(20)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
   guildId   Int       @unique
@@ -94,8 +94,8 @@ model Channel {
 model Message {
   id        Int      @id @default(autoincrement())
   value     String   @db.Text
-  type      String   @default("text") @db.VarChar(255)
-  mimetype  String   @default("text/plain") @db.VarChar(255)
+  type      String   @default("text") @db.VarChar(10)
+  mimetype  String   @default("text/plain") @db.VarChar(127)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
   memberId  Int      @unique

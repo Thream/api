@@ -6,10 +6,13 @@ export const types = [Type.Literal('text'), Type.Literal('file')]
 
 export const messageSchema = {
   id,
-  value: Type.String(),
+  value: Type.String({
+    minLength: 1,
+    maxLength: 20_000
+  }),
   type: Type.Union(types, { default: 'text' }),
   mimetype: Type.String({
-    maxLength: 255,
+    maxLength: 127,
     default: 'text/plain',
     format: 'mimetype'
   }),

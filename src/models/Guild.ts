@@ -5,9 +5,9 @@ import { date, id } from './utils.js'
 
 export const guildSchema = {
   id,
-  name: Type.String({ minLength: 3, maxLength: 30 }),
-  icon: Type.String({ format: 'uri-reference' }),
-  description: Type.String({ maxLength: 160 }),
+  name: Type.String({ minLength: 1, maxLength: 30 }),
+  icon: Type.Union([Type.String({ format: 'uri-reference' }), Type.Null()]),
+  description: Type.Union([Type.String({ maxLength: 160 }), Type.Null()]),
   createdAt: date.createdAt,
   updatedAt: date.updatedAt
 }

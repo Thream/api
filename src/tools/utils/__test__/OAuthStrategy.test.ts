@@ -5,7 +5,7 @@ import { OAuthStrategy } from '../OAuthStrategy.js'
 
 const oauthStrategy = new OAuthStrategy('discord')
 
-describe('/utils/OAuthStrategy - callbackSignin', () => {
+describe('/tools/utils/OAuthStrategy - callbackSignin', () => {
   it('should signup the user', async () => {
     const name = 'Martin'
     const id = '12345'
@@ -52,7 +52,7 @@ describe('/utils/OAuthStrategy - callbackSignin', () => {
   })
 })
 
-describe('/utils/OAuthStrategy - callbackAddStrategy', () => {
+describe('/tools/utils/OAuthStrategy - callbackAddStrategy', () => {
   it('should add the strategy to the user', async () => {
     const name = userExample.name
     const id = '12345'
