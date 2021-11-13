@@ -1,4 +1,4 @@
-import { Type } from '@sinclair/typebox'
+import { Static, Type } from '@sinclair/typebox'
 
 import { FastifyPluginAsync, FastifySchema } from 'fastify'
 
@@ -8,9 +8,15 @@ import authenticateUser from '../../../tools/plugins/authenticateUser.js'
 import { guildSchema } from '../../../models/Guild'
 import {
   getPaginationOptions,
-  queryPaginationSchema,
-  QueryPaginationSchemaType
+  queryPaginationSchema
 } from '../../../tools/database/pagination'
+
+const querySchema = Type.Object({
+  search: Type.Optional(Type.String()),
+  ...queryPaginationSchema
+})
+
+export type QuerySchemaType = Static<typeof querySchema>
 
 const getServiceSchema: FastifySchema = {
   description: 'GET all the public guilds.',
@@ -20,7 +26,7 @@ const getServiceSchema: FastifySchema = {
       bearerAuth: []
     }
   ] as Array<{ [key: string]: [] }>,
-  querystring: queryPaginationSchema,
+  querystring: querySchema,
   response: {
     200: Type.Array(
       Type.Object({
@@ -39,7 +45,7 @@ export const getGuildsPublic: FastifyPluginAsync = async (fastify) => {
   await fastify.register(authenticateUser)
 
   fastify.route<{
-    Querystring: QueryPaginationSchemaType
+    Querystring: QuerySchemaType
   }>({
     method: 'GET',
     url: '/guilds/public',
@@ -49,7 +55,13 @@ export const getGuildsPublic: FastifyPluginAsync = async (fastify) => {
         throw fastify.httpErrors.forbidden()
       }
       const guildsRequest = await prisma.guild.findMany({
-        ...getPaginationOptions(request.query)
+        ...getPaginationOptions(request.query),
+        orderBy: { createdAt: 'desc' },
+        ...(request.query.search != null && {
+          where: {
+            name: { contains: request.query.search }
+          }
+        })
       })
       const guilds = await Promise.all(
         guildsRequest.map(async (guild) => {

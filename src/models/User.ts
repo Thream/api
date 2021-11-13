@@ -21,10 +21,14 @@ export const userSchema = {
   name: Type.String({ minLength: 1, maxLength: 30 }),
   email: Type.String({ minLength: 1, maxLength: 254, format: 'email' }),
   password: Type.String(),
-  logo: Type.String({ format: 'uri-reference' }),
-  status: Type.String({ maxLength: 50 }),
-  biography: Type.String({ maxLength: 160 }),
-  website: Type.String({ maxLength: 255, format: 'uri-reference' }),
+  logo: Type.String({ minLength: 1, format: 'uri-reference' }),
+  status: Type.String({ minLength: 1, maxLength: 50 }),
+  biography: Type.String({ minLength: 1, maxLength: 160 }),
+  website: Type.String({
+    minLength: 1,
+    maxLength: 255,
+    format: 'uri-reference'
+  }),
   isConfirmed: Type.Boolean({ default: false }),
   temporaryToken: Type.String(),
   temporaryExpirationToken: Type.String({ format: 'date-time' }),

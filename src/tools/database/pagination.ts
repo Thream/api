@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client'
 import { Static, Type } from '@sinclair/typebox'
 
-export const queryPaginationSchema = Type.Object({
+export const queryPaginationSchema = {
   /** Maximum number of items to return */
   limit: Type.Integer({ default: 20, minimum: 1, maximum: 100 }),
 
@@ -12,9 +12,13 @@ export const queryPaginationSchema = Type.Object({
   after: Type.Optional(
     Type.Integer({ minimum: 1, description: 'Get items after this id' })
   )
-})
+}
 
-export type QueryPaginationSchemaType = Static<typeof queryPaginationSchema>
+export const queryPaginationObjectSchema = Type.Object(queryPaginationSchema)
+
+export type QueryPaginationSchemaType = Static<
+  typeof queryPaginationObjectSchema
+>
 
 export const getPaginationOptions = (
   query: QueryPaginationSchemaType
