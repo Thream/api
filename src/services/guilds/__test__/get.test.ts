@@ -16,8 +16,7 @@ describe('GET /guilds', () => {
       url: '/guilds',
       headers: {
         authorization: `Bearer ${accessToken}`
-      },
-      payload: {}
+      }
     })
     const responseJson = response.json()
     expect(response.statusCode).toEqual(200)

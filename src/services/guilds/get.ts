@@ -10,7 +10,7 @@ import {
   queryPaginationObjectSchema
 } from '../../tools/database/pagination.js'
 
-export type QuerySchemaType = Static<typeof queryPaginationObjectSchema>
+type QuerySchemaType = Static<typeof queryPaginationObjectSchema>
 
 const getServiceSchema: FastifySchema = {
   description: 'GET all the guilds of an user.',

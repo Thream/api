@@ -64,9 +64,9 @@ model Member {
   Message   Message[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
-  userId    Int       @unique
+  userId    Int
   user      User?     @relation(fields: [userId], references: [id])
-  guildId   Int       @unique
+  guildId   Int
   guild     Guild?    @relation(fields: [guildId], references: [id])
 }
 
@@ -86,7 +86,7 @@ model Channel {
   name      String    @db.VarChar(20)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
-  guildId   Int       @unique
+  guildId   Int
   guild     Guild?    @relation(fields: [guildId], references: [id])
   messages  Message[]
 }
@@ -98,8 +98,8 @@ model Message {
   mimetype  String   @default("text/plain") @db.VarChar(127)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
-  memberId  Int      @unique
+  memberId  Int
   member    Member?  @relation(fields: [memberId], references: [id])
-  channelId Int      @unique
+  channelId Int
   channel   Channel? @relation(fields: [channelId], references: [id])
 }
