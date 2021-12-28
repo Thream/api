@@ -17,4 +17,15 @@ describe('GET /users/[userId]', () => {
     expect(responseJson.user.id).toEqual(userExample.id)
     expect(responseJson.user.name).toEqual(userExample.name)
   })
+
+  it('fails with not found user', async () => {
+    prismaMock.userSetting.findFirst.mockResolvedValue(null)
+    const response = await application.inject({
+      method: 'GET',
+      url: `/users/1`
+    })
+    const responseJson = response.json()
+    expect(response.statusCode).toEqual(404)
+    expect(responseJson.message).toEqual('User not found')
+  })
 })
