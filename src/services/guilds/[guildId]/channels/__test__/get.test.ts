@@ -26,8 +26,8 @@ describe('GET /guilds/[guildId]/channels', () => {
   })
 
   it('fails with not found guild', async () => {
-    const { accessToken } = await authenticateUserTest()
     prismaMock.member.findFirst.mockResolvedValue(null)
+    const { accessToken } = await authenticateUserTest()
     const response = await application.inject({
       method: 'GET',
       url: '/guilds/1/channels',
