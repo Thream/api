@@ -1,3 +1,4 @@
+import { Message } from '@prisma/client'
 import { Type } from '@sinclair/typebox'
 
 import { date, id } from './utils.js'
@@ -20,4 +21,15 @@ export const messageSchema = {
   updatedAt: date.updatedAt,
   memberId: id,
   channelId: id
+}
+
+export const messageExample: Message = {
+  id: 1,
+  value: 'Hello, world!',
+  type: 'text',
+  mimetype: 'text/plain',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  memberId: 1,
+  channelId: 1
 }
