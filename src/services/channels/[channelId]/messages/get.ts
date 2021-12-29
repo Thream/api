@@ -80,11 +80,11 @@ export const getMessagesByChannelIdService: FastifyPluginAsync = async (
       }
       const messagesRequest = await prisma.message.findMany({
         ...getPaginationOptions(request.query),
-        orderBy: { createdAt: 'asc' },
+        orderBy: { createdAt: 'desc' },
         where: { channelId }
       })
       const messages = await Promise.all(
-        messagesRequest.map(async (message) => {
+        messagesRequest.reverse().map(async (message) => {
           const member = await prisma.member.findFirst({
             where: { id: message.memberId },
             include: {
