@@ -1,13 +1,16 @@
-import { Static, Type } from '@sinclair/typebox'
+import { Type, Static } from '@sinclair/typebox'
 import { FastifyPluginAsync, FastifySchema } from 'fastify'
+import fastifyMultipart from 'fastify-multipart'
 
-import prisma from '../../../../tools/database/prisma.js'
-import { fastifyErrors } from '../../../../models/utils.js'
-import authenticateUser from '../../../../tools/plugins/authenticateUser.js'
-import { messageSchema } from '../../../../models/Message.js'
-import { channelSchema } from '../../../../models/Channel.js'
-import { memberSchema } from '../../../../models/Member.js'
-import { userPublicWithoutSettingsSchema } from '../../../../models/User.js'
+import prisma from '../../../../../tools/database/prisma.js'
+import { fastifyErrors } from '../../../../../models/utils.js'
+import authenticateUser from '../../../../../tools/plugins/authenticateUser.js'
+import { messageSchema } from '../../../../../models/Message.js'
+import { memberSchema } from '../../../../../models/Member.js'
+import { userPublicWithoutSettingsSchema } from '../../../../../models/User.js'
+import { channelSchema } from '../../../../../models/Channel.js'
+import { uploadFile } from '../../../../../tools/utils/uploadFile.js'
+import { maximumFileSize } from '../../../../../tools/configurations/index.js'
 
 const parametersSchema = Type.Object({
   channelId: channelSchema.id
@@ -15,22 +18,17 @@ const parametersSchema = Type.Object({
 
 type Parameters = Static<typeof parametersSchema>
 
-const bodyPostServiceSchema = Type.Object({
-  value: messageSchema.value
-})
-
-type BodyPostServiceSchemaType = Static<typeof bodyPostServiceSchema>
-
 const postServiceSchema: FastifySchema = {
   description:
-    'POST a new message (text) in a specific channel using its channelId.',
+    'POST a new message (file) in a specific channel using its channelId.',
   tags: ['messages'] as string[],
+  consumes: ['multipart/form-data'] as string[],
+  produces: ['application/json'] as string[],
   security: [
     {
       bearerAuth: []
     }
   ] as Array<{ [key: string]: [] }>,
-  body: bodyPostServiceSchema,
   params: parametersSchema,
   response: {
     200: Type.Object({
@@ -44,22 +42,22 @@ const postServiceSchema: FastifySchema = {
     401: fastifyErrors[401],
     403: fastifyErrors[403],
     404: fastifyErrors[404],
-    431: fastifyErrors[431],
     500: fastifyErrors[500]
   }
 } as const
 
-export const postMessageByChannelIdService: FastifyPluginAsync = async (
+export const postMessageUploadsByChannelIdService: FastifyPluginAsync = async (
   fastify
 ) => {
   await fastify.register(authenticateUser)
 
+  await fastify.register(fastifyMultipart)
+
   fastify.route<{
-    Body: BodyPostServiceSchemaType
     Params: Parameters
   }>({
     method: 'POST',
-    url: '/channels/:channelId/messages',
+    url: '/channels/:channelId/messages/uploads',
     schema: postServiceSchema,
     handler: async (request, reply) => {
       if (request.user == null) {
@@ -92,12 +90,17 @@ export const postMessageByChannelIdService: FastifyPluginAsync = async (
       if (memberCheck == null) {
         throw fastify.httpErrors.notFound('Channel not found')
       }
-      const { value } = request.body
+      const file = await uploadFile({
+        fastify,
+        request,
+        folderInUploadsFolder: 'messages',
+        maximumFileSize: maximumFileSize
+      })
       const message = await prisma.message.create({
         data: {
-          value,
-          type: 'text',
-          mimetype: 'text/plain',
+          value: file.pathToStoreInDatabase,
+          type: 'file',
+          mimetype: file.mimetype,
           channelId,
           memberId: memberCheck.id
         }

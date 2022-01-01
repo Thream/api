@@ -5,8 +5,12 @@ import authenticateUser from '../../../../tools/plugins/authenticateUser.js'
 import { fastifyErrors } from '../../../../models/utils.js'
 import fastifyMultipart from 'fastify-multipart'
 import prisma from '../../../../tools/database/prisma.js'
-import { uploadImage } from '../../../../tools/utils/uploadImage.js'
+import { uploadFile } from '../../../../tools/utils/uploadFile.js'
 import { guildSchema } from '../../../../models/Guild.js'
+import {
+  maximumImageSize,
+  supportedImageMimetype
+} from '../../../../tools/configurations/index.js'
 
 const parametersSchema = Type.Object({
   guildId: guildSchema.id
@@ -60,19 +64,21 @@ export const putGuildIconById: FastifyPluginAsync = async (fastify) => {
       if (guild == null) {
         throw fastify.httpErrors.notFound()
       }
-      const icon = await uploadImage({
+      const file = await uploadFile({
         fastify,
         request,
-        folderInUploadsFolder: 'guilds'
+        folderInUploadsFolder: 'guilds',
+        maximumFileSize: maximumImageSize,
+        supportedFileMimetype: supportedImageMimetype
       })
       await prisma.guild.update({
         where: { id: guildId },
-        data: { icon }
+        data: { icon: file.pathToStoreInDatabase }
       })
       reply.statusCode = 200
       return {
         guild: {
-          icon
+          icon: file.pathToStoreInDatabase
         }
       }
     }

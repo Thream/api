@@ -14,7 +14,7 @@
   },
   "module": {
     "type": "commonjs",
-    "strict": true,
+    "strict": false,
     "strictMode": true,
     "lazy": false,
     "noInterop": false
