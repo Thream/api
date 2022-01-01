@@ -4,7 +4,7 @@ import { FastifyPluginAsync, FastifySchema } from 'fastify'
 import prisma from '../../../../tools/database/prisma.js'
 import { fastifyErrors } from '../../../../models/utils.js'
 import authenticateUser from '../../../../tools/plugins/authenticateUser.js'
-import { guildSchema } from '../../../../models/Guild'
+import { guildSchema } from '../../../../models/Guild.js'
 import { channelSchema } from '../../../../models/Channel.js'
 import {
   getPaginationOptions,

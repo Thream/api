@@ -4,7 +4,7 @@ import { FastifyPluginAsync, FastifySchema } from 'fastify'
 import prisma from '../../../tools/database/prisma.js'
 import { fastifyErrors } from '../../../models/utils.js'
 import authenticateUser from '../../../tools/plugins/authenticateUser.js'
-import { channelSchema } from '../../../models/Channel'
+import { channelSchema } from '../../../models/Channel.js'
 
 const parametersSchema = Type.Object({
   channelId: channelSchema.id

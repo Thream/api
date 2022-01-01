@@ -1,7 +1,9 @@
 {
-  "preset": "ts-jest",
   "testEnvironment": "node",
   "resolver": "jest-ts-webcompat-resolver",
+  "transform": {
+    "^.+\\.(t|j)sx?$": ["@swc/jest"]
+  },
   "setupFiles": ["./__test__/setEnvironmentsVariables.ts"],
   "setupFilesAfterEnv": ["./__test__/setup.ts"],
   "rootDir": "./src",

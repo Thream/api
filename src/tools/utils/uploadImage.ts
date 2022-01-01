@@ -10,7 +10,7 @@ import {
   maximumImageSize,
   supportedImageMimetype,
   ROOT_URL
-} from '../configurations'
+} from '../configurations/index.js'
 
 export interface UploadImageOptions {
   folderInUploadsFolder: 'guilds' | 'messages' | 'users'
