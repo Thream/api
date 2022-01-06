@@ -1,9 +1,9 @@
 import { Static, Type } from '@sinclair/typebox'
 import { FastifyPluginAsync, FastifySchema } from 'fastify'
+import fastifyMultipart from 'fastify-multipart'
 
 import authenticateUser from '../../../../tools/plugins/authenticateUser.js'
 import { fastifyErrors } from '../../../../models/utils.js'
-import fastifyMultipart from 'fastify-multipart'
 import prisma from '../../../../tools/database/prisma.js'
 import { uploadFile } from '../../../../tools/utils/uploadFile.js'
 import { guildSchema } from '../../../../models/Guild.js'

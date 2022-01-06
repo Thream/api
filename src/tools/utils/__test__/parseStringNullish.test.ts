@@ -1,4 +1,4 @@
-import { parseStringNullish } from '../parseStringNullish'
+import { parseStringNullish } from '../parseStringNullish.js'
 
 const defaultString = 'defaultString'
 

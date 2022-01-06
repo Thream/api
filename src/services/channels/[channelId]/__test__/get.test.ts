@@ -1,7 +1,7 @@
 import { application } from '../../../../application.js'
 import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
 import { prismaMock } from '../../../../__test__/setup.js'
-import { memberExample } from '../../../../models/Member'
+import { memberExample } from '../../../../models/Member.js'
 import { channelExample } from '../../../../models/Channel.js'
 
 describe('GET /channels/[channelId]', () => {

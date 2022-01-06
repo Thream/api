@@ -6,8 +6,8 @@ import { userSettingsExample } from '../../models/UserSettings.js'
 import {
   generateAccessToken,
   generateRefreshToken
-} from '../../tools/utils/jwtToken'
-import { prismaMock } from '../setup'
+} from '../../tools/utils/jwtToken.js'
+import { prismaMock } from '../setup.js'
 
 export const authenticateUserTest = async (): Promise<{
   accessToken: string

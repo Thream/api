@@ -3,3 +3,4 @@ node_modules
 coverage
 package.json
 package-lock.json
+*.hbs

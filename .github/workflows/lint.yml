@@ -21,13 +21,27 @@ jobs:
       - name: 'Install'
         run: 'npm install'
 
-      - run: 'npm run lint:commit -- --to "${{ github.sha }}"'
-      - run: 'npm run lint:editorconfig'
-      - run: 'npm run lint:markdown'
-      - run: 'npm run lint:docker'
-      - run: 'npm run lint:typescript'
+      - name: 'lint:commit'
+        run: 'npm run lint:commit -- --to "${{ github.sha }}"'
 
-      - name: 'dotenv-linter'
+      - name: 'lint:editorconfig'
+        run: 'npm run lint:editorconfig'
+
+      - name: 'lint:markdown'
+        run: 'npm run lint:markdown'
+
+      - name: 'lint:typescript'
+        run: 'npm run lint:typescript'
+
+      - name: 'lint:prettier'
+        run: 'npm run lint:prettier'
+
+      - name: 'lint:dotenv'
         uses: 'dotenv-linter/action-dotenv-linter@v2'
         with:
           github_token: ${{ secrets.github_token }}
+
+      - name: 'lint:docker'
+        uses: 'hadolint/hadolint-action@v1.6.0'
+        with:
+          dockerfile: './Dockerfile'

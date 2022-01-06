@@ -1,8 +1,8 @@
 import { application } from '../../../../../application.js'
 import { authenticateUserTest } from '../../../../../__test__/utils/authenticateUserTest.js'
 import { prismaMock } from '../../../../../__test__/setup.js'
-import { memberExample } from '../../../../../models/Member'
-import { guildExample } from '../../../../../models/Guild'
+import { memberExample } from '../../../../../models/Member.js'
+import { guildExample } from '../../../../../models/Guild.js'
 import { channelExample } from '../../../../../models/Channel.js'
 
 describe('GET /guilds/[guildId]/channels', () => {
