@@ -1,4 +1,5 @@
 import fastify from 'fastify'
+
 import fastifySocketIo from '../socket-io.js'
 
 describe('tools/plugins/socket-io', () => {

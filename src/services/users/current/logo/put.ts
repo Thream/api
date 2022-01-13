@@ -1,7 +1,7 @@
 import { Type } from '@sinclair/typebox'
 import { FastifyPluginAsync, FastifySchema } from 'fastify'
-
 import fastifyMultipart from 'fastify-multipart'
+
 import authenticateUser from '../../../../tools/plugins/authenticateUser.js'
 import { fastifyErrors } from '../../../../models/utils.js'
 import prisma from '../../../../tools/database/prisma.js'

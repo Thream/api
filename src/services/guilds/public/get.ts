@@ -1,5 +1,4 @@
 import { Static, Type } from '@sinclair/typebox'
-
 import { FastifyPluginAsync, FastifySchema } from 'fastify'
 
 import prisma from '../../../tools/database/prisma.js'
