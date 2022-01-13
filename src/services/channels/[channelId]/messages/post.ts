@@ -102,7 +102,7 @@ export const postMessageByChannelIdService: FastifyPluginAsync = async (
         }
       })
       reply.statusCode = 201
-      return {
+      const item = {
         ...message,
         member: {
           ...memberCheck,
@@ -112,6 +112,12 @@ export const postMessageByChannelIdService: FastifyPluginAsync = async (
           }
         }
       }
+      await fastify.io.emitToMembers({
+        event: 'messages',
+        guildId: item.member.guildId,
+        payload: { action: 'create', item }
+      })
+      return item
     }
   })
 }
