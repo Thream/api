@@ -82,7 +82,7 @@ describe('PUT /users/current', () => {
     expect(response.statusCode).toEqual(400)
   })
 
-  it('suceeds with valid website url', async () => {
+  it('succeeds with valid website url', async () => {
     const newWebsite = 'https://somerandomwebsite.com'
     const { accessToken, user } = await authenticateUserTest()
     prismaMock.user.update.mockResolvedValue({

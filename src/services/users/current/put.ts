@@ -1,5 +1,4 @@
 import { randomUUID } from 'node:crypto'
-
 import { Static, Type } from '@sinclair/typebox'
 import { FastifyPluginAsync, FastifySchema } from 'fastify'
 
@@ -14,10 +13,10 @@ import { parseStringNullish } from '../../../tools/utils/parseStringNullish.js'
 
 const bodyPutServiceSchema = Type.Object({
   name: Type.Optional(userSchema.name),
-  email: Type.Optional(userSchema.email),
-  status: Type.Optional(userSchema.status),
-  biography: Type.Optional(userSchema.biography),
-  website: Type.Optional(userSchema.website)
+  email: Type.Optional(Type.Union([userSchema.email, Type.Null()])),
+  status: Type.Optional(Type.Union([userSchema.status, Type.Null()])),
+  biography: Type.Optional(Type.Union([userSchema.biography, Type.Null()])),
+  website: Type.Optional(Type.Union([userSchema.website, Type.Null()]))
 })
 
 type BodyPutServiceSchemaType = Static<typeof bodyPutServiceSchema>
@@ -89,7 +88,12 @@ export const putCurrentUser: FastifyPluginAsync = async (fastify) => {
       if (request.user.current.password != null) {
         strategies.push('local')
       }
-      if (email != null) {
+      if (email === null && strategies.includes('local')) {
+        throw fastify.httpErrors.badRequest(
+          'You must have an email to sign in.'
+        )
+      }
+      if (email != null && email !== request.user.current.email) {
         await prisma.refreshToken.deleteMany({
           where: {
             userId: request.user.current.id
