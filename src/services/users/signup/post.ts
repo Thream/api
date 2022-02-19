@@ -34,7 +34,7 @@ const postSignupSchema: FastifySchema = {
 } as const
 
 export const postSignupUser: FastifyPluginAsync = async (fastify) => {
-  fastify.route<{
+  await fastify.route<{
     Body: BodyUserSchemaType
     Querystring: QueryPostSignupSchemaType
   }>({

@@ -80,8 +80,8 @@ export default fastifyPlugin(
       emitToAuthorizedUsers,
       emitToMembers
     }
-    fastify.decorate('io', io)
-    fastify.addHook('onClose', async (fastify) => {
+    await fastify.decorate('io', io)
+    await fastify.addHook('onClose', (fastify) => {
       fastify.io.instance.close()
     })
   },

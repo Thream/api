@@ -95,7 +95,7 @@ export const postMessageUploadsByChannelIdService: FastifyPluginAsync = async (
         fastify,
         request,
         folderInUploadsFolder: 'messages',
-        maximumFileSize: maximumFileSize
+        maximumFileSize
       })
       const message = await prisma.message.create({
         data: {

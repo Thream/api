@@ -26,7 +26,7 @@ const putResetPasswordSchema: FastifySchema = {
 } as const
 
 export const putResetPasswordUser: FastifyPluginAsync = async (fastify) => {
-  fastify.route<{
+  await fastify.route<{
     Body: BodyPutResetPasswordSchemaType
   }>({
     method: 'PUT',

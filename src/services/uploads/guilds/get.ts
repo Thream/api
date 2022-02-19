@@ -26,7 +26,7 @@ export const getServiceSchema: FastifySchema = {
 } as const
 
 export const getGuildsUploadsService: FastifyPluginAsync = async (fastify) => {
-  fastify.route<{
+  await fastify.route<{
     Params: Parameters
   }>({
     method: 'GET',

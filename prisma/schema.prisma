@@ -36,7 +36,7 @@ model UserSetting {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @default(now()) @updatedAt
   userId         Int      @unique
-  user           User?    @relation(fields: [userId], references: [id])
+  user           User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model RefreshToken {
@@ -45,7 +45,7 @@ model RefreshToken {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
   userId    Int
-  user      User?    @relation(fields: [userId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model OAuth {
@@ -55,7 +55,7 @@ model OAuth {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now()) @updatedAt
   userId     Int
-  user       User?    @relation(fields: [userId], references: [id])
+  user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Member {
@@ -65,9 +65,9 @@ model Member {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
   userId    Int
-  user      User?     @relation(fields: [userId], references: [id])
+  user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   guildId   Int
-  guild     Guild?    @relation(fields: [guildId], references: [id])
+  guild     Guild?    @relation(fields: [guildId], references: [id], onDelete: Cascade)
 }
 
 model Guild {
@@ -87,7 +87,7 @@ model Channel {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
   guildId   Int
-  guild     Guild?    @relation(fields: [guildId], references: [id])
+  guild     Guild?    @relation(fields: [guildId], references: [id], onDelete: Cascade)
   messages  Message[]
 }
 
@@ -99,7 +99,7 @@ model Message {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
   memberId  Int
-  member    Member?  @relation(fields: [memberId], references: [id])
+  member    Member?  @relation(fields: [memberId], references: [id], onDelete: Cascade)
   channelId Int
-  channel   Channel? @relation(fields: [channelId], references: [id])
+  channel   Channel? @relation(fields: [channelId], references: [id], onDelete: Cascade)
 }

@@ -15,10 +15,10 @@ import { swaggerOptions } from './tools/configurations/swaggerOptions.js'
 import fastifySocketIo from './tools/plugins/socket-io.js'
 import { UPLOADS_URL } from './tools/configurations/index.js'
 
+dotenv.config()
 export const application = fastify({
   logger: process.env.NODE_ENV === 'development'
 })
-dotenv.config()
 
 const main = async (): Promise<void> => {
   await application.register(fastifyCors)
@@ -34,7 +34,7 @@ const main = async (): Promise<void> => {
   })
   await application.register(fastifyHelmet)
   await application.register(fastifyRateLimit, {
-    max: 100,
+    max: 150,
     timeWindow: '1 minute'
   })
   await application.register(fastifyStatic, {

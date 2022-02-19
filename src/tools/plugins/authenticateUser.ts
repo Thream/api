@@ -54,10 +54,11 @@ declare module 'fastify' {
 
 export default fastifyPlugin(
   async (fastify) => {
-    fastify.decorateRequest('user', null)
-    fastify.addHook('onRequest', async (request) => {
+    await fastify.decorateRequest('user', null)
+    await fastify.addHook('onRequest', async (request) => {
       const { authorization } = request.headers
-      request.user = await getUserWithBearerToken(authorization)
+      const user = await getUserWithBearerToken(authorization)
+      request.user = user
     })
   },
   { fastify: '3.x' }

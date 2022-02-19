@@ -35,7 +35,7 @@ const postRefreshTokenSchema: FastifySchema = {
 } as const
 
 export const postRefreshTokenUser: FastifyPluginAsync = async (fastify) => {
-  fastify.route<{
+  await fastify.route<{
     Body: BodyPostRefreshTokenSchemaType
   }>({
     method: 'POST',

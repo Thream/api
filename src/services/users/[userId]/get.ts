@@ -19,7 +19,7 @@ const getServiceSchema: FastifySchema = {
   response: {
     200: Type.Object({
       user: Type.Object(userPublicSchema),
-      guilds: Type.Union([Type.Array(Type.Object(guildSchema)), Type.Null()])
+      guilds: Type.Array(Type.Object(guildSchema))
     }),
     400: fastifyErrors[400],
     404: fastifyErrors[404],
@@ -28,7 +28,7 @@ const getServiceSchema: FastifySchema = {
 } as const
 
 export const getUserById: FastifyPluginAsync = async (fastify) => {
-  fastify.route<{
+  await fastify.route<{
     Params: ParametersGetUser
   }>({
     method: 'GET',
@@ -65,11 +65,13 @@ export const getUserById: FastifyPluginAsync = async (fastify) => {
       return {
         user: {
           ...user,
+          email: user.email ?? null,
           settings
         },
         guilds: !settings.isPublicGuilds
-          ? null
+          ? []
           : await prisma.guild.findMany({
+              take: 10,
               where: {
                 members: {
                   some: {

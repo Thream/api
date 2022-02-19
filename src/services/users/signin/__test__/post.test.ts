@@ -60,7 +60,7 @@ describe('POST /users/signin', () => {
     const response = await application.inject({
       method: 'POST',
       url: '/users/signin',
-      payload: payload
+      payload
     })
     expect(response.statusCode).toEqual(400)
   })

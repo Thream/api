@@ -25,7 +25,7 @@ const getConfirmEmailSchema: FastifySchema = {
 } as const
 
 export const getConfirmEmail: FastifyPluginAsync = async (fastify) => {
-  fastify.route<{
+  await fastify.route<{
     Querystring: QueryGetConfirmEmailSchemaType
   }>({
     method: 'GET',

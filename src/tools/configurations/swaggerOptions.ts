@@ -18,7 +18,6 @@ export const swaggerOptions: FastifyDynamicSwaggerOptions = {
       { name: 'users' },
       { name: 'guilds' },
       { name: 'channels' },
-      { name: 'invitations' },
       { name: 'messages' },
       { name: 'members' }
     ],

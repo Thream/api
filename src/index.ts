@@ -3,7 +3,7 @@ import { HOST, PORT } from './tools/configurations/index.js'
 
 const main = async (): Promise<void> => {
   const address = await application.listen(PORT, HOST)
-  console.log('\x1b[36m%s\x1b[0m', `🚀  Server listening at ${address}`)
+  console.log('\u001B[36m%s\u001B[0m', `🚀  Server listening at ${address}`)
 }
 
 main().catch((error) => {

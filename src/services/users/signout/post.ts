@@ -24,7 +24,7 @@ const postSignoutSchema: FastifySchema = {
 } as const
 
 export const postSignoutUser: FastifyPluginAsync = async (fastify) => {
-  fastify.route<{
+  await fastify.route<{
     Body: BodyPostSignoutSchemaType
   }>({
     method: 'POST',
