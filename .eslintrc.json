@@ -12,6 +12,6 @@
     "prettier/prettier": "error",
     "import/extensions": ["error", "always"],
     "unicorn/prevent-abbreviations": "error",
-    "require-atomic-updates": "off"
+    "@typescript-eslint/await-thenable": "off"
   }
 }
