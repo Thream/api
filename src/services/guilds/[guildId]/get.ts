@@ -7,6 +7,7 @@ import authenticateUser from '../../../tools/plugins/authenticateUser.js'
 import { guildSchema } from '../../../models/Guild.js'
 import { memberSchema } from '../../../models/Member.js'
 import { userPublicWithoutSettingsSchema } from '../../../models/User.js'
+import { channelSchema } from '../../../models/Channel.js'
 
 const parametersSchema = Type.Object({
   guildId: guildSchema.id
@@ -25,7 +26,10 @@ const getServiceSchema: FastifySchema = {
   params: parametersSchema,
   response: {
     200: Type.Object({
-      guild: Type.Object(guildSchema),
+      guild: Type.Object({
+        ...guildSchema,
+        defaultChannelId: channelSchema.id
+      }),
       member: Type.Object({
         ...memberSchema,
         user: Type.Object(userPublicWithoutSettingsSchema)
@@ -76,9 +80,17 @@ export const getGuildMemberByIdService: FastifyPluginAsync = async (
       if (member == null) {
         throw fastify.httpErrors.notFound('Member not found')
       }
-      reply.statusCode = 200
-      return {
-        guild: member.guild,
+      const defaultChannel = await prisma.channel.findFirst({
+        where: { guildId: member.guildId }
+      })
+      if (defaultChannel == null) {
+        throw fastify.httpErrors.internalServerError()
+      }
+      const item = {
+        guild: {
+          ...member.guild,
+          defaultChannelId: defaultChannel.id
+        },
         member: {
           ...member,
           user: {
@@ -87,6 +99,8 @@ export const getGuildMemberByIdService: FastifyPluginAsync = async (
           }
         }
       }
+      reply.statusCode = 200
+      return item
     }
   })
 }

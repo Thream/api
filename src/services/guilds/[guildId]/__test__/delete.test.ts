@@ -8,8 +8,9 @@ describe('DELETE /guilds/[guildId]', () => {
   it('succeeds and delete the guild', async () => {
     prismaMock.member.findFirst.mockResolvedValue({
       ...memberExample,
-      isOwner: true
-    })
+      isOwner: true,
+      guild: guildExample
+    } as any)
     prismaMock.guild.delete.mockResolvedValue(guildExample)
     const { accessToken } = await authenticateUserTest()
     const response = await application.inject({
@@ -41,8 +42,9 @@ describe('DELETE /guilds/[guildId]', () => {
   it('fails if the user is not the owner', async () => {
     prismaMock.member.findFirst.mockResolvedValue({
       ...memberExample,
-      isOwner: false
-    })
+      isOwner: false,
+      guild: guildExample
+    } as any)
     const { accessToken } = await authenticateUserTest()
     const response = await application.inject({
       method: 'DELETE',
@@ -52,7 +54,7 @@ describe('DELETE /guilds/[guildId]', () => {
       }
     })
     const responseJson = response.json()
-    expect(response.statusCode).toEqual(403)
+    expect(response.statusCode).toEqual(400)
     expect(responseJson.message).toEqual('You should be an owner of the guild')
   })
 })

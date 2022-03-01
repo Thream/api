@@ -6,9 +6,14 @@ import { memberExample } from '../../../../models/Member.js'
 
 describe('PUT /channels/[channelId]', () => {
   it('succeeds', async () => {
+    const defaultChannelId = 5
     prismaMock.channel.findUnique.mockResolvedValue(channelExample)
     prismaMock.member.findFirst.mockResolvedValue(memberExample)
     prismaMock.channel.update.mockResolvedValue(channelExample)
+    prismaMock.channel.findFirst.mockResolvedValue({
+      ...channelExample,
+      id: defaultChannelId
+    })
     const { accessToken } = await authenticateUserTest()
     const response = await application.inject({
       method: 'PUT',
@@ -23,6 +28,7 @@ describe('PUT /channels/[channelId]', () => {
     expect(responseJson.id).toEqual(channelExample.id)
     expect(responseJson.name).toEqual(channelExample.name)
     expect(responseJson.guildId).toEqual(channelExample.guildId)
+    expect(responseJson.defaultChannelId).toEqual(defaultChannelId)
   })
 
   it('fails if the channel is not found', async () => {

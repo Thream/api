@@ -6,10 +6,15 @@ import { memberExample } from '../../../../models/Member.js'
 
 describe('DELETE /channels/[channelId]', () => {
   it('succeeds', async () => {
+    const defaultChannelId = 5
     prismaMock.channel.findUnique.mockResolvedValue(channelExample)
     prismaMock.member.findFirst.mockResolvedValue(memberExample)
     prismaMock.channel.count.mockResolvedValue(2)
     prismaMock.channel.delete.mockResolvedValue(channelExample)
+    prismaMock.channel.findFirst.mockResolvedValue({
+      ...channelExample,
+      id: defaultChannelId
+    })
     const { accessToken } = await authenticateUserTest()
     const response = await application.inject({
       method: 'DELETE',
@@ -23,6 +28,7 @@ describe('DELETE /channels/[channelId]', () => {
     expect(responseJson.id).toEqual(channelExample.id)
     expect(responseJson.name).toEqual(channelExample.name)
     expect(responseJson.guildId).toEqual(channelExample.guildId)
+    expect(responseJson.defaultChannelId).toEqual(defaultChannelId)
   })
 
   it('fails if there is only one channel', async () => {

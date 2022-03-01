@@ -12,6 +12,7 @@
     "prettier/prettier": "error",
     "import/extensions": ["error", "always"],
     "unicorn/prevent-abbreviations": "error",
-    "@typescript-eslint/await-thenable": "off"
+    "@typescript-eslint/await-thenable": "off",
+    "@typescript-eslint/no-misused-promises": "off"
   }
 }

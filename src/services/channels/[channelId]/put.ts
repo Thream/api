@@ -29,7 +29,10 @@ const putServiceSchema: FastifySchema = {
   params: parametersSchema,
   body: bodyPutServiceSchema,
   response: {
-    200: Type.Object(channelSchema),
+    200: Type.Object({
+      ...channelSchema,
+      defaultChannelId: channelSchema.id
+    }),
     400: fastifyErrors[400],
     401: fastifyErrors[401],
     403: fastifyErrors[403],
@@ -74,16 +77,26 @@ export const putChannelService: FastifyPluginAsync = async (fastify) => {
         where: { id: channelId },
         data: { name }
       })
+      const defaultChannel = await prisma.channel.findFirst({
+        where: { guildId: member.guildId }
+      })
+      if (defaultChannel == null) {
+        throw fastify.httpErrors.internalServerError()
+      }
+      const item = {
+        ...channel,
+        defaultChannelId: defaultChannel.id
+      }
       await fastify.io.emitToMembers({
         event: 'channels',
         guildId: member.guildId,
         payload: {
           action: 'update',
-          item: channel
+          item
         }
       })
       reply.statusCode = 200
-      return channel
+      return item
     }
   })
 }

@@ -11,6 +11,7 @@ import {
   maximumImageSize,
   supportedImageMimetype
 } from '../../../../tools/configurations/index.js'
+import { channelSchema } from '../../../../models/Channel.js'
 
 const parametersSchema = Type.Object({
   guildId: guildSchema.id
@@ -31,9 +32,8 @@ const putServiceSchema: FastifySchema = {
   params: parametersSchema,
   response: {
     200: Type.Object({
-      guild: Type.Object({
-        icon: Type.String()
-      })
+      ...guildSchema,
+      defaultChannelId: channelSchema.id
     }),
     400: fastifyErrors[400],
     401: fastifyErrors[401],
@@ -75,12 +75,24 @@ export const putGuildIconById: FastifyPluginAsync = async (fastify) => {
         where: { id: guildId },
         data: { icon: file.pathToStoreInDatabase }
       })
-      reply.statusCode = 200
-      return {
-        guild: {
-          icon: file.pathToStoreInDatabase
-        }
+      const defaultChannel = await prisma.channel.findFirst({
+        where: { guildId: guild.id }
+      })
+      if (defaultChannel == null) {
+        throw fastify.httpErrors.internalServerError()
       }
+      const item = {
+        ...guild,
+        icon: file.pathToStoreInDatabase,
+        defaultChannelId: defaultChannel.id
+      }
+      await fastify.io.emitToMembers({
+        event: 'guilds',
+        guildId: guild.id,
+        payload: { action: 'update', item }
+      })
+      reply.statusCode = 200
+      return item
     }
   })
 }

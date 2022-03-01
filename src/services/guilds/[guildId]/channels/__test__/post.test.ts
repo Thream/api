@@ -7,8 +7,13 @@ import { guildExample } from '../../../../../models/Guild.js'
 
 describe('POST /guilds/[guildId]/channels', () => {
   it('succeeds', async () => {
+    const defaultChannelId = 5
     prismaMock.member.findFirst.mockResolvedValue(memberExample)
     prismaMock.channel.create.mockResolvedValue(channelExample)
+    prismaMock.channel.findFirst.mockResolvedValue({
+      ...channelExample,
+      id: defaultChannelId
+    })
     const { accessToken } = await authenticateUserTest()
     const response = await application.inject({
       method: 'POST',
@@ -23,6 +28,7 @@ describe('POST /guilds/[guildId]/channels', () => {
     expect(responseJson.id).toEqual(channelExample.id)
     expect(responseJson.name).toEqual(channelExample.name)
     expect(responseJson.guildId).toEqual(channelExample.guildId)
+    expect(responseJson.defaultChannelId).toEqual(defaultChannelId)
   })
 
   it('fails if the member is not found', async () => {

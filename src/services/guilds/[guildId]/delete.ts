@@ -46,23 +46,29 @@ export const deleteGuildByIdService: FastifyPluginAsync = async (fastify) => {
       }
       const { guildId } = request.params
       const member = await prisma.member.findFirst({
-        where: { guildId, userId: request.user.current.id }
+        where: { guildId, userId: request.user.current.id },
+        include: {
+          guild: true
+        }
       })
-      if (member == null) {
+      if (member == null || member.guild == null) {
         throw fastify.httpErrors.notFound('Member not found')
       }
       if (!member.isOwner) {
-        throw fastify.httpErrors.forbidden(
+        throw fastify.httpErrors.badRequest(
           'You should be an owner of the guild'
         )
       }
-      const guild = await prisma.guild.delete({
-        where: { id: member.guildId }
-      })
       await fastify.io.emitToMembers({
         event: 'guilds',
-        guildId: guild.id,
-        payload: { action: 'delete', item: guild }
+        guildId: member.guildId,
+        payload: {
+          action: 'delete',
+          item: member.guild
+        }
+      })
+      const guild = await prisma.guild.delete({
+        where: { id: member.guildId }
       })
       reply.statusCode = 200
       return guild

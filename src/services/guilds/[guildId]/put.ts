@@ -6,6 +6,7 @@ import { fastifyErrors } from '../../../models/utils.js'
 import authenticateUser from '../../../tools/plugins/authenticateUser.js'
 import { guildSchema } from '../../../models/Guild.js'
 import { parseStringNullish } from '../../../tools/utils/parseStringNullish.js'
+import { channelSchema } from '../../../models/Channel.js'
 
 const parametersSchema = Type.Object({
   guildId: guildSchema.id
@@ -31,7 +32,10 @@ const putServiceSchema: FastifySchema = {
   body: bodyPutServiceSchema,
   params: parametersSchema,
   response: {
-    200: Type.Object(guildSchema),
+    200: Type.Object({
+      ...guildSchema,
+      defaultChannelId: channelSchema.id
+    }),
     400: fastifyErrors[400],
     401: fastifyErrors[401],
     403: fastifyErrors[403],
@@ -66,7 +70,7 @@ export const putGuildByIdService: FastifyPluginAsync = async (fastify) => {
         throw fastify.httpErrors.notFound('Member not found')
       }
       if (!member.isOwner) {
-        throw fastify.httpErrors.forbidden(
+        throw fastify.httpErrors.badRequest(
           'You should be an owner of the guild'
         )
       }
@@ -77,13 +81,23 @@ export const putGuildByIdService: FastifyPluginAsync = async (fastify) => {
           description: parseStringNullish(member.guild.description, description)
         }
       })
+      const defaultChannel = await prisma.channel.findFirst({
+        where: { guildId: guild.id }
+      })
+      if (defaultChannel == null) {
+        throw fastify.httpErrors.internalServerError()
+      }
+      const item = {
+        ...guild,
+        defaultChannelId: defaultChannel.id
+      }
       await fastify.io.emitToMembers({
         event: 'guilds',
         guildId: guild.id,
-        payload: { action: 'update', item: guild }
+        payload: { action: 'update', item }
       })
       reply.statusCode = 200
-      return guild
+      return item
     }
   })
 }

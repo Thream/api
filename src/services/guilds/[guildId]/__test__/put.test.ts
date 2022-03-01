@@ -3,9 +3,11 @@ import { authenticateUserTest } from '../../../../__test__/utils/authenticateUse
 import { prismaMock } from '../../../../__test__/setup.js'
 import { guildExample } from '../../../../models/Guild.js'
 import { memberExample } from '../../../../models/Member.js'
+import { channelExample } from '../../../../models/Channel.js'
 
 describe('PUT /guilds/[guildId]', () => {
   it('succeeds and edit the guild', async () => {
+    const defaultChannelId = 5
     const newName = 'New guild name'
     const newDescription = 'New guild description'
     prismaMock.member.findFirst.mockResolvedValue({
@@ -17,6 +19,10 @@ describe('PUT /guilds/[guildId]', () => {
       ...guildExample,
       name: newName,
       description: newDescription
+    })
+    prismaMock.channel.findFirst.mockResolvedValue({
+      ...channelExample,
+      id: defaultChannelId
     })
     const { accessToken } = await authenticateUserTest()
     const response = await application.inject({
@@ -34,6 +40,7 @@ describe('PUT /guilds/[guildId]', () => {
     expect(response.statusCode).toEqual(200)
     expect(responseJson.name).toEqual(newName)
     expect(responseJson.description).toEqual(newDescription)
+    expect(responseJson.defaultChannelId).toEqual(defaultChannelId)
   })
 
   it("fails if the guild doesn't exist", async () => {
@@ -76,7 +83,7 @@ describe('PUT /guilds/[guildId]', () => {
       }
     })
     const responseJson = response.json()
-    expect(response.statusCode).toEqual(403)
+    expect(response.statusCode).toEqual(400)
     expect(responseJson.message).toEqual('You should be an owner of the guild')
   })
 })
