@@ -61,6 +61,14 @@ export const deleteChannelService: FastifyPluginAsync = async (fastify) => {
       if (!member.isOwner) {
         throw fastify.httpErrors.badRequest('You should be a member owner')
       }
+      const channelCount = await prisma.channel.count({
+        where: { guildId: channelCheck.guildId }
+      })
+      if (channelCount <= 1) {
+        throw fastify.httpErrors.badRequest(
+          'The guild should have at least one channel'
+        )
+      }
       const channel = await prisma.channel.delete({
         where: { id: channelId }
       })

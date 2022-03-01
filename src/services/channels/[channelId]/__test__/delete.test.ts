@@ -8,6 +8,7 @@ describe('DELETE /channels/[channelId]', () => {
   it('succeeds', async () => {
     prismaMock.channel.findUnique.mockResolvedValue(channelExample)
     prismaMock.member.findFirst.mockResolvedValue(memberExample)
+    prismaMock.channel.count.mockResolvedValue(2)
     prismaMock.channel.delete.mockResolvedValue(channelExample)
     const { accessToken } = await authenticateUserTest()
     const response = await application.inject({
@@ -22,6 +23,21 @@ describe('DELETE /channels/[channelId]', () => {
     expect(responseJson.id).toEqual(channelExample.id)
     expect(responseJson.name).toEqual(channelExample.name)
     expect(responseJson.guildId).toEqual(channelExample.guildId)
+  })
+
+  it('fails if there is only one channel', async () => {
+    prismaMock.channel.findUnique.mockResolvedValue(channelExample)
+    prismaMock.member.findFirst.mockResolvedValue(memberExample)
+    prismaMock.channel.count.mockResolvedValue(1)
+    const { accessToken } = await authenticateUserTest()
+    const response = await application.inject({
+      method: 'DELETE',
+      url: `/channels/${channelExample.id}`,
+      headers: {
+        authorization: `Bearer ${accessToken}`
+      }
+    })
+    expect(response.statusCode).toEqual(400)
   })
 
   it('fails if the channel is not found', async () => {
