@@ -15,7 +15,7 @@ interface EmitEventOptions {
 
 interface EmitToAuthorizedUsersOptions extends EmitEventOptions {
   /** tests whether the current connected userId is authorized to get the event, if the callback returns true, the server will emit the event to that user */
-  isAuthorizedCallback: (userId: number) => Promise<boolean>
+  isAuthorizedCallback: (userId: number) => Promise<boolean> | boolean
 }
 
 type EmitToAuthorizedUsers = (

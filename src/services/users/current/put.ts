@@ -131,6 +131,14 @@ export const putCurrentUser: FastifyPluginAsync = async (fastify) => {
           website: parseStringNullish(request.user.current.website, website)
         }
       })
+      await fastify.io.emitToAuthorizedUsers({
+        event: 'users',
+        isAuthorizedCallback: () => true,
+        payload: {
+          action: 'update',
+          item: user
+        }
+      })
       reply.statusCode = 200
       return {
         user: {
