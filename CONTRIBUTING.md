@@ -21,7 +21,7 @@ All work on **Thream/api** happens directly on [GitHub](https://github.com/Threa
 
 - **Please first discuss** the change you wish to make via issues.
 
-- Ensure your code respect `eslint` and `prettier`.
+- Ensure your code respect linting.
 
 - Make sure your **code passes the tests**.
 
@@ -70,6 +70,7 @@ git commit -m "fix(services): should emit events to connected users"
 ├── prisma
 └── src
     ├── models
+    ├── scripts
     ├── services
     ├── tools
     └── typings
@@ -81,6 +82,7 @@ git commit -m "fix(services): should emit events to connected users"
 - `prisma` : contains the prisma schema and migrations
 - `src` : all source files
   - `models` : models that represent tables in database as JSON schema
+  - `scripts` : scripts
   - `services` : all REST API endpoints
   - `tools` : configs and utilities
   - `typings` : types gloablly used in the project

@@ -16,9 +16,7 @@
 
 ## 📜 About
 
-Thream's application programming interface to stay close with your friends and communities.
-
-This project was bootstrapped with [create-fullstack-app](https://github.com/Divlo/create-fullstack-app).
+Thream's Application Programming Interface (API) to stay close with your friends and communities.
 
 ## ⚙️ Getting Started
 
