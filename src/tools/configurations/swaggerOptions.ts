@@ -19,7 +19,8 @@ export const swaggerOptions: FastifyDynamicSwaggerOptions = {
       { name: 'guilds' },
       { name: 'channels' },
       { name: 'messages' },
-      { name: 'members' }
+      { name: 'members' },
+      { name: 'uploads' }
     ],
     components: {
       securitySchemes: {

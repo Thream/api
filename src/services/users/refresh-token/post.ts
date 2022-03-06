@@ -56,7 +56,7 @@ export const postRefreshTokenUser: FastifyPluginAsync = async (fastify) => {
         ) as UserJWT
         const accessToken = generateAccessToken({
           id: userJWT.id,
-          currentStrategy: 'local'
+          currentStrategy: userJWT.currentStrategy
         })
         reply.statusCode = 200
         return {

@@ -33,24 +33,25 @@ export const getCurrentUser: FastifyPluginAsync = async (fastify) => {
       if (request.user == null) {
         throw fastify.httpErrors.forbidden()
       }
+      const { user } = request
       const settings = await prisma.userSetting.findFirst({
-        where: { userId: request.user.current.id }
+        where: { userId: user.current.id }
       })
       const OAuths = await prisma.oAuth.findMany({
-        where: { userId: request.user.current.id }
+        where: { userId: user.current.id }
       })
       const strategies = OAuths.map((oauth) => {
         return oauth.provider
       })
-      if (request.user.current.password != null) {
+      if (user.current.password != null) {
         strategies.push('local')
       }
       reply.statusCode = 200
       return {
         user: {
-          ...request.user.current,
+          ...user.current,
           settings,
-          currentStrategy: request.user.currentStrategy,
+          currentStrategy: user.currentStrategy,
           strategies
         }
       }

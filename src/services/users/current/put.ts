@@ -65,7 +65,10 @@ export const putCurrentUser: FastifyPluginAsync = async (fastify) => {
       const { redirectURI } = request.params
       const userValidation = await prisma.user.findFirst({
         where: {
-          OR: [{ email }, { name }],
+          OR: [
+            ...(email != null ? [{ email }] : [{}]),
+            ...(name != null ? [{ name }] : [{}])
+          ],
           AND: [{ id: { not: request.user.current.id } }]
         }
       })

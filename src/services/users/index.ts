@@ -13,6 +13,13 @@ import { putCurrentUser } from './current/put.js'
 import { putCurrentUserSettings } from './current/settings/put.js'
 import { getUserById } from './[userId]/get.js'
 import { putCurrentUserLogo } from './current/logo/put.js'
+import { getSigninDiscordOAuth2Service } from './oauth2/discord/signin/get.js'
+import { getCallbackDiscordOAuth2Service } from './oauth2/discord/callback/get.js'
+import { getSigninGoogleOAuth2Service } from './oauth2/google/signin/get.js'
+import { getCallbackGoogleOAuth2Service } from './oauth2/google/callback/get.js'
+import { getSigninGitHubOAuth2Service } from './oauth2/github/signin/get.js'
+import { getCallbackGitHubOAuth2Service } from './oauth2/github/callback/get.js'
+import { deleteProviderService } from './oauth2/[provider]/delete.js'
 
 export const usersService: FastifyPluginAsync = async (fastify) => {
   await fastify.register(postSignupUser)
@@ -28,4 +35,15 @@ export const usersService: FastifyPluginAsync = async (fastify) => {
   await fastify.register(putCurrentUserSettings)
   await fastify.register(putCurrentUserLogo)
   await fastify.register(getUserById)
+
+  await fastify.register(getSigninDiscordOAuth2Service)
+  await fastify.register(getCallbackDiscordOAuth2Service)
+
+  await fastify.register(getSigninGoogleOAuth2Service)
+  await fastify.register(getCallbackGoogleOAuth2Service)
+
+  await fastify.register(getSigninGitHubOAuth2Service)
+  await fastify.register(getCallbackGitHubOAuth2Service)
+
+  await fastify.register(deleteProviderService)
 }
