@@ -1,5 +1,4 @@
-import { URL, pathToFileURL } from 'node:url'
-import path from 'node:path'
+import { URL } from 'node:url'
 
 import dotenv from 'dotenv'
 
@@ -14,9 +13,7 @@ export const JWT_REFRESH_SECRET =
 export const JWT_ACCESS_EXPIRES_IN =
   process.env.JWT_ACCESS_EXPIRES_IN ?? '15 minutes'
 
-const importMetaURL = pathToFileURL(path.join(__dirname, 'app.js'))
-
-export const SRC_URL = new URL('../../', importMetaURL)
+export const SRC_URL = new URL('../../', import.meta.url)
 export const ROOT_URL = new URL('../', SRC_URL)
 export const EMAIL_URL = new URL('./email/', ROOT_URL)
 export const EMAIL_TEMPLATE_URL = new URL('./email-template.ejs', EMAIL_URL)
