@@ -6,4 +6,5 @@ coverage: false
 
 files:
   - 'build/services/users/**/__test__/*.js'
+  - 'build/services/messages/**/__test__/*.js'
   - 'build/tools/**/__test__/*.js'
