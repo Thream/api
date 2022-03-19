@@ -1,14 +1,15 @@
+import tap from 'tap'
 import fastify from 'fastify'
 
 import fastifySocketIo from '../socket-io.js'
 
-describe('tools/plugins/socket-io', () => {
-  it('should close socket server on fastify close', async () => {
+await tap.test('tools/plugins/socket-io', async (t) => {
+  await t.test('should close socket server on fastify close', async (t) => {
     const PORT = 3030
     const application = fastify()
     await application.register(fastifySocketIo)
     await application.listen(PORT)
-    expect(application.io).not.toBeNull()
+    t.not(application.io, null)
     await application.close()
   })
 })

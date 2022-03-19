@@ -4,7 +4,7 @@ import { parseStringNullish } from '../parseStringNullish.js'
 
 const defaultString = 'defaultString'
 
-await tap.test('/tools/utils/parseStringNullish', async (t) => {
+await tap.test('tools/utils/parseStringNullish', async (t) => {
   await t.test(
     'returns `defaultString` if `string === undefined`',
     async (t) => {

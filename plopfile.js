@@ -1,6 +1,6 @@
-const { serviceGenerator } = require('./generators/service/index.js')
+import { serviceGenerator } from './generators/service/index.js'
 
-module.exports = (
+export default (
   /** @type {import('plop').NodePlopAPI} */
   plop
 ) => {
