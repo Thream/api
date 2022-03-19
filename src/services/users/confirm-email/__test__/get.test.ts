@@ -1,31 +1,23 @@
-import { application } from '../../../../application.js'
-import { userExample } from '../../../../models/User.js'
-import { prismaMock } from '../../../../__test__/setup.js'
+import tap from 'tap'
+import sinon from 'sinon'
 
-describe('GET /users/confirm-email', () => {
-  it('should succeeds', async () => {
-    prismaMock.user.findFirst.mockResolvedValue(userExample)
-    prismaMock.user.update.mockResolvedValue({
-      ...userExample,
-      isConfirmed: true,
-      temporaryToken: null
-    })
-    const response = await application.inject({
-      method: 'GET',
-      url: '/users/confirm-email',
-      query: {
-        temporaryToken: userExample.temporaryToken ?? ''
-      }
-    })
-    expect(response.statusCode).toEqual(200)
+import { application } from '../../../../application.js'
+import prisma from '../../../../tools/database/prisma.js'
+import { userExample } from '../../../../models/User.js'
+
+await tap.test('GET /users/confirm-email', async (t) => {
+  t.afterEach(() => {
+    sinon.restore()
   })
 
-  it('should fails with invalid `temporaryToken`', async () => {
-    prismaMock.user.findFirst.mockResolvedValue(null)
-    prismaMock.user.update.mockResolvedValue({
-      ...userExample,
-      isConfirmed: true,
-      temporaryToken: null
+  await t.test('succeeds', async (t) => {
+    sinon.stub(prisma, 'user').value({
+      findFirst: async () => {
+        return userExample
+      },
+      update: async () => {
+        return { ...userExample, isConfirmed: true, temporaryToken: null }
+      }
     })
     const response = await application.inject({
       method: 'GET',
@@ -34,6 +26,25 @@ describe('GET /users/confirm-email', () => {
         temporaryToken: userExample.temporaryToken ?? ''
       }
     })
-    expect(response.statusCode).toEqual(403)
+    t.equal(response.statusCode, 200)
+  })
+
+  await t.test('should fails with invalid `temporaryToken`', async (t) => {
+    sinon.stub(prisma, 'user').value({
+      findFirst: async () => {
+        return null
+      },
+      update: async () => {
+        return { ...userExample, isConfirmed: true, temporaryToken: null }
+      }
+    })
+    const response = await application.inject({
+      method: 'GET',
+      url: '/users/confirm-email',
+      query: {
+        temporaryToken: userExample.temporaryToken ?? ''
+      }
+    })
+    t.equal(response.statusCode, 403)
   })
 })

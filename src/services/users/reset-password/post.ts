@@ -70,6 +70,12 @@ export const postResetPasswordUser: FastifyPluginAsync = async (fastify) => {
           'A request to reset-password is already in progress'
         )
       }
+      const userSettings = await prisma.userSetting.findFirst({
+        where: { userId: user.id }
+      })
+      if (userSettings == null) {
+        throw fastify.httpErrors.badRequest()
+      }
       const temporaryToken = randomUUID()
       await prisma.user.update({
         where: {
@@ -80,12 +86,6 @@ export const postResetPasswordUser: FastifyPluginAsync = async (fastify) => {
           temporaryToken
         }
       })
-      const userSettings = await prisma.userSetting.findFirst({
-        where: { userId: user.id }
-      })
-      if (userSettings == null) {
-        throw fastify.httpErrors.badRequest()
-      }
       await sendEmail({
         type: 'reset-password',
         email,

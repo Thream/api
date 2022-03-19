@@ -11,6 +11,7 @@
     "prettier/prettier": "error",
     "import/extensions": ["error", "always"],
     "unicorn/prevent-abbreviations": "error",
+    "unicorn/prefer-node-protocol": "error",
     "@typescript-eslint/require-await": "off"
   }
 }
