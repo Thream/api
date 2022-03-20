@@ -1,24 +1,40 @@
+import tap from 'tap'
+import sinon from 'sinon'
+
 import { application } from '../../../../application.js'
 import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
-import { prismaMock } from '../../../../__test__/setup.js'
+import prisma from '../../../../tools/database/prisma.js'
 import { memberExample } from '../../../../models/Member.js'
 import { guildExample } from '../../../../models/Guild.js'
 import { userExample } from '../../../../models/User.js'
 import { channelExample } from '../../../../models/Channel.js'
 
-describe('GET /guilds/[guildId]', () => {
-  it('succeeds', async () => {
-    const defaultChannelId = 5
-    prismaMock.member.findFirst.mockResolvedValue({
-      ...memberExample,
-      guild: guildExample,
-      user: userExample
-    } as any)
-    prismaMock.channel.findFirst.mockResolvedValue({
-      ...channelExample,
-      id: defaultChannelId
-    })
+const defaultChannelId = 5
+
+await tap.test('GET /guilds/[guildId]', async (t) => {
+  t.afterEach(() => {
+    sinon.restore()
+  })
+
+  await t.test('succeeds', async (t) => {
     const { accessToken, user } = await authenticateUserTest()
+    sinon.stub(prisma, 'member').value({
+      findFirst: async () => {
+        return {
+          ...memberExample,
+          guild: guildExample,
+          user: userExample
+        }
+      }
+    })
+    sinon.stub(prisma, 'channel').value({
+      findFirst: async () => {
+        return {
+          ...channelExample,
+          id: defaultChannelId
+        }
+      }
+    })
     const response = await application.inject({
       method: 'GET',
       url: `/guilds/${guildExample.id}`,
@@ -27,18 +43,23 @@ describe('GET /guilds/[guildId]', () => {
       }
     })
     const responseJson = response.json()
-    expect(response.statusCode).toEqual(200)
-    expect(responseJson.member.isOwner).toEqual(memberExample.isOwner)
-    expect(responseJson.member.user.name).toEqual(user.name)
-    expect(responseJson.member.user.email).toBeNull()
-    expect(responseJson.guild.id).toEqual(guildExample.id)
-    expect(responseJson.guild.name).toEqual(guildExample.name)
-    expect(responseJson.guild.defaultChannelId).toEqual(defaultChannelId)
+    t.equal(response.statusCode, 200)
+    t.equal(responseJson.member.id, memberExample.id)
+    t.equal(responseJson.member.isOwner, memberExample.isOwner)
+    t.equal(responseJson.member.user.name, user.name)
+    t.equal(responseJson.member.user.email, null)
+    t.equal(responseJson.guild.id, guildExample.id)
+    t.equal(responseJson.guild.name, guildExample.name)
+    t.equal(responseJson.guild.defaultChannelId, defaultChannelId)
   })
 
-  it('fails with not found guild', async () => {
+  await t.test('fails with not found member/guild', async (t) => {
     const { accessToken } = await authenticateUserTest()
-    prismaMock.member.findFirst.mockResolvedValue(null)
+    sinon.stub(prisma, 'member').value({
+      findFirst: async () => {
+        return null
+      }
+    })
     const response = await application.inject({
       method: 'GET',
       url: '/guilds/1',
@@ -47,15 +68,15 @@ describe('GET /guilds/[guildId]', () => {
       }
     })
     const responseJson = response.json()
-    expect(response.statusCode).toEqual(404)
-    expect(responseJson.message).toEqual('Member not found')
+    t.equal(response.statusCode, 404)
+    t.equal(responseJson.message, 'Member not found')
   })
 
-  it('fails with unauthenticated user', async () => {
+  await t.test('fails with unauthenticated user', async (t) => {
     const response = await application.inject({
       method: 'GET',
       url: '/guilds/1'
     })
-    expect(response.statusCode).toEqual(401)
+    t.equal(response.statusCode, 401)
   })
 })

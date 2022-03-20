@@ -6,6 +6,7 @@ coverage: false
 
 files:
   - 'build/services/channels/**/*.test.js'
+  - 'build/services/guilds/**/*.test.js'
   - 'build/services/messages/**/*.test.js'
   - 'build/services/users/**/*.test.js'
   - 'build/tools/**/*.test.js'
