@@ -1,15 +1,26 @@
+import tap from 'tap'
+import sinon from 'sinon'
+
 import { application } from 'application.js'
 {{#if shouldBeAuthenticated}}
 import { authenticateUserTest } from '__test__/utils/authenticateUserTest.js'
 {{/if}}
-import { prismaMock } from '__test__/setup.js'
+import prisma from 'tools/database/prisma.js'
 
-describe('{{httpMethod}} {{url}}', () => {
-  it('succeeds', async () => {
-    // prismaMock.service.findUnique.mockResolvedValue(null)
+await tap.test('{{httpMethod}} {{url}}', async (t) => {
+  t.afterEach(() => {
+    sinon.restore()
+  })
+
+  await t.test('succeeds', async (t) => {
     {{#if shouldBeAuthenticated}}
-    const { accessToken, user } = await authenticateUserTest()
+    const { accessToken } = await authenticateUserTest()
     {{/if}}
+    sinon.stub(prisma, 'channel').value({
+      findFirst: async () => {
+        return null
+      }
+    })
     const response = await application.inject({
       method: '{{httpMethod}}',
       url: '{{url}}',
@@ -21,6 +32,6 @@ describe('{{httpMethod}} {{url}}', () => {
       payload: {}
     })
     // const responseJson = response.json()
-    expect(response.statusCode).toEqual(200)
+    t.equal(response.statusCode, 200)
   })
 })
