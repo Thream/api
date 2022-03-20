@@ -1,5 +1,5 @@
 /** @type {import('node-plop').PlopGeneratorConfig} */
-exports.serviceGenerator = {
+export const serviceGenerator = {
   description: 'REST API endpoint',
   prompts: [
     {

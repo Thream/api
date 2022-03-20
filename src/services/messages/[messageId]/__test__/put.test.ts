@@ -1,109 +1,141 @@
+import tap from 'tap'
+import sinon from 'sinon'
+
 import { application } from '../../../../application.js'
 import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
-import { prismaMock } from '../../../../__test__/setup.js'
+import prisma from '../../../../tools/database/prisma.js'
 import { messageExample } from '../../../../models/Message.js'
 import { memberExample } from '../../../../models/Member.js'
 import { userExample } from '../../../../models/User.js'
 import { channelExample } from '../../../../models/Channel.js'
 
-describe('PUT /messsages/[messageId]', () => {
-  it('succeeds', async () => {
-    const newValue = 'some message'
-    prismaMock.message.findFirst.mockResolvedValue({
-      ...messageExample,
-      channel: channelExample
-    } as any)
-    prismaMock.member.findFirst.mockResolvedValue({
-      ...memberExample,
-      user: userExample
-    } as any)
-    prismaMock.message.update.mockResolvedValue({
-      ...messageExample,
-      value: newValue
-    })
+await tap.test('PUT /messsages/[messageId]', async (t) => {
+  t.afterEach(() => {
+    sinon.restore()
+  })
+
+  await t.test('succeeds', async (t) => {
     const { accessToken } = await authenticateUserTest()
+    const newValue = 'some message'
+    sinon.stub(prisma, 'message').value({
+      findFirst: async () => {
+        return {
+          ...messageExample,
+          channel: channelExample
+        }
+      },
+      update: async () => {
+        return {
+          ...messageExample,
+          value: newValue
+        }
+      }
+    })
+    sinon.stub(prisma, 'member').value({
+      findFirst: async () => {
+        return {
+          ...memberExample,
+          user: userExample
+        }
+      }
+    })
     const response = await application.inject({
       method: 'PUT',
       url: `/messages/${messageExample.id}`,
       headers: {
         authorization: `Bearer ${accessToken}`
       },
-      payload: {
-        value: newValue
-      }
+      payload: { value: newValue }
     })
     const responseJson = response.json()
-    expect(response.statusCode).toEqual(200)
-    expect(responseJson.id).toEqual(messageExample.id)
-    expect(responseJson.value).toEqual(newValue)
-    expect(responseJson.type).toEqual(messageExample.type)
-    expect(responseJson.mimetype).toEqual(messageExample.mimetype)
-    expect(responseJson.member.id).toEqual(memberExample.id)
-    expect(responseJson.member.isOwner).toEqual(memberExample.isOwner)
-    expect(responseJson.member.user.id).toEqual(userExample.id)
-    expect(responseJson.member.user.name).toEqual(userExample.name)
+    t.equal(response.statusCode, 200)
+    t.equal(responseJson.id, messageExample.id)
+    t.equal(responseJson.value, newValue)
+    t.equal(responseJson.type, messageExample.type)
+    t.equal(responseJson.mimetype, messageExample.mimetype)
+    t.equal(responseJson.member.id, memberExample.id)
+    t.equal(responseJson.member.isOwner, memberExample.isOwner)
+    t.equal(responseJson.member.user.id, userExample.id)
+    t.equal(responseJson.member.user.name, userExample.name)
   })
 
-  it('fails if the message is not found', async () => {
-    const newValue = 'some message'
-    prismaMock.message.findFirst.mockResolvedValue(null)
+  await t.test('fails if the message is not found', async (t) => {
     const { accessToken } = await authenticateUserTest()
+    const newValue = 'some message'
+    sinon.stub(prisma, 'message').value({
+      findFirst: async () => {
+        return null
+      }
+    })
     const response = await application.inject({
       method: 'PUT',
       url: `/messages/${messageExample.id}`,
       headers: {
         authorization: `Bearer ${accessToken}`
       },
-      payload: {
-        value: newValue
-      }
+      payload: { value: newValue }
     })
-    expect(response.statusCode).toEqual(404)
+    t.equal(response.statusCode, 404)
   })
 
-  it('fails if the member is not found', async () => {
-    const newValue = 'some message'
-    prismaMock.message.findFirst.mockResolvedValue({
-      ...messageExample,
-      channel: channelExample
-    } as any)
-    prismaMock.member.findFirst.mockResolvedValue(null)
+  await t.test('fails if the member is not found', async (t) => {
     const { accessToken } = await authenticateUserTest()
+    const newValue = 'some message'
+    sinon.stub(prisma, 'message').value({
+      findFirst: async () => {
+        return {
+          ...messageExample,
+          channel: channelExample
+        }
+      }
+    })
+    sinon.stub(prisma, 'member').value({
+      findFirst: async () => {
+        return null
+      }
+    })
     const response = await application.inject({
       method: 'PUT',
       url: `/messages/${messageExample.id}`,
       headers: {
         authorization: `Bearer ${accessToken}`
       },
-      payload: {
-        value: newValue
-      }
+      payload: { value: newValue }
     })
-    expect(response.statusCode).toEqual(404)
+    t.equal(response.statusCode, 404)
   })
 
-  it('fails if the member is not owner of the message', async () => {
-    const newValue = 'some message'
-    const randomUserIdOwnerOfMessage = 14
-    prismaMock.message.findFirst.mockResolvedValue({
-      ...messageExample,
-      channel: channelExample
-    } as any)
-    prismaMock.member.findFirst.mockResolvedValue({
-      ...memberExample,
-      userId: randomUserIdOwnerOfMessage
-    })
-    const { accessToken } = await authenticateUserTest()
-    const response = await application.inject({
-      method: 'PUT',
-      url: `/messages/${messageExample.id}`,
-      headers: {
-        authorization: `Bearer ${accessToken}`
-      },
-      payload: {
-        value: newValue
-      }
-    })
-    expect(response.statusCode).toEqual(400)
-  })
+  await t.test(
+    'fails if the member is not the owner of the message',
+    async (t) => {
+      const { accessToken } = await authenticateUserTest()
+      const newValue = 'some message'
+      const randomUserIdOwnerOfMessage = 14
+      sinon.stub(prisma, 'message').value({
+        findFirst: async () => {
+          return {
+            ...messageExample,
+            channel: channelExample
+          }
+        }
+      })
+      sinon.stub(prisma, 'member').value({
+        findFirst: async () => {
+          return {
+            ...memberExample,
+            userId: randomUserIdOwnerOfMessage
+          }
+        }
+      })
+      const response = await application.inject({
+        method: 'PUT',
+        url: `/messages/${messageExample.id}`,
+        headers: {
+          authorization: `Bearer ${accessToken}`
+        },
+        payload: { value: newValue }
+      })
+      t.equal(response.statusCode, 400)
+    }
+  )
 })

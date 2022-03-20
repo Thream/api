@@ -10,7 +10,7 @@ import { memberSchema } from '../../../../../models/Member.js'
 import { userPublicWithoutSettingsSchema } from '../../../../../models/User.js'
 import { channelSchema } from '../../../../../models/Channel.js'
 import { uploadFile } from '../../../../../tools/utils/uploadFile.js'
-import { maximumFileSize } from '../../../../../tools/configurations/index.js'
+import { MAXIMUM_FILE_SIZE } from '../../../../../tools/configurations/index.js'
 
 const parametersSchema = Type.Object({
   channelId: channelSchema.id
@@ -95,7 +95,7 @@ export const postMessageUploadsByChannelIdService: FastifyPluginAsync = async (
         fastify,
         request,
         folderInUploadsFolder: 'messages',
-        maximumFileSize
+        maximumFileSize: MAXIMUM_FILE_SIZE
       })
       const message = await prisma.message.create({
         data: {

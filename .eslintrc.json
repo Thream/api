@@ -5,14 +5,12 @@
     "project": "./tsconfig.json"
   },
   "env": {
-    "node": true,
-    "jest": true
+    "node": true
   },
   "rules": {
     "prettier/prettier": "error",
     "import/extensions": ["error", "always"],
     "unicorn/prevent-abbreviations": "error",
-    "@typescript-eslint/await-thenable": "off",
-    "@typescript-eslint/no-misused-promises": "off"
+    "unicorn/prefer-node-protocol": "error"
   }
 }

@@ -1,13 +1,28 @@
+import tap from 'tap'
+import sinon from 'sinon'
+
 import { application } from '../../../../application.js'
 import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
-import { prismaMock } from '../../../../__test__/setup.js'
+import prisma from '../../../../tools/database/prisma.js'
 import { guildExample } from '../../../../models/Guild.js'
 
-describe('GET /guilds/public', () => {
-  it('succeeds', async () => {
-    prismaMock.guild.findMany.mockResolvedValue([guildExample])
-    prismaMock.member.count.mockResolvedValue(2)
+await tap.test('GET /guilds/public', async (t) => {
+  t.afterEach(() => {
+    sinon.restore()
+  })
+
+  await t.test('succeeds', async (t) => {
     const { accessToken } = await authenticateUserTest()
+    sinon.stub(prisma, 'guild').value({
+      findMany: async () => {
+        return [guildExample]
+      }
+    })
+    sinon.stub(prisma, 'member').value({
+      count: async () => {
+        return 2
+      }
+    })
     const response = await application.inject({
       method: 'GET',
       url: '/guilds/public',
@@ -16,9 +31,9 @@ describe('GET /guilds/public', () => {
       }
     })
     const responseJson = response.json()
-    expect(response.statusCode).toEqual(200)
-    expect(responseJson.length).toEqual(1)
-    expect(responseJson[0].name).toEqual(guildExample.name)
-    expect(responseJson[0].membersCount).toEqual(2)
+    t.equal(response.statusCode, 200)
+    t.equal(responseJson.length, 1)
+    t.equal(responseJson[0].name, guildExample.name)
+    t.equal(responseJson[0].membersCount, 2)
   })
 })

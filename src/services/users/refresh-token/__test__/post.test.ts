@@ -1,46 +1,72 @@
+import tap from 'tap'
+import sinon from 'sinon'
+
 import { application } from '../../../../application.js'
+import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
+import prisma from '../../../../tools/database/prisma.js'
 import { refreshTokenExample } from '../../../../models/RefreshToken.js'
 import { expiresIn } from '../../../../tools/utils/jwtToken.js'
-import { prismaMock } from '../../../../__test__/setup.js'
-import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
 
-describe('POST /users/refresh-token', () => {
-  it('succeeds', async () => {
-    const { refreshToken } = await authenticateUserTest()
-    prismaMock.refreshToken.findFirst.mockResolvedValue({
-      ...refreshTokenExample,
-      id: 1,
-      token: refreshToken
+await tap.test('POST /users/refresh-token', async (t) => {
+  t.afterEach(() => {
+    sinon.restore()
+  })
+
+  await t.test('succeeds', async (t) => {
+    const { accessToken, refreshToken, refreshTokenStubValue } =
+      await authenticateUserTest()
+    sinon.stub(prisma, 'refreshToken').value({
+      ...refreshTokenStubValue,
+      findFirst: async () => {
+        return {
+          ...refreshTokenExample,
+          id: 1,
+          token: refreshToken
+        }
+      }
     })
     const response = await application.inject({
       method: 'POST',
       url: '/users/refresh-token',
+      headers: {
+        authorization: `Bearer ${accessToken}`
+      },
       payload: { refreshToken }
     })
     const responseJson = response.json()
-    expect(response.statusCode).toEqual(200)
-    expect(responseJson.type).toEqual('Bearer')
-    expect(responseJson.expiresIn).toEqual(expiresIn)
-    expect(typeof responseJson.accessToken).toEqual('string')
+    t.equal(response.statusCode, 200)
+    t.equal(responseJson.type, 'Bearer')
+    t.equal(responseJson.expiresIn, expiresIn)
+    t.type(responseJson.accessToken, 'string')
   })
 
-  it('fails with refreshToken noty saved in database', async () => {
+  await t.test('fails with refreshToken not saved in database', async (t) => {
+    sinon.stub(prisma, 'refreshToken').value({
+      findFirst: async () => {
+        return null
+      }
+    })
     const response = await application.inject({
       method: 'POST',
       url: '/users/refresh-token',
       payload: { refreshToken: 'somerandomtoken' }
     })
-    expect(response.statusCode).toEqual(403)
+    t.equal(response.statusCode, 403)
   })
 
-  it('fails with invalid jwt refreshToken', async () => {
-    const { refreshToken } = await authenticateUserTest()
-    prismaMock.refreshToken.findFirst.mockResolvedValue(refreshTokenExample)
+  await t.test('fails with invalid jwt refreshToken', async (t) => {
+    const { refreshToken, refreshTokenStubValue } = await authenticateUserTest()
+    sinon.stub(prisma, 'refreshToken').value({
+      ...refreshTokenStubValue,
+      findFirst: async () => {
+        return refreshTokenExample
+      }
+    })
     const response = await application.inject({
       method: 'POST',
       url: '/users/refresh-token',
       payload: { refreshToken }
     })
-    expect(response.statusCode).toEqual(403)
+    t.equal(response.statusCode, 403)
   })
 })

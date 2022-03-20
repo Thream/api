@@ -1,13 +1,23 @@
-import { application } from '../../../../application.js'
-import { prismaMock } from '../../../../__test__/setup.js'
-import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
+import tap from 'tap'
+import sinon from 'sinon'
 
-describe('DELETE /users/signout', () => {
-  it('succeeds', async () => {
-    prismaMock.refreshToken.deleteMany.mockResolvedValue({
-      count: 1
+import { application } from '../../../../application.js'
+import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
+import prisma from '../../../../tools/database/prisma.js'
+
+await tap.test('DELETE /users/signout', async (t) => {
+  t.afterEach(() => {
+    sinon.restore()
+  })
+
+  await t.test('succeeds', async (t) => {
+    const { accessToken, refreshTokenStubValue } = await authenticateUserTest()
+    sinon.stub(prisma, 'refreshToken').value({
+      ...refreshTokenStubValue,
+      deleteMany: async () => {
+        return { count: 1 }
+      }
     })
-    const { accessToken } = await authenticateUserTest()
     const response = await application.inject({
       method: 'DELETE',
       url: '/users/signout',
@@ -15,14 +25,14 @@ describe('DELETE /users/signout', () => {
         authorization: `Bearer ${accessToken}`
       }
     })
-    expect(response.statusCode).toEqual(200)
+    t.equal(response.statusCode, 200)
   })
 
-  it('fails with empty authorization header', async () => {
+  await t.test('fails with empty authorized header', async (t) => {
     const response = await application.inject({
       method: 'DELETE',
       url: '/users/signout'
     })
-    expect(response.statusCode).toEqual(401)
+    t.equal(response.statusCode, 401)
   })
 })

@@ -1,10 +1,10 @@
 import dotenv from 'dotenv'
-import readPackageJSON from 'read-pkg'
+import { readPackage } from 'read-pkg'
 import { FastifyDynamicSwaggerOptions } from 'fastify-swagger'
 
 dotenv.config()
 
-const packageJSON = readPackageJSON.sync()
+const packageJSON = await readPackage()
 
 export const swaggerOptions: FastifyDynamicSwaggerOptions = {
   routePrefix: '/documentation',

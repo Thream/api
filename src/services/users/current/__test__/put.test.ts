@@ -1,15 +1,29 @@
-import { application } from '../../../../application.js'
-import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
-import { prismaMock } from '../../../../__test__/setup.js'
-import { userExample } from '../../../../models/User.js'
+import tap from 'tap'
+import sinon from 'sinon'
 
-describe('PUT /users/current', () => {
-  it('succeeds with valid accessToken and valid name', async () => {
+import { application } from '../../../../application.js'
+import prisma from '../../../../tools/database/prisma.js'
+import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
+
+await tap.test('PUT /users/current', async (t) => {
+  t.afterEach(() => {
+    sinon.restore()
+  })
+
+  await t.test('succeeds with valid accessToken and valid name', async (t) => {
     const newName = 'John Doe'
-    const { accessToken, user } = await authenticateUserTest()
-    prismaMock.user.update.mockResolvedValue({
-      ...user,
-      name: newName
+    const { accessToken, user, userStubValue } = await authenticateUserTest()
+    sinon.stub(prisma, 'user').value({
+      ...userStubValue,
+      findFirst: async () => {
+        return null
+      },
+      update: async () => {
+        return {
+          ...user,
+          name: newName
+        }
+      }
     })
     const response = await application.inject({
       method: 'PUT',
@@ -22,16 +36,24 @@ describe('PUT /users/current', () => {
       }
     })
     const responseJson = response.json()
-    expect(response.statusCode).toEqual(200)
-    expect(responseJson.user.name).toEqual(newName)
+    t.equal(response.statusCode, 200)
+    t.equal(responseJson.user.name, newName)
   })
 
-  it('succeeds and only update the status', async () => {
+  await t.test('succeeds and only update the status', async (t) => {
     const newStatus = '👀 Working on secret projects...'
-    const { accessToken, user } = await authenticateUserTest()
-    prismaMock.user.update.mockResolvedValue({
-      ...user,
-      status: newStatus
+    const { accessToken, user, userStubValue } = await authenticateUserTest()
+    sinon.stub(prisma, 'user').value({
+      ...userStubValue,
+      findFirst: async () => {
+        return null
+      },
+      update: async () => {
+        return {
+          ...user,
+          status: newStatus
+        }
+      }
     })
     const response = await application.inject({
       method: 'PUT',
@@ -44,15 +66,20 @@ describe('PUT /users/current', () => {
       }
     })
     const responseJson = response.json()
-    expect(response.statusCode).toEqual(200)
-    expect(responseJson.user.name).toEqual(user.name)
-    expect(responseJson.user.status).toEqual(newStatus)
+    t.equal(response.statusCode, 200)
+    t.equal(responseJson.user.name, user.name)
+    t.equal(responseJson.user.status, newStatus)
   })
 
-  it('fails with name already used', async () => {
+  await t.test('fails with name already used', async (t) => {
     const newName = 'John Doe'
-    prismaMock.user.findFirst.mockResolvedValue(userExample)
-    const { accessToken } = await authenticateUserTest()
+    const { accessToken, user, userStubValue } = await authenticateUserTest()
+    sinon.stub(prisma, 'user').value({
+      ...userStubValue,
+      findFirst: async () => {
+        return user
+      }
+    })
     const response = await application.inject({
       method: 'PUT',
       url: '/users/current',
@@ -63,10 +90,10 @@ describe('PUT /users/current', () => {
         name: newName
       }
     })
-    expect(response.statusCode).toEqual(400)
+    t.equal(response.statusCode, 400)
   })
 
-  it('fails with invalid website url', async () => {
+  await t.test('fails with invalid website url', async (t) => {
     const newWebsite = 'invalid website url'
     const { accessToken } = await authenticateUserTest()
     const response = await application.inject({
@@ -79,15 +106,23 @@ describe('PUT /users/current', () => {
         website: newWebsite
       }
     })
-    expect(response.statusCode).toEqual(400)
+    t.equal(response.statusCode, 400)
   })
 
-  it('succeeds with valid website url', async () => {
+  await t.test('succeeds with valid website url', async (t) => {
     const newWebsite = 'https://somerandomwebsite.com'
-    const { accessToken, user } = await authenticateUserTest()
-    prismaMock.user.update.mockResolvedValue({
-      ...user,
-      website: newWebsite
+    const { accessToken, user, userStubValue } = await authenticateUserTest()
+    sinon.stub(prisma, 'user').value({
+      ...userStubValue,
+      findFirst: async () => {
+        return null
+      },
+      update: async () => {
+        return {
+          ...user,
+          website: newWebsite
+        }
+      }
     })
     const response = await application.inject({
       method: 'PUT',
@@ -100,8 +135,8 @@ describe('PUT /users/current', () => {
       }
     })
     const responseJson = response.json()
-    expect(response.statusCode).toEqual(200)
-    expect(responseJson.user.name).toEqual(user.name)
-    expect(responseJson.user.website).toEqual(newWebsite)
+    t.equal(response.statusCode, 200)
+    t.equal(responseJson.user.name, user.name)
+    t.equal(responseJson.user.website, newWebsite)
   })
 })

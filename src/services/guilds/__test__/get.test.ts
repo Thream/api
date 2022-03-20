@@ -1,16 +1,35 @@
+import tap from 'tap'
+import sinon from 'sinon'
+
 import { application } from '../../../application.js'
 import { authenticateUserTest } from '../../../__test__/utils/authenticateUserTest.js'
-import { prismaMock } from '../../../__test__/setup.js'
-import { guildExample } from '../../../models/Guild.js'
+import prisma from '../../../tools/database/prisma.js'
 import { memberExample } from '../../../models/Member.js'
+import { guildExample } from '../../../models/Guild.js'
 import { channelExample } from '../../../models/Channel.js'
 
-describe('GET /guilds', () => {
-  it('succeeds', async () => {
-    prismaMock.guild.findUnique.mockResolvedValue(guildExample)
-    prismaMock.member.findMany.mockResolvedValue([memberExample])
-    prismaMock.channel.findFirst.mockResolvedValue(channelExample)
+await tap.test('GET /guilds', async (t) => {
+  t.afterEach(() => {
+    sinon.restore()
+  })
+
+  await t.test('succeeds', async (t) => {
     const { accessToken } = await authenticateUserTest()
+    sinon.stub(prisma, 'guild').value({
+      findUnique: async () => {
+        return guildExample
+      }
+    })
+    sinon.stub(prisma, 'member').value({
+      findMany: async () => {
+        return [memberExample]
+      }
+    })
+    sinon.stub(prisma, 'channel').value({
+      findFirst: async () => {
+        return channelExample
+      }
+    })
     const response = await application.inject({
       method: 'GET',
       url: '/guilds',
@@ -19,10 +38,10 @@ describe('GET /guilds', () => {
       }
     })
     const responseJson = response.json()
-    expect(response.statusCode).toEqual(200)
-    expect(responseJson.length).toEqual(1)
-    expect(responseJson[0].name).toEqual(guildExample.name)
-    expect(responseJson[0].description).toEqual(guildExample.description)
-    expect(responseJson[0].defaultChannelId).toEqual(channelExample.id)
+    t.equal(response.statusCode, 200)
+    t.equal(responseJson.length, 1)
+    t.equal(responseJson[0].name, guildExample.name)
+    t.equal(responseJson[0].description, guildExample.description)
+    t.equal(responseJson[0].defaultChannelId, channelExample.id)
   })
 })

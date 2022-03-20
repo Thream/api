@@ -1,14 +1,29 @@
+import tap from 'tap'
+import sinon from 'sinon'
+
 import { application } from '../../../../application.js'
 import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
-import { prismaMock } from '../../../../__test__/setup.js'
-import { memberExample } from '../../../../models/Member.js'
+import prisma from '../../../../tools/database/prisma.js'
 import { channelExample } from '../../../../models/Channel.js'
+import { memberExample } from '../../../../models/Member.js'
 
-describe('GET /channels/[channelId]', () => {
-  it('succeeds', async () => {
-    prismaMock.channel.findUnique.mockResolvedValue(channelExample)
-    prismaMock.member.findFirst.mockResolvedValue(memberExample)
+await tap.test('GET /channels/[channelId]', async (t) => {
+  t.afterEach(() => {
+    sinon.restore()
+  })
+
+  await t.test('succeeds', async (t) => {
     const { accessToken } = await authenticateUserTest()
+    sinon.stub(prisma, 'channel').value({
+      findUnique: async () => {
+        return channelExample
+      }
+    })
+    sinon.stub(prisma, 'member').value({
+      findFirst: async () => {
+        return memberExample
+      }
+    })
     const response = await application.inject({
       method: 'GET',
       url: `/channels/${channelExample.id}`,
@@ -17,31 +32,24 @@ describe('GET /channels/[channelId]', () => {
       }
     })
     const responseJson = response.json()
-    expect(response.statusCode).toEqual(200)
-    expect(responseJson.channel.id).toEqual(channelExample.id)
-    expect(responseJson.channel.name).toEqual(channelExample.name)
-    expect(responseJson.channel.guildId).toEqual(channelExample.guildId)
+    t.equal(response.statusCode, 200)
+    t.equal(responseJson.channel.id, channelExample.id)
+    t.equal(responseJson.channel.name, channelExample.name)
+    t.equal(responseJson.channel.guildId, channelExample.guildId)
   })
 
-  it('fails with not found member', async () => {
-    prismaMock.channel.findUnique.mockResolvedValue(null)
+  await t.test('fails with not found member', async (t) => {
     const { accessToken } = await authenticateUserTest()
-    const response = await application.inject({
-      method: 'GET',
-      url: '/channels/1',
-      headers: {
-        authorization: `Bearer ${accessToken}`
+    sinon.stub(prisma, 'channel').value({
+      findUnique: async () => {
+        return channelExample
       }
     })
-    const responseJson = response.json()
-    expect(response.statusCode).toEqual(404)
-    expect(responseJson.message).toEqual('Channel not found')
-  })
-
-  it('fails with not found member', async () => {
-    prismaMock.channel.findUnique.mockResolvedValue(channelExample)
-    prismaMock.member.findFirst.mockResolvedValue(null)
-    const { accessToken } = await authenticateUserTest()
+    sinon.stub(prisma, 'member').value({
+      findFirst: async () => {
+        return null
+      }
+    })
     const response = await application.inject({
       method: 'GET',
       url: `/channels/${channelExample.id}`,
@@ -50,15 +58,39 @@ describe('GET /channels/[channelId]', () => {
       }
     })
     const responseJson = response.json()
-    expect(response.statusCode).toEqual(404)
-    expect(responseJson.message).toEqual('Channel not found')
+    t.equal(response.statusCode, 404)
+    t.equal(responseJson.message, 'Channel not found')
   })
 
-  it('fails with unauthenticated user', async () => {
+  await t.test('fails with not found channel', async (t) => {
+    const { accessToken } = await authenticateUserTest()
+    sinon.stub(prisma, 'channel').value({
+      findUnique: async () => {
+        return null
+      }
+    })
+    sinon.stub(prisma, 'member').value({
+      findFirst: async () => {
+        return memberExample
+      }
+    })
+    const response = await application.inject({
+      method: 'GET',
+      url: `/channels/${channelExample.id}`,
+      headers: {
+        authorization: `Bearer ${accessToken}`
+      }
+    })
+    const responseJson = response.json()
+    t.equal(response.statusCode, 404)
+    t.equal(responseJson.message, 'Channel not found')
+  })
+
+  await t.test('fails with unauthenticated user', async (t) => {
     const response = await application.inject({
       method: 'GET',
       url: '/channels/1'
     })
-    expect(response.statusCode).toEqual(401)
+    t.equal(response.statusCode, 401)
   })
 })

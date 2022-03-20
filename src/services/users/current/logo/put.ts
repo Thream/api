@@ -7,8 +7,8 @@ import { fastifyErrors } from '../../../../models/utils.js'
 import prisma from '../../../../tools/database/prisma.js'
 import { uploadFile } from '../../../../tools/utils/uploadFile.js'
 import {
-  maximumImageSize,
-  supportedImageMimetype
+  MAXIMUM_IMAGE_SIZE,
+  SUPPORTED_IMAGE_MIMETYPE
 } from '../../../../tools/configurations/index.js'
 
 const putServiceSchema: FastifySchema = {
@@ -52,8 +52,8 @@ export const putCurrentUserLogo: FastifyPluginAsync = async (fastify) => {
         fastify,
         request,
         folderInUploadsFolder: 'users',
-        maximumFileSize: maximumImageSize,
-        supportedFileMimetype: supportedImageMimetype
+        maximumFileSize: MAXIMUM_IMAGE_SIZE,
+        supportedFileMimetype: SUPPORTED_IMAGE_MIMETYPE
       })
       await prisma.user.update({
         where: { id: request.user.current.id },

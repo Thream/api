@@ -1,23 +1,40 @@
+import tap from 'tap'
+import sinon from 'sinon'
+
 import { application } from '../../../../application.js'
 import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
-import { prismaMock } from '../../../../__test__/setup.js'
+import prisma from '../../../../tools/database/prisma.js'
 import { messageExample } from '../../../../models/Message.js'
 import { memberExample } from '../../../../models/Member.js'
 import { userExample } from '../../../../models/User.js'
 import { channelExample } from '../../../../models/Channel.js'
 
-describe('DELETE /messsages/[messageId]', () => {
-  it('succeeds', async () => {
-    prismaMock.message.findFirst.mockResolvedValue({
-      ...messageExample,
-      channel: channelExample
-    } as any)
-    prismaMock.member.findFirst.mockResolvedValue({
-      ...memberExample,
-      user: userExample
-    } as any)
-    prismaMock.message.delete.mockResolvedValue(messageExample)
+await tap.test('DELETE /messsages/[messageId]', async (t) => {
+  t.afterEach(() => {
+    sinon.restore()
+  })
+
+  await t.test('succeeds', async (t) => {
     const { accessToken } = await authenticateUserTest()
+    sinon.stub(prisma, 'message').value({
+      findFirst: async () => {
+        return {
+          ...messageExample,
+          channel: channelExample
+        }
+      },
+      delete: async () => {
+        return messageExample
+      }
+    })
+    sinon.stub(prisma, 'member').value({
+      findFirst: async () => {
+        return {
+          ...memberExample,
+          user: userExample
+        }
+      }
+    })
     const response = await application.inject({
       method: 'DELETE',
       url: `/messages/${messageExample.id}`,
@@ -26,20 +43,24 @@ describe('DELETE /messsages/[messageId]', () => {
       }
     })
     const responseJson = response.json()
-    expect(response.statusCode).toEqual(200)
-    expect(responseJson.id).toEqual(messageExample.id)
-    expect(responseJson.value).toEqual(messageExample.value)
-    expect(responseJson.type).toEqual(messageExample.type)
-    expect(responseJson.mimetype).toEqual(messageExample.mimetype)
-    expect(responseJson.member.id).toEqual(memberExample.id)
-    expect(responseJson.member.isOwner).toEqual(memberExample.isOwner)
-    expect(responseJson.member.user.id).toEqual(userExample.id)
-    expect(responseJson.member.user.name).toEqual(userExample.name)
+    t.equal(response.statusCode, 200)
+    t.equal(responseJson.id, messageExample.id)
+    t.equal(responseJson.value, messageExample.value)
+    t.equal(responseJson.type, messageExample.type)
+    t.equal(responseJson.mimetype, messageExample.mimetype)
+    t.equal(responseJson.member.id, memberExample.id)
+    t.equal(responseJson.member.isOwner, memberExample.isOwner)
+    t.equal(responseJson.member.user.id, userExample.id)
+    t.equal(responseJson.member.user.name, userExample.name)
   })
 
-  it('fails if the message is not found', async () => {
-    prismaMock.message.findFirst.mockResolvedValue(null)
+  await t.test('fails if the message is not found', async (t) => {
     const { accessToken } = await authenticateUserTest()
+    sinon.stub(prisma, 'message').value({
+      findFirst: async () => {
+        return null
+      }
+    })
     const response = await application.inject({
       method: 'DELETE',
       url: `/messages/${messageExample.id}`,
@@ -47,16 +68,24 @@ describe('DELETE /messsages/[messageId]', () => {
         authorization: `Bearer ${accessToken}`
       }
     })
-    expect(response.statusCode).toEqual(404)
+    t.equal(response.statusCode, 404)
   })
 
-  it('fails if the member is not found', async () => {
-    prismaMock.message.findFirst.mockResolvedValue({
-      ...messageExample,
-      channel: channelExample
-    } as any)
-    prismaMock.member.findFirst.mockResolvedValue(null)
+  await t.test('fails if the member is not found', async (t) => {
     const { accessToken } = await authenticateUserTest()
+    sinon.stub(prisma, 'message').value({
+      findFirst: async () => {
+        return {
+          ...messageExample,
+          channel: channelExample
+        }
+      }
+    })
+    sinon.stub(prisma, 'member').value({
+      findFirst: async () => {
+        return null
+      }
+    })
     const response = await application.inject({
       method: 'DELETE',
       url: `/messages/${messageExample.id}`,
@@ -64,20 +93,28 @@ describe('DELETE /messsages/[messageId]', () => {
         authorization: `Bearer ${accessToken}`
       }
     })
-    expect(response.statusCode).toEqual(404)
+    t.equal(response.statusCode, 404)
   })
 
-  it('fails if the member is not owner of the message', async () => {
+  await t.test('fails if the member is not owner of the message', async (t) => {
+    const { accessToken } = await authenticateUserTest()
     const randomUserIdOwnerOfMessage = 14
-    prismaMock.message.findFirst.mockResolvedValue({
-      ...messageExample,
-      channel: channelExample
-    } as any)
-    prismaMock.member.findFirst.mockResolvedValue({
-      ...memberExample,
-      userId: randomUserIdOwnerOfMessage
+    sinon.stub(prisma, 'message').value({
+      findFirst: async () => {
+        return {
+          ...messageExample,
+          channel: channelExample
+        }
+      }
     })
-    const { accessToken } = await authenticateUserTest()
+    sinon.stub(prisma, 'member').value({
+      findFirst: async () => {
+        return {
+          ...memberExample,
+          userId: randomUserIdOwnerOfMessage
+        }
+      }
+    })
     const response = await application.inject({
       method: 'DELETE',
       url: `/messages/${messageExample.id}`,
@@ -85,6 +122,6 @@ describe('DELETE /messsages/[messageId]', () => {
         authorization: `Bearer ${accessToken}`
       }
     })
-    expect(response.statusCode).toEqual(400)
+    t.equal(response.statusCode, 400)
   })
 })

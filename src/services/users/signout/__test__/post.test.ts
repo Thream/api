@@ -1,25 +1,41 @@
-import { application } from '../../../../application.js'
-import { refreshTokenExample } from '../../../../models/RefreshToken.js'
-import { prismaMock } from '../../../../__test__/setup.js'
+import tap from 'tap'
+import sinon from 'sinon'
 
-describe('POST /users/signout', () => {
-  it('succeeds', async () => {
-    prismaMock.refreshToken.findFirst.mockResolvedValue(refreshTokenExample)
+import { application } from '../../../../application.js'
+import prisma from '../../../../tools/database/prisma.js'
+import { refreshTokenExample } from '../../../../models/RefreshToken.js'
+
+await tap.test('POST /users/signout', async (t) => {
+  t.afterEach(() => {
+    sinon.restore()
+  })
+
+  await t.test('succeeds', async (t) => {
+    sinon.stub(prisma, 'refreshToken').value({
+      findFirst: async () => {
+        return refreshTokenExample
+      },
+      delete: async () => {}
+    })
     const response = await application.inject({
       method: 'POST',
       url: '/users/signout',
       payload: { refreshToken: refreshTokenExample.token }
     })
-    expect(response.statusCode).toEqual(200)
+    t.equal(response.statusCode, 200)
   })
 
-  it('fails with invalid refreshToken', async () => {
-    prismaMock.refreshToken.findFirst.mockResolvedValue(null)
+  await t.test('fails with invalid refreshToken', async (t) => {
+    sinon.stub(prisma, 'refreshToken').value({
+      findFirst: async () => {
+        return null
+      }
+    })
     const response = await application.inject({
       method: 'POST',
       url: '/users/signout',
       payload: { refreshToken: 'somerandomtoken' }
     })
-    expect(response.statusCode).toEqual(404)
+    t.equal(response.statusCode, 404)
   })
 })

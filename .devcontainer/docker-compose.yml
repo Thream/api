@@ -10,7 +10,7 @@ services:
     command: 'sleep infinity'
 
   thream-database:
-    image: 'postgres:14.0'
+    image: 'postgres:14.2'
     environment:
       POSTGRES_USER: 'user'
       POSTGRES_PASSWORD: 'password'

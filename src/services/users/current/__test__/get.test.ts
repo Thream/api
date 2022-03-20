@@ -1,8 +1,15 @@
+import tap from 'tap'
+import sinon from 'sinon'
+
 import { application } from '../../../../application.js'
 import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
 
-describe('GET /users/current', () => {
-  it('succeeds', async () => {
+await tap.test('GET /users/current', async (t) => {
+  t.afterEach(() => {
+    sinon.restore()
+  })
+
+  await t.test('succeeds', async (t) => {
     const { accessToken, user } = await authenticateUserTest()
     const response = await application.inject({
       method: 'GET',
@@ -12,18 +19,16 @@ describe('GET /users/current', () => {
       }
     })
     const responseJson = response.json()
-    expect(response.statusCode).toEqual(200)
-    expect(responseJson.user.name).toEqual(user.name)
-    expect(responseJson.user.strategies).toEqual(
-      expect.arrayContaining(['local'])
-    )
+    t.equal(response.statusCode, 200)
+    t.equal(responseJson.user.name, user.name)
+    t.strictSame(responseJson.user.strategies, ['local'])
   })
 
-  it('fails with unauthenticated user', async () => {
+  await t.test('fails with unauthenticated user', async (t) => {
     const response = await application.inject({
       method: 'GET',
       url: '/users/current'
     })
-    expect(response.statusCode).toEqual(401)
+    t.equal(response.statusCode, 401)
   })
 })
