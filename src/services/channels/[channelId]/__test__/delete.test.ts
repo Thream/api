@@ -1,21 +1,42 @@
+import tap from 'tap'
+import sinon from 'sinon'
+
 import { application } from '../../../../application.js'
 import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
-import { prismaMock } from '../../../../__test__/setup.js'
+import prisma from '../../../../tools/database/prisma.js'
 import { channelExample } from '../../../../models/Channel.js'
 import { memberExample } from '../../../../models/Member.js'
 
-describe('DELETE /channels/[channelId]', () => {
-  it('succeeds', async () => {
+await tap.test('DELETE /channels/[channelId]', async (t) => {
+  t.afterEach(() => {
+    sinon.restore()
+  })
+
+  await t.test('succeeds', async (t) => {
     const defaultChannelId = 5
-    prismaMock.channel.findUnique.mockResolvedValue(channelExample)
-    prismaMock.member.findFirst.mockResolvedValue(memberExample)
-    prismaMock.channel.count.mockResolvedValue(2)
-    prismaMock.channel.delete.mockResolvedValue(channelExample)
-    prismaMock.channel.findFirst.mockResolvedValue({
-      ...channelExample,
-      id: defaultChannelId
-    })
     const { accessToken } = await authenticateUserTest()
+    sinon.stub(prisma, 'channel').value({
+      findUnique: async () => {
+        return channelExample
+      },
+      findFirst: async () => {
+        return {
+          ...channelExample,
+          id: defaultChannelId
+        }
+      },
+      count: async () => {
+        return 2
+      },
+      delete: async () => {
+        return channelExample
+      }
+    })
+    sinon.stub(prisma, 'member').value({
+      findFirst: async () => {
+        return memberExample
+      }
+    })
     const response = await application.inject({
       method: 'DELETE',
       url: `/channels/${channelExample.id}`,
@@ -24,18 +45,28 @@ describe('DELETE /channels/[channelId]', () => {
       }
     })
     const responseJson = response.json()
-    expect(response.statusCode).toEqual(200)
-    expect(responseJson.id).toEqual(channelExample.id)
-    expect(responseJson.name).toEqual(channelExample.name)
-    expect(responseJson.guildId).toEqual(channelExample.guildId)
-    expect(responseJson.defaultChannelId).toEqual(defaultChannelId)
+    t.equal(response.statusCode, 200)
+    t.equal(responseJson.id, channelExample.id)
+    t.equal(responseJson.name, channelExample.name)
+    t.equal(responseJson.guildId, channelExample.guildId)
+    t.equal(responseJson.defaultChannelId, defaultChannelId)
   })
 
-  it('fails if there is only one channel', async () => {
-    prismaMock.channel.findUnique.mockResolvedValue(channelExample)
-    prismaMock.member.findFirst.mockResolvedValue(memberExample)
-    prismaMock.channel.count.mockResolvedValue(1)
+  await t.test('fails if there is only one channel', async (t) => {
     const { accessToken } = await authenticateUserTest()
+    sinon.stub(prisma, 'channel').value({
+      findUnique: async () => {
+        return channelExample
+      },
+      count: async () => {
+        return 1
+      }
+    })
+    sinon.stub(prisma, 'member').value({
+      findFirst: async () => {
+        return memberExample
+      }
+    })
     const response = await application.inject({
       method: 'DELETE',
       url: `/channels/${channelExample.id}`,
@@ -43,12 +74,16 @@ describe('DELETE /channels/[channelId]', () => {
         authorization: `Bearer ${accessToken}`
       }
     })
-    expect(response.statusCode).toEqual(400)
+    t.equal(response.statusCode, 400)
   })
 
-  it('fails if the channel is not found', async () => {
-    prismaMock.channel.findUnique.mockResolvedValue(null)
+  await t.test('fails if the channel is not found', async (t) => {
     const { accessToken } = await authenticateUserTest()
+    sinon.stub(prisma, 'channel').value({
+      findUnique: async () => {
+        return null
+      }
+    })
     const response = await application.inject({
       method: 'DELETE',
       url: `/channels/${channelExample.id}`,
@@ -56,13 +91,21 @@ describe('DELETE /channels/[channelId]', () => {
         authorization: `Bearer ${accessToken}`
       }
     })
-    expect(response.statusCode).toEqual(404)
+    t.equal(response.statusCode, 404)
   })
 
-  it('fails if the member is not found', async () => {
-    prismaMock.channel.findUnique.mockResolvedValue(channelExample)
-    prismaMock.member.findFirst.mockResolvedValue(null)
+  await t.test('fails if the member is not found', async (t) => {
     const { accessToken } = await authenticateUserTest()
+    sinon.stub(prisma, 'channel').value({
+      findUnique: async () => {
+        return channelExample
+      }
+    })
+    sinon.stub(prisma, 'member').value({
+      findFirst: async () => {
+        return null
+      }
+    })
     const response = await application.inject({
       method: 'DELETE',
       url: `/channels/${channelExample.id}`,
@@ -70,17 +113,24 @@ describe('DELETE /channels/[channelId]', () => {
         authorization: `Bearer ${accessToken}`
       }
     })
-    expect(response.statusCode).toEqual(404)
+    t.equal(response.statusCode, 404)
   })
 
-  it('fails if the member is not owner', async () => {
-    const member = {
-      ...memberExample,
-      isOwner: false
-    }
-    prismaMock.channel.findUnique.mockResolvedValue(channelExample)
-    prismaMock.member.findFirst.mockResolvedValue(member)
+  await t.test('fails if the member is not owner', async (t) => {
     const { accessToken } = await authenticateUserTest()
+    sinon.stub(prisma, 'channel').value({
+      findUnique: async () => {
+        return channelExample
+      }
+    })
+    sinon.stub(prisma, 'member').value({
+      findFirst: async () => {
+        return {
+          ...memberExample,
+          isOwner: false
+        }
+      }
+    })
     const response = await application.inject({
       method: 'DELETE',
       url: `/channels/${channelExample.id}`,
@@ -88,6 +138,6 @@ describe('DELETE /channels/[channelId]', () => {
         authorization: `Bearer ${accessToken}`
       }
     })
-    expect(response.statusCode).toEqual(400)
+    t.equal(response.statusCode, 400)
   })
 })

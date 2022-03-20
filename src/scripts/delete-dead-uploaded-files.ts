@@ -34,25 +34,18 @@ const deleteDeadUploadedFiles = async (
   }
 }
 
-const main = async (): Promise<void> => {
-  await deleteDeadUploadedFiles('guilds', async (icon: string) => {
-    return await prisma.guild.findFirst({
-      where: { icon }
-    })
+await deleteDeadUploadedFiles('guilds', async (icon: string) => {
+  return await prisma.guild.findFirst({
+    where: { icon }
   })
-  await deleteDeadUploadedFiles('messages', async (value: string) => {
-    return await prisma.message.findFirst({
-      where: { type: 'file', value }
-    })
+})
+await deleteDeadUploadedFiles('messages', async (value: string) => {
+  return await prisma.message.findFirst({
+    where: { type: 'file', value }
   })
-  await deleteDeadUploadedFiles('users', async (logo: string) => {
-    return await prisma.user.findFirst({
-      where: { logo }
-    })
+})
+await deleteDeadUploadedFiles('users', async (logo: string) => {
+  return await prisma.user.findFirst({
+    where: { logo }
   })
-}
-
-main().catch((error) => {
-  console.error(error)
-  process.exit(1)
 })

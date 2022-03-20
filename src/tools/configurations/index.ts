@@ -20,7 +20,7 @@ export const EMAIL_TEMPLATE_URL = new URL('./email-template.ejs', EMAIL_URL)
 export const EMAIL_LOCALES_URL = new URL('./locales/', EMAIL_URL)
 export const UPLOADS_URL = new URL('./uploads/', ROOT_URL)
 
-export const supportedImageMimetype = [
+export const SUPPORTED_IMAGE_MIMETYPE = [
   'image/png',
   'image/jpg',
   'image/jpeg',
@@ -28,5 +28,7 @@ export const supportedImageMimetype = [
 ]
 
 /** in megabytes */
-export const maximumImageSize = 10
-export const maximumFileSize = 100
+export const MAXIMUM_IMAGE_SIZE = 10
+
+/** in megabytes */
+export const MAXIMUM_FILE_SIZE = 100

@@ -5,6 +5,7 @@ check-coverage: false
 coverage: false
 
 files:
-  - 'build/services/users/**/__test__/*.js'
-  - 'build/services/messages/**/__test__/*.js'
-  - 'build/tools/**/__test__/*.js'
+  - 'build/services/channels/**/*.test.js'
+  - 'build/services/messages/**/*.test.js'
+  - 'build/services/users/**/*.test.js'
+  - 'build/tools/**/*.test.js'

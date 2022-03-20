@@ -8,8 +8,8 @@ import prisma from '../../../../tools/database/prisma.js'
 import { uploadFile } from '../../../../tools/utils/uploadFile.js'
 import { guildSchema } from '../../../../models/Guild.js'
 import {
-  maximumImageSize,
-  supportedImageMimetype
+  MAXIMUM_IMAGE_SIZE,
+  SUPPORTED_IMAGE_MIMETYPE
 } from '../../../../tools/configurations/index.js'
 import { channelSchema } from '../../../../models/Channel.js'
 
@@ -68,8 +68,8 @@ export const putGuildIconById: FastifyPluginAsync = async (fastify) => {
         fastify,
         request,
         folderInUploadsFolder: 'guilds',
-        maximumFileSize: maximumImageSize,
-        supportedFileMimetype: supportedImageMimetype
+        maximumFileSize: MAXIMUM_IMAGE_SIZE,
+        supportedFileMimetype: SUPPORTED_IMAGE_MIMETYPE
       })
       await prisma.guild.update({
         where: { id: guildId },
