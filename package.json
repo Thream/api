@@ -15,7 +15,7 @@
   "scripts": {
     "build": "rimraf ./build && swc ./src --out-dir ./build && tsc",
     "build:dev": "swc ./src --out-dir ./build --watch",
-    "start": "cross-env NODE_ENV=production node build/index.js",
+    "start": "node build/index.js",
     "dev": "concurrently -k -n \"TypeScript,Node\" -p \"[{name}]\" -c \"blue,green\" \"npm run build:dev\" \"cross-env NODE_ENV=development nodemon build/index.js\"",
     "generate": "plop",
     "scripts:delete-dead-uploaded-files": "node build/scripts/delete-dead-uploaded-files.js",
