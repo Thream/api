@@ -20,7 +20,7 @@ export const userSchema = {
   id,
   name: Type.String({ minLength: 1, maxLength: 30 }),
   email: Type.String({ minLength: 1, maxLength: 254, format: 'email' }),
-  password: Type.String(),
+  password: Type.String({ minLength: 1 }),
   logo: Type.String({ minLength: 1, format: 'uri-reference' }),
   status: Type.String({ minLength: 1, maxLength: 50 }),
   biography: Type.String({ minLength: 1, maxLength: 160 }),
