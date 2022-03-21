@@ -12,7 +12,7 @@ import {
   userPublicSchema
 } from '../../../models/User.js'
 import { sendEmail } from '../../../tools/email/sendEmail.js'
-import { HOST, PORT } from '../../../tools/configurations/index.js'
+import { API_URL } from '../../../tools/configurations/index.js'
 
 const queryPostSignupSchema = Type.Object({
   redirectURI: Type.Optional(Type.String({ format: 'uri-reference' }))
@@ -76,7 +76,7 @@ export const postSignupUser: FastifyPluginAsync = async (fastify) => {
       await sendEmail({
         type: 'confirm-email',
         email,
-        url: `${request.protocol}://${HOST}:${PORT}/users/confirm-email?temporaryToken=${temporaryToken}${redirectQuery}`,
+        url: `${API_URL}/users/confirm-email?temporaryToken=${temporaryToken}${redirectQuery}`,
         language,
         theme
       })

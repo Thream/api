@@ -8,7 +8,7 @@ import { fastifyErrors } from '../../../models/utils.js'
 import authenticateUser from '../../../tools/plugins/authenticateUser.js'
 import { userCurrentSchema, userSchema } from '../../../models/User.js'
 import { sendEmail } from '../../../tools/email/sendEmail.js'
-import { HOST, PORT } from '../../../tools/configurations/index.js'
+import { API_URL } from '../../../tools/configurations/index.js'
 import { Language, Theme } from '../../../models/UserSettings.js'
 import { parseStringNullish } from '../../../tools/utils/parseStringNullish.js'
 
@@ -109,7 +109,7 @@ export const putCurrentUser: FastifyPluginAsync = async (fastify) => {
         await sendEmail({
           type: 'confirm-email',
           email,
-          url: `${request.protocol}://${HOST}:${PORT}/users/confirm-email?temporaryToken=${temporaryToken}${redirectQuery}`,
+          url: `${API_URL}/users/confirm-email?temporaryToken=${temporaryToken}${redirectQuery}`,
           language: settings.language as Language,
           theme: settings.theme as Theme
         })

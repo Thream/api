@@ -1,7 +1,7 @@
 import { Static, Type } from '@sinclair/typebox'
 import { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import { HOST, PORT } from '../../../../../tools/configurations/index.js'
+import { API_URL } from '../../../../../tools/configurations/index.js'
 import { fastifyErrors } from '../../../../../models/utils.js'
 import { discordStrategy, getDiscordUserData } from '../__utils__/utils.js'
 import { buildQueryURL } from '../../../../../tools/utils/buildQueryURL.js'
@@ -37,7 +37,7 @@ export const getCallbackDiscordOAuth2Service: FastifyPluginAsync = async (
       const { redirectURI, code } = request.query
       const discordUser = await getDiscordUserData(
         code,
-        `${request.protocol}://${HOST}:${PORT}/users/oauth2/discord/callback?redirectURI=${redirectURI}`
+        `${API_URL}/users/oauth2/discord/callback?redirectURI=${redirectURI}`
       )
       const responseJWT = await discordStrategy.callbackSignin({
         name: discordUser.username,

@@ -1,7 +1,7 @@
 import { Static, Type } from '@sinclair/typebox'
 import { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import { HOST, PORT } from '../../../../../tools/configurations/index.js'
+import { API_URL } from '../../../../../tools/configurations/index.js'
 import { fastifyErrors } from '../../../../../models/utils.js'
 import { GOOGLE_BASE_URL, GOOGLE_CLIENT_ID } from '../__utils__/utils.js'
 
@@ -33,7 +33,7 @@ export const getSigninGoogleOAuth2Service: FastifyPluginAsync = async (
     schema: getServiceSchema,
     handler: async (request, reply) => {
       const { redirectURI } = request.query
-      const redirectCallback = `${request.protocol}://${HOST}:${PORT}/users/oauth2/google/callback?redirectURI=${redirectURI}`
+      const redirectCallback = `${API_URL}/users/oauth2/google/callback?redirectURI=${redirectURI}`
       const url = `${GOOGLE_BASE_URL}?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${redirectCallback}&response_type=code&scope=profile&access_type=online`
       reply.statusCode = 200
       return url

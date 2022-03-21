@@ -32,11 +32,6 @@ jobs:
       - name: 'Build'
         run: 'npm run build'
 
-      - name: 'Production migration'
-        run: 'npm run prisma:migrate:deploy'
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-
       - name: 'Release'
         run: 'npm run release'
         env:
