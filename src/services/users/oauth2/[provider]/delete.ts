@@ -53,7 +53,7 @@ export const deleteProviderService: FastifyPluginAsync = async (fastify) => {
         return oauth.provider
       })
       if (user.current.password != null) {
-        strategies.push('local')
+        strategies.push('Local')
       }
       const oauthProvider = OAuths.find((oauth) => oauth.provider === provider)
       if (oauthProvider == null) {

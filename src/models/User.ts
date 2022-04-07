@@ -27,7 +27,7 @@ export const userSchema = {
   website: Type.String({
     minLength: 1,
     maxLength: 255,
-    format: 'uri-reference'
+    format: 'uri'
   }),
   isConfirmed: Type.Boolean({ default: false }),
   temporaryToken: Type.String(),

@@ -17,7 +17,12 @@ import { UPLOADS_URL } from './tools/configurations/index.js'
 
 dotenv.config()
 export const application = fastify({
-  logger: process.env.NODE_ENV === 'development'
+  logger: process.env.NODE_ENV === 'development',
+  ajv: {
+    customOptions: {
+      format: 'full'
+    }
+  }
 })
 
 await application.register(fastifyCors)
@@ -33,7 +38,7 @@ await application.register(fastifySocketIo, {
 })
 await application.register(fastifyHelmet)
 await application.register(fastifyRateLimit, {
-  max: 150,
+  max: 200,
   timeWindow: '1 minute'
 })
 await application.register(fastifyStatic, {

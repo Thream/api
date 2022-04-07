@@ -44,7 +44,7 @@ export const authenticateUserTest = async (): Promise<{
   sinon.stub(prisma, 'oAuth').value(oAuthStubValue)
   sinon.stub(prisma, 'refreshToken').value(refreshTokenStubValue)
   const userJWT: UserJWT = {
-    currentStrategy: 'local',
+    currentStrategy: 'Local',
     id: 1
   }
   const accessToken = generateAccessToken(userJWT)

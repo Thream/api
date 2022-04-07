@@ -33,7 +33,7 @@ export const getUserWithBearerToken = async (
     throw new Forbidden()
   }
 
-  if (!user.isConfirmed && payload.currentStrategy === 'local') {
+  if (!user.isConfirmed && payload.currentStrategy === 'Local') {
     throw new BadRequest(
       'You should have a confirmed account, please check your email and follow the instructions to verify your account'
     )

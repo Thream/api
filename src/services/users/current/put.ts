@@ -52,7 +52,7 @@ export const putCurrentUser: FastifyPluginAsync = async (fastify) => {
 
   fastify.route<{
     Body: BodyPutServiceSchemaType
-    Params: QueryPutCurrentUserSchemaType
+    Querystring: QueryPutCurrentUserSchemaType
   }>({
     method: 'PUT',
     url: '/users/current',
@@ -62,7 +62,7 @@ export const putCurrentUser: FastifyPluginAsync = async (fastify) => {
         throw fastify.httpErrors.forbidden()
       }
       const { name, email, status, biography, website } = request.body
-      const { redirectURI } = request.params
+      const { redirectURI } = request.query
       const userValidation = await prisma.user.findFirst({
         where: {
           OR: [
@@ -90,9 +90,9 @@ export const putCurrentUser: FastifyPluginAsync = async (fastify) => {
         return oauth.provider
       })
       if (request.user.current.password != null) {
-        strategies.push('local')
+        strategies.push('Local')
       }
-      if (email === null && strategies.includes('local')) {
+      if (email === null && strategies.includes('Local')) {
         throw fastify.httpErrors.badRequest(
           'You must have an email to sign in.'
         )

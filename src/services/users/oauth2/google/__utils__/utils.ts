@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import { OAuthStrategy } from '../../../../../tools/utils/OAuthStrategy.js'
 
-export const GOOGLE_PROVIDER = 'google'
+export const GOOGLE_PROVIDER = 'Google'
 export const GOOGLE_BASE_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
 export const GOOGLE_OAUTH2_TOKEN = 'https://oauth2.googleapis.com/token'
 export const GOOGLE_USERINFO =

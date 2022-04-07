@@ -7,7 +7,7 @@ import { OAuthStrategy } from '../OAuthStrategy.js'
 import prisma from '../../database/prisma.js'
 import { refreshTokenExample } from '../../../models/RefreshToken.js'
 
-const oauthStrategy = new OAuthStrategy('discord')
+const oauthStrategy = new OAuthStrategy('Discord')
 
 await tap.test('tools/utils/OAuthStrategy', async (t) => {
   await t.test('callbackSignin', async (t) => {
@@ -47,7 +47,7 @@ await tap.test('tools/utils/OAuthStrategy', async (t) => {
           return {
             id: 1,
             userId: userExample.id,
-            provider: 'discord',
+            provider: 'Discord',
             providerId: id,
             updatedAt: new Date(),
             createdAt: new Date()
@@ -64,7 +64,7 @@ await tap.test('tools/utils/OAuthStrategy', async (t) => {
         oAuthCreateSpy.calledWith({
           data: {
             userId: userExample.id,
-            provider: 'discord',
+            provider: 'Discord',
             providerId: id
           }
         }),
@@ -73,7 +73,7 @@ await tap.test('tools/utils/OAuthStrategy', async (t) => {
       t.equal(
         oAuthFindFirstSpy.calledWith({
           where: {
-            provider: 'discord',
+            provider: 'Discord',
             providerId: id
           }
         }),
@@ -108,7 +108,7 @@ await tap.test('tools/utils/OAuthStrategy', async (t) => {
           return {
             id: 1,
             userId: userExample.id,
-            provider: 'discord',
+            provider: 'Discord',
             providerId: id,
             updatedAt: new Date(),
             createdAt: new Date()
@@ -119,14 +119,14 @@ await tap.test('tools/utils/OAuthStrategy', async (t) => {
       const oAuthFindFirstSpy = sinon.spy(prisma.oAuth, 'findFirst')
       const result = await oauthStrategy.callbackAddStrategy(
         { id, name },
-        { accessToken: '123', current: userExample, currentStrategy: 'local' }
+        { accessToken: '123', current: userExample, currentStrategy: 'Local' }
       )
       t.equal(result, 'success')
       t.equal(
         oAuthCreateSpy.calledWith({
           data: {
             userId: userExample.id,
-            provider: 'discord',
+            provider: 'Discord',
             providerId: id
           }
         }),
@@ -135,7 +135,7 @@ await tap.test('tools/utils/OAuthStrategy', async (t) => {
       t.equal(
         oAuthFindFirstSpy.calledWith({
           where: {
-            provider: 'discord',
+            provider: 'Discord',
             providerId: id
           }
         }),
@@ -153,7 +153,7 @@ await tap.test('tools/utils/OAuthStrategy', async (t) => {
             return {
               id: 1,
               userId: 2,
-              provider: 'discord',
+              provider: 'Discord',
               providerId: id,
               updatedAt: new Date(),
               createdAt: new Date()
@@ -163,13 +163,13 @@ await tap.test('tools/utils/OAuthStrategy', async (t) => {
         const oAuthFindFirstSpy = sinon.spy(prisma.oAuth, 'findFirst')
         const result = await oauthStrategy.callbackAddStrategy(
           { id, name },
-          { accessToken: '123', current: userExample, currentStrategy: 'local' }
+          { accessToken: '123', current: userExample, currentStrategy: 'Local' }
         )
         t.equal(result, 'This account is already used by someone else')
         t.equal(
           oAuthFindFirstSpy.calledWith({
             where: {
-              provider: 'discord',
+              provider: 'Discord',
               providerId: id
             }
           }),
@@ -188,7 +188,7 @@ await tap.test('tools/utils/OAuthStrategy', async (t) => {
             return {
               id: 1,
               userId: userExample.id,
-              provider: 'discord',
+              provider: 'Discord',
               providerId: id,
               updatedAt: new Date(),
               createdAt: new Date()
@@ -198,13 +198,13 @@ await tap.test('tools/utils/OAuthStrategy', async (t) => {
         const oAuthFindFirstSpy = sinon.spy(prisma.oAuth, 'findFirst')
         const result = await oauthStrategy.callbackAddStrategy(
           { id, name },
-          { accessToken: '123', current: userExample, currentStrategy: 'local' }
+          { accessToken: '123', current: userExample, currentStrategy: 'Local' }
         )
         t.equal(result, 'You are already using this account')
         t.equal(
           oAuthFindFirstSpy.calledWith({
             where: {
-              provider: 'discord',
+              provider: 'Discord',
               providerId: id
             }
           }),

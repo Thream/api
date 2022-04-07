@@ -2,8 +2,8 @@ import { Type } from '@sinclair/typebox'
 
 import { date, id } from './utils.js'
 
-export const providers = ['google', 'github', 'discord'] as const
-export const strategies = [...providers, 'local'] as const
+export const providers = ['Google', 'GitHub', 'Discord'] as const
+export const strategies = [...providers, 'Local'] as const
 
 export const strategiesTypebox = strategies.map((strategy) =>
   Type.Literal(strategy)

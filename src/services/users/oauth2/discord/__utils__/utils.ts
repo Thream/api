@@ -4,8 +4,8 @@ import axios from 'axios'
 
 import { OAuthStrategy } from '../../../../../tools/utils/OAuthStrategy.js'
 
-export const DISCORD_PROVIDER = 'discord'
-export const DISCORD_BASE_URL = 'https://discord.com/api/v6'
+export const DISCORD_PROVIDER = 'Discord'
+export const DISCORD_BASE_URL = 'https://discord.com/api/v10'
 export const DISCORD_CLIENT_ID =
   process.env.DISCORD_CLIENT_ID ?? 'DISCORD_CLIENT_ID'
 export const DISCORD_CLIENT_SECRET =

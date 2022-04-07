@@ -22,7 +22,7 @@ await tap.test(
           return userExample
         }
       })
-      const currentStrategy = 'local'
+      const currentStrategy = 'Local'
       sinon.stub(jwt, 'verify').value(() => {
         return { id: userExample.id, currentStrategy }
       })
@@ -89,7 +89,7 @@ await tap.test(
           }
         })
         sinon.stub(jwt, 'verify').value(() => {
-          return { id: userExample.id, currentStrategy: 'local' }
+          return { id: userExample.id, currentStrategy: 'Local' }
         })
         await t.rejects(getUserWithBearerToken('Bearer token'), BadRequest)
       }

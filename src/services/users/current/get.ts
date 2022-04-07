@@ -44,7 +44,7 @@ export const getCurrentUser: FastifyPluginAsync = async (fastify) => {
         return oauth.provider
       })
       if (user.current.password != null) {
-        strategies.push('local')
+        strategies.push('Local')
       }
       reply.statusCode = 200
       return {

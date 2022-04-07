@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import { OAuthStrategy } from '../../../../../tools/utils/OAuthStrategy.js'
 
-export const GITHUB_PROVIDER = 'github'
+export const GITHUB_PROVIDER = 'GitHub'
 export const GITHUB_BASE_URL = 'https://github.com'
 export const GITHUB_API_BASE_URL = 'https://api.github.com'
 export const GITHUB_CLIENT_ID =

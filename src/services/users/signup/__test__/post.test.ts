@@ -58,7 +58,7 @@ await tap.test('POST /users/signup', async (t) => {
       url: '/users/signup',
       payload: {
         ...payload,
-        email: 'incorrect-email'
+        email: 'incorrect-email@abc'
       }
     })
     t.equal(response.statusCode, 400)

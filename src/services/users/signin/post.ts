@@ -53,11 +53,11 @@ export const postSigninUser: FastifyPluginAsync = async (fastify) => {
         throw fastify.httpErrors.badRequest('Invalid credentials.')
       }
       const accessToken = generateAccessToken({
-        currentStrategy: 'local',
+        currentStrategy: 'Local',
         id: user.id
       })
       const refreshToken = await generateRefreshToken({
-        currentStrategy: 'local',
+        currentStrategy: 'Local',
         id: user.id
       })
       reply.statusCode = 200
