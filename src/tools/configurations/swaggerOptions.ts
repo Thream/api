@@ -10,7 +10,7 @@ export const swaggerOptions: FastifyDynamicSwaggerOptions = {
   routePrefix: '/documentation',
   openapi: {
     info: {
-      title: 'Thream',
+      title: packageJSON.name,
       description: packageJSON.description,
       version: packageJSON.version
     },

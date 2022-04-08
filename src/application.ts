@@ -4,7 +4,6 @@ import dotenv from 'dotenv'
 import fastify from 'fastify'
 import fastifyCors from 'fastify-cors'
 import fastifySwagger from 'fastify-swagger'
-import fastifyUrlData from 'fastify-url-data'
 import fastifyHelmet from 'fastify-helmet'
 import fastifyRateLimit from 'fastify-rate-limit'
 import fastifySensible from 'fastify-sensible'
@@ -27,7 +26,6 @@ export const application = fastify({
 
 await application.register(fastifyCors)
 await application.register(fastifySensible)
-await application.register(fastifyUrlData)
 await application.register(fastifySocketIo, {
   cors: {
     origin: '*',
