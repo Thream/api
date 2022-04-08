@@ -8,10 +8,10 @@ export const themes = [Type.Literal('light'), Type.Literal('dark')]
 
 export const userSettingsSchema = {
   id,
-  language: Type.Union(languages, { default: 'en' }),
-  theme: Type.Union(themes, { default: 'dark' }),
-  isPublicEmail: Type.Boolean({ default: false }),
-  isPublicGuilds: Type.Boolean({ default: false }),
+  language: Type.Union(languages),
+  theme: Type.Union(themes),
+  isPublicEmail: Type.Boolean(),
+  isPublicGuilds: Type.Boolean(),
   createdAt: date.createdAt,
   updatedAt: date.updatedAt,
   userId: id
