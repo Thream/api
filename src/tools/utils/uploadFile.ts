@@ -5,7 +5,7 @@ import { randomUUID } from 'node:crypto'
 import { FastifyInstance, FastifyRequest } from 'fastify'
 import { Multipart } from 'fastify-multipart'
 
-import { ROOT_URL } from '../configurations/index.js'
+import { API_URL, ROOT_URL } from '../configurations/index.js'
 
 export interface UploadFileOptions {
   folderInUploadsFolder: 'guilds' | 'messages' | 'users'
@@ -62,7 +62,7 @@ export const uploadFile = async (
   const fileExtension = splitedMimetype[1]
   const filePath = `uploads/${folderInUploadsFolder}/${randomUUID()}.${fileExtension}`
   const fileURL = new URL(filePath, ROOT_URL)
-  const pathToStoreInDatabase = `/${filePath}`
+  const pathToStoreInDatabase = `${API_URL}/${filePath}`
   await fs.promises.copyFile(file.filepath, fileURL)
   return { pathToStoreInDatabase, mimetype: file.mimetype }
 }
