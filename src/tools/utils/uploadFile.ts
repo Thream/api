@@ -5,7 +5,10 @@ import FormData from 'form-data'
 import { FastifyInstance, FastifyRequest } from 'fastify'
 import { Multipart } from 'fastify-multipart'
 
-import { FILE_UPLOADS_API_URL } from '../configurations/index.js'
+import {
+  FILE_UPLOADS_API_KEY,
+  FILE_UPLOADS_API_URL
+} from '../configurations/index.js'
 
 export const fileUploadAPI = axios.create({
   baseURL: FILE_UPLOADS_API_URL,
@@ -55,12 +58,17 @@ export const uploadFile = async (
     const response = await fileUploadAPI.post(
       `/uploads/${folderInUploadsFolder}`,
       formData,
-      { headers: formData.getHeaders() }
+      {
+        headers: {
+          'X-API-Key': FILE_UPLOADS_API_KEY,
+          ...formData.getHeaders()
+        }
+      }
     )
     return { pathToStoreInDatabase: response.data, mimetype: file.mimetype }
   } catch (error: any) {
     throw fastify.httpErrors.createError(
-      error.response.data.error,
+      error.response.data.statusCode,
       error.response.data.message
     )
   }
