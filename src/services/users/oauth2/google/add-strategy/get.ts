@@ -28,7 +28,7 @@ const getServiceSchema: FastifySchema = {
   }
 } as const
 
-export const getAddStrategyGitHubOAuth2Service: FastifyPluginAsync = async (
+export const getAddStrategyGoogleOAuth2Service: FastifyPluginAsync = async (
   fastify
 ) => {
   await fastify.register(authenticateUser)

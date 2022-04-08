@@ -24,6 +24,8 @@ import { getCallbackAddStrategyDiscordOAuth2Service } from './oauth2/discord/cal
 import { getAddStrategyDiscordOAuth2Service } from './oauth2/discord/add-strategy/get.js'
 import { getAddStrategyGitHubOAuth2Service } from './oauth2/github/add-strategy/get.js'
 import { getCallbackAddStrategyGitHubOAuth2Service } from './oauth2/github/callback-add-strategy/get.js'
+import { getCallbackAddStrategyGoogleOAuth2Service } from './oauth2/google/callback-add-strategy/get.js'
+import { getAddStrategyGoogleOAuth2Service } from './oauth2/google/add-strategy/get.js'
 
 export const usersService: FastifyPluginAsync = async (fastify) => {
   await fastify.register(postSignupUser)
@@ -47,6 +49,8 @@ export const usersService: FastifyPluginAsync = async (fastify) => {
 
   await fastify.register(getSigninGoogleOAuth2Service)
   await fastify.register(getCallbackGoogleOAuth2Service)
+  await fastify.register(getCallbackAddStrategyGoogleOAuth2Service)
+  await fastify.register(getAddStrategyGoogleOAuth2Service)
 
   await fastify.register(getSigninGitHubOAuth2Service)
   await fastify.register(getCallbackGitHubOAuth2Service)
