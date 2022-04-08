@@ -8,6 +8,8 @@ services:
     volumes:
       - '..:/workspace:cached'
     command: 'sleep infinity'
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
 
   thream-database:
     image: 'postgres:14.2'

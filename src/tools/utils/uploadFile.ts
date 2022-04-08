@@ -1,21 +1,29 @@
 import fs from 'node:fs'
-import { URL } from 'node:url'
-import { randomUUID } from 'node:crypto'
 
+import axios from 'axios'
+import FormData from 'form-data'
 import { FastifyInstance, FastifyRequest } from 'fastify'
 import { Multipart } from 'fastify-multipart'
 
-import { ROOT_URL } from '../configurations/index.js'
+import {
+  FILE_UPLOADS_API_KEY,
+  FILE_UPLOADS_API_URL
+} from '../configurations/index.js'
+
+export const fileUploadAPI = axios.create({
+  baseURL: FILE_UPLOADS_API_URL,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
+
+/** in megabytes */
+export const MAXIMUM_FILE_SIZE = 100
 
 export interface UploadFileOptions {
   folderInUploadsFolder: 'guilds' | 'messages' | 'users'
   request: FastifyRequest
   fastify: FastifyInstance
-
-  /** in megabytes */
-  maximumFileSize: number
-
-  supportedFileMimetype?: string[]
 }
 
 export interface UploadFileResult {
@@ -26,43 +34,42 @@ export interface UploadFileResult {
 export const uploadFile = async (
   options: UploadFileOptions
 ): Promise<UploadFileResult> => {
-  const {
-    fastify,
-    request,
-    folderInUploadsFolder,
-    maximumFileSize,
-    supportedFileMimetype
-  } = options
+  const { fastify, request, folderInUploadsFolder } = options
   let files: Multipart[] = []
   try {
     files = await request.saveRequestFiles({
       limits: {
         files: 1,
-        fileSize: maximumFileSize * 1024 * 1024
+        fileSize: MAXIMUM_FILE_SIZE * 1024 * 1024
       }
     })
   } catch (error) {
     throw fastify.httpErrors.requestHeaderFieldsTooLarge(
-      `File should be less than ${maximumFileSize}mb.`
+      `File should be less than ${MAXIMUM_FILE_SIZE}mb.`
     )
   }
   if (files.length !== 1) {
     throw fastify.httpErrors.badRequest('You must upload at most one file.')
   }
   const file = files[0]
-  if (
-    supportedFileMimetype != null &&
-    !supportedFileMimetype.includes(file.mimetype)
-  ) {
-    throw fastify.httpErrors.badRequest(
-      `The file must have a valid type (${supportedFileMimetype.join(', ')}).`
+  const formData = new FormData()
+  formData.append('file', fs.createReadStream(file.filepath))
+  try {
+    const response = await fileUploadAPI.post(
+      `/uploads/${folderInUploadsFolder}`,
+      formData,
+      {
+        headers: {
+          'X-API-Key': FILE_UPLOADS_API_KEY,
+          ...formData.getHeaders()
+        }
+      }
+    )
+    return { pathToStoreInDatabase: response.data, mimetype: file.mimetype }
+  } catch (error: any) {
+    throw fastify.httpErrors.createError(
+      error.response.data.statusCode,
+      error.response.data.message
     )
   }
-  const splitedMimetype = file.mimetype.split('/')
-  const fileExtension = splitedMimetype[1]
-  const filePath = `uploads/${folderInUploadsFolder}/${randomUUID()}.${fileExtension}`
-  const fileURL = new URL(filePath, ROOT_URL)
-  const pathToStoreInDatabase = `/${filePath}`
-  await fs.promises.copyFile(file.filepath, fileURL)
-  return { pathToStoreInDatabase, mimetype: file.mimetype }
 }

@@ -6,10 +6,6 @@ import authenticateUser from '../../../../tools/plugins/authenticateUser.js'
 import { fastifyErrors } from '../../../../models/utils.js'
 import prisma from '../../../../tools/database/prisma.js'
 import { uploadFile } from '../../../../tools/utils/uploadFile.js'
-import {
-  MAXIMUM_IMAGE_SIZE,
-  SUPPORTED_IMAGE_MIMETYPE
-} from '../../../../tools/configurations/index.js'
 
 const putServiceSchema: FastifySchema = {
   description: 'Edit the current connected user logo',
@@ -51,9 +47,7 @@ export const putCurrentUserLogo: FastifyPluginAsync = async (fastify) => {
       const file = await uploadFile({
         fastify,
         request,
-        folderInUploadsFolder: 'users',
-        maximumFileSize: MAXIMUM_IMAGE_SIZE,
-        supportedFileMimetype: SUPPORTED_IMAGE_MIMETYPE
+        folderInUploadsFolder: 'users'
       })
       await prisma.user.update({
         where: { id: request.user.current.id },
