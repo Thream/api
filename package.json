@@ -1,6 +1,6 @@
 {
   "name": "@thream/api",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Thream's application programming interface to stay close with your friends and communities.",
   "private": true,
   "type": "module",
