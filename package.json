@@ -60,6 +60,7 @@
     "@commitlint/cli": "16.2.3",
     "@commitlint/config-conventional": "16.2.1",
     "@saithodev/semantic-release-backmerge": "2.1.2",
+    "@semantic-release/git": "10.0.1",
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.164",
     "@types/bcryptjs": "2.4.2",
