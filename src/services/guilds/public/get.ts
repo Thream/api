@@ -18,7 +18,8 @@ const querySchema = Type.Object({
 export type QuerySchemaType = Static<typeof querySchema>
 
 const getServiceSchema: FastifySchema = {
-  description: 'GET all the public guilds.',
+  description:
+    'GET all the public guilds (ordered by descending members count).',
   tags: ['guilds'] as string[],
   security: [
     {
@@ -55,7 +56,11 @@ export const getGuildsPublic: FastifyPluginAsync = async (fastify) => {
       }
       const guildsRequest = await prisma.guild.findMany({
         ...getPaginationOptions(request.query),
-        orderBy: { createdAt: 'desc' },
+        orderBy: {
+          members: {
+            _count: 'desc'
+          }
+        },
         ...(request.query.search != null && {
           where: {
             name: { contains: request.query.search }
