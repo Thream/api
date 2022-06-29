@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import { readPackage } from 'read-pkg'
-import { FastifyDynamicSwaggerOptions } from 'fastify-swagger'
+import { FastifyDynamicSwaggerOptions } from '@fastify/swagger'
 
 dotenv.config()
 
@@ -19,8 +19,7 @@ export const swaggerOptions: FastifyDynamicSwaggerOptions = {
       { name: 'guilds' },
       { name: 'channels' },
       { name: 'messages' },
-      { name: 'members' },
-      { name: 'uploads' }
+      { name: 'members' }
     ],
     components: {
       securitySchemes: {

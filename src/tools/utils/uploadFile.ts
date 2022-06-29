@@ -3,7 +3,7 @@ import fs from 'node:fs'
 import axios from 'axios'
 import FormData from 'form-data'
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import { Multipart } from 'fastify-multipart'
+import { Multipart } from '@fastify/multipart'
 
 import {
   FILE_UPLOADS_API_KEY,

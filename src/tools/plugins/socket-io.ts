@@ -85,5 +85,5 @@ export default fastifyPlugin(
       fastify.io.instance.close()
     })
   },
-  { fastify: '3.x' }
+  { fastify: '4.x' }
 )

@@ -61,5 +61,5 @@ export default fastifyPlugin(
       request.user = user
     })
   },
-  { fastify: '3.x' }
+  { fastify: '4.x' }
 )
