@@ -14,8 +14,7 @@ export const messageSchema = {
   type: Type.Union(types, { default: 'text' }),
   mimetype: Type.String({
     maxLength: 127,
-    default: 'text/plain',
-    format: 'mimetype'
+    default: 'text/plain'
   }),
   createdAt: date.createdAt,
   updatedAt: date.updatedAt,

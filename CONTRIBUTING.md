@@ -86,7 +86,6 @@ git commit -m "fix(services): should emit events to connected users"
   - `services` : all REST API endpoints
   - `tools` : configs and utilities
   - `typings` : types gloablly used in the project
-- `uploads` : uploaded files by users
 
 ### Services folder explained with an example
 
