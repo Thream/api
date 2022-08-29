@@ -25,6 +25,11 @@ await tap.test('PUT /users/reset-password', async (t) => {
         return userExample
       }
     })
+    sinon.stub(prisma, 'refreshToken').value({
+      deleteMany: async () => {
+        return { count: 1 }
+      }
+    })
     const response = await application.inject({
       method: 'PUT',
       url: '/users/reset-password',

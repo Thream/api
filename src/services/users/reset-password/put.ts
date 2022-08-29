@@ -39,7 +39,7 @@ export const putResetPasswordUser: FastifyPluginAsync = async (fastify) => {
         user?.temporaryExpirationToken != null &&
         user.temporaryExpirationToken.getTime() > Date.now()
       if (user == null || !isValidTemporaryToken) {
-        throw fastify.httpErrors.badRequest('"tempToken" is invalid')
+        throw fastify.httpErrors.badRequest('`temporaryToken` is invalid.')
       }
       const hashedPassword = await bcrypt.hash(password, 12)
       await prisma.user.update({
@@ -50,6 +50,11 @@ export const putResetPasswordUser: FastifyPluginAsync = async (fastify) => {
           password: hashedPassword,
           temporaryToken: null,
           temporaryExpirationToken: null
+        }
+      })
+      await prisma.refreshToken.deleteMany({
+        where: {
+          userId: user.id
         }
       })
       reply.statusCode = 200
