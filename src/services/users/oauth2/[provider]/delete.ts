@@ -14,7 +14,7 @@ type Parameters = Static<typeof parametersSchema>
 
 const deleteServiceSchema: FastifySchema = {
   description: 'DELETE a provider to authenticate with for a user.',
-  tags: ['users'] as string[],
+  tags: ['oauth2'] as string[],
   security: [
     {
       bearerAuth: []

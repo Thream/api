@@ -15,7 +15,7 @@ type QuerySchemaType = Static<typeof querySchema>
 
 const getServiceSchema: FastifySchema = {
   description: 'Discord OAuth2 - callback',
-  tags: ['users'] as string[],
+  tags: ['oauth2'] as string[],
   querystring: querySchema,
   response: {
     200: Type.String(),

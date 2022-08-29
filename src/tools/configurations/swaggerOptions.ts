@@ -16,6 +16,7 @@ export const swaggerOptions: FastifyDynamicSwaggerOptions = {
     },
     tags: [
       { name: 'users' },
+      { name: 'oauth2' },
       { name: 'guilds' },
       { name: 'channels' },
       { name: 'messages' },

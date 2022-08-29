@@ -13,7 +13,7 @@ type QuerySchemaType = Static<typeof querySchema>
 
 const getServiceSchema: FastifySchema = {
   description: 'GitHub OAuth2 - signin',
-  tags: ['users'] as string[],
+  tags: ['oauth2'] as string[],
   querystring: querySchema,
   response: {
     200: Type.String(),
