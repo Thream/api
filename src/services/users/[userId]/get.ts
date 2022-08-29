@@ -50,6 +50,7 @@ export const getUserById: FastifyPluginAsync = async (fastify) => {
           id: true,
           name: true,
           email: settings.isPublicEmail,
+          isConfirmed: true,
           logo: true,
           status: true,
           biography: true,

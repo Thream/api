@@ -22,7 +22,7 @@ export const serviceGenerator = {
       type: 'list',
       name: 'tag',
       message: 'tag',
-      choices: ['users', 'guilds', 'channels', 'messages', 'members', 'uploads']
+      choices: ['users', 'guilds', 'channels', 'messages', 'members']
     },
     {
       type: 'confirm',

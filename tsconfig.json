@@ -3,12 +3,12 @@
     "target": "ESNext",
     "module": "ESNext",
     "lib": ["ESNext"],
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "outDir": "./build",
     "rootDir": "./src",
     "noEmit": true,
     "strict": true,
+    "skipLibCheck": true,
     "esModuleInterop": true
-  },
-  "exclude": ["node_modules", "generators"]
+  }
 }

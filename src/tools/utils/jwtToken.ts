@@ -22,7 +22,7 @@ export const jwtSchema = {
   refreshToken: Type.String(),
   expiresIn: Type.Integer({
     description:
-      'expiresIn is how long, in milliseconds, until the returned accessToken expires'
+      'expiresIn is how long, in milliseconds, until the accessToken expires'
   }),
   type: Type.Literal('Bearer')
 }
@@ -30,9 +30,7 @@ export const jwtSchema = {
 export const expiresIn = ms(JWT_ACCESS_EXPIRES_IN)
 
 export const generateAccessToken = (user: UserJWT): string => {
-  return jwt.sign(user, JWT_ACCESS_SECRET, {
-    expiresIn: JWT_ACCESS_EXPIRES_IN
-  })
+  return jwt.sign(user, JWT_ACCESS_SECRET, { expiresIn })
 }
 
 export const generateRefreshToken = async (user: UserJWT): Promise<string> => {
