@@ -9,7 +9,7 @@ import {
   jwtSchema,
   expiresIn
 } from '../../../tools/utils/jwtToken.js'
-import { UserJWT } from '../../../models/User.js'
+import { UserRefreshJWT } from '../../../models/User.js'
 import { JWT_REFRESH_SECRET } from '../../../tools/configurations/index.js'
 
 const bodyPostRefreshTokenSchema = Type.Object({
@@ -43,20 +43,20 @@ export const postRefreshTokenUser: FastifyPluginAsync = async (fastify) => {
     schema: postRefreshTokenSchema,
     handler: async (request, reply) => {
       const { refreshToken } = request.body
-      const foundRefreshToken = await prisma.refreshToken.findFirst({
-        where: { token: refreshToken }
-      })
-      if (foundRefreshToken == null) {
-        throw fastify.httpErrors.forbidden()
-      }
       try {
-        const userJWT = jwt.verify(
-          foundRefreshToken.token,
+        const userRefreshJWT = jwt.verify(
+          refreshToken,
           JWT_REFRESH_SECRET
-        ) as UserJWT
+        ) as UserRefreshJWT
+        const foundRefreshToken = await prisma.refreshToken.findFirst({
+          where: { token: userRefreshJWT.tokenUUID }
+        })
+        if (foundRefreshToken == null) {
+          throw fastify.httpErrors.forbidden()
+        }
         const accessToken = generateAccessToken({
-          id: userJWT.id,
-          currentStrategy: userJWT.currentStrategy
+          id: userRefreshJWT.id,
+          currentStrategy: userRefreshJWT.currentStrategy
         })
         reply.statusCode = 200
         return {

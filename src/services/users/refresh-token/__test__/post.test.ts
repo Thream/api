@@ -1,5 +1,6 @@
 import tap from 'tap'
 import sinon from 'sinon'
+import jwt from 'jsonwebtoken'
 
 import { application } from '../../../../application.js'
 import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
@@ -13,8 +14,7 @@ await tap.test('POST /users/refresh-token', async (t) => {
   })
 
   await t.test('succeeds', async (t) => {
-    const { accessToken, refreshToken, refreshTokenStubValue } =
-      await authenticateUserTest()
+    const { refreshToken, refreshTokenStubValue } = await authenticateUserTest()
     sinon.stub(prisma, 'refreshToken').value({
       ...refreshTokenStubValue,
       findFirst: async () => {
@@ -28,9 +28,6 @@ await tap.test('POST /users/refresh-token', async (t) => {
     const response = await application.inject({
       method: 'POST',
       url: '/users/refresh-token',
-      headers: {
-        authorization: `Bearer ${accessToken}`
-      },
       payload: { refreshToken }
     })
     const responseJson = response.json()
@@ -61,6 +58,9 @@ await tap.test('POST /users/refresh-token', async (t) => {
       findFirst: async () => {
         return refreshTokenExample
       }
+    })
+    sinon.stub(jwt, 'verify').value(() => {
+      throw new Error('Invalid token')
     })
     const response = await application.inject({
       method: 'POST',

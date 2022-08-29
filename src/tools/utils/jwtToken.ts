@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto'
+
 import { Type } from '@sinclair/typebox'
 import jwt from 'jsonwebtoken'
 import ms from 'ms'
@@ -34,9 +36,16 @@ export const generateAccessToken = (user: UserJWT): string => {
 }
 
 export const generateRefreshToken = async (user: UserJWT): Promise<string> => {
-  const refreshToken = jwt.sign(user, JWT_REFRESH_SECRET)
+  const tokenUUID = randomUUID()
+  const refreshToken = jwt.sign(
+    {
+      ...user,
+      tokenUUID
+    },
+    JWT_REFRESH_SECRET
+  )
   await prisma.refreshToken.create({
-    data: { token: refreshToken, userId: user.id }
+    data: { token: tokenUUID, userId: user.id }
   })
   return refreshToken
 }

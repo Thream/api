@@ -1,9 +1,11 @@
 import tap from 'tap'
 import sinon from 'sinon'
+import jwt from 'jsonwebtoken'
 
 import { application } from '../../../../application.js'
 import prisma from '../../../../tools/database/prisma.js'
 import { refreshTokenExample } from '../../../../models/RefreshToken.js'
+import { UserRefreshJWT } from '../../../../models/User.js'
 
 await tap.test('POST /users/signout', async (t) => {
   t.afterEach(() => {
@@ -17,10 +19,18 @@ await tap.test('POST /users/signout', async (t) => {
       },
       delete: async () => {}
     })
+    sinon.stub(jwt, 'verify').value(() => {
+      const value: UserRefreshJWT = {
+        id: 1,
+        tokenUUID: refreshTokenExample.token,
+        currentStrategy: 'Local'
+      }
+      return value
+    })
     const response = await application.inject({
       method: 'POST',
       url: '/users/signout',
-      payload: { refreshToken: refreshTokenExample.token }
+      payload: { refreshToken: 'jwt token' }
     })
     t.equal(response.statusCode, 200)
   })

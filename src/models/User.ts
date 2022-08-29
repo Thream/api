@@ -10,6 +10,10 @@ export interface UserJWT {
   currentStrategy: AuthenticationStrategy
 }
 
+export interface UserRefreshJWT extends UserJWT {
+  tokenUUID: string
+}
+
 export interface UserRequest {
   current: User
   currentStrategy: AuthenticationStrategy
