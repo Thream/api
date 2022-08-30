@@ -13,10 +13,9 @@ FROM node:16.17.0 AS runner
 WORKDIR /usr/src/app
 ENV NODE_ENV=production
 COPY --from=builder /usr/src/app/node_modules ./node_modules
-COPY --from=builder /usr/src/app/docker-start.sh ./docker-start.sh
 COPY --from=builder /usr/src/app/package.json ./package.json
 COPY --from=builder /usr/src/app/email ./email
 COPY --from=builder /usr/src/app/build ./build
 COPY --from=builder /usr/src/app/prisma ./prisma
 USER node
-CMD ["./docker-start.sh"]
+CMD ["node", "build/index.js"]

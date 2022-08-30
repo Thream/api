@@ -49,6 +49,8 @@ the root of the project (see `.env.example`).
 
 ### Local Development environment
 
+Recommended to use [VSCode: Remote development in Containers](https://code.visualstudio.com/docs/remote/containers-tutorial).
+
 #### Setup the database
 
 ```sh
@@ -75,18 +77,6 @@ npm run dev
 # Run Prisma Studio
 npm run prisma:studio
 ```
-
-### Production environment with [Docker](https://www.docker.com/)
-
-```sh
-# Setup and run all the services for you
-docker-compose up --build
-```
-
-#### Services started
-
-- API : `http://localhost:8080`
-- [PostgreSQL database](https://www.postgresql.org/)
 
 ## 💡 Contributing
 
