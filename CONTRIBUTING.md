@@ -58,9 +58,9 @@ Scopes define what part of the code changed.
 ### Examples
 
 ```sh
-git commit -m "feat(services): add POST /users/signup"
+git commit -m "feat: add POST /users/signup"
 git commit -m "docs(readme): update installation process"
-git commit -m "fix(services): should emit events to connected users"
+git commit -m "fix: should emit events to connected users"
 ```
 
 ## Directory Structure
@@ -120,3 +120,5 @@ The folders after `src/services` : is the real path of the routes in the API exc
 folders starting and ending with `__` like `__test__` or `__utils__`.
 
 The filenames correspond to the HTTP methods used (`get`, `post`, `put`, `delete`).
+
+You can generate the boilerplate code for a new service with the `npm run generate` command.

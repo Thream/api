@@ -1,2 +1,1 @@
-ARG VARIANT="16"
-FROM mcr.microsoft.com/vscode/devcontainers/javascript-node:0-${VARIANT}
+FROM mcr.microsoft.com/devcontainers/javascript-node:16
