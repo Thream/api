@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import { readPackage } from 'read-pkg'
-import { FastifyDynamicSwaggerOptions } from '@fastify/swagger'
+import type { FastifyDynamicSwaggerOptions } from '@fastify/swagger'
 
 dotenv.config()
 

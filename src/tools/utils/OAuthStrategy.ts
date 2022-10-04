@@ -1,12 +1,12 @@
+import type { ResponseJWT } from './jwtToken.js'
 import {
   expiresIn,
   generateAccessToken,
-  generateRefreshToken,
-  ResponseJWT
+  generateRefreshToken
 } from './jwtToken.js'
 import prisma from '../database/prisma.js'
-import { ProviderOAuth } from '../../models/OAuth.js'
-import { UserRequest } from '../../models/User.js'
+import type { ProviderOAuth } from '../../models/OAuth.js'
+import type { UserRequest } from '../../models/User.js'
 
 interface ProviderData {
   name: string

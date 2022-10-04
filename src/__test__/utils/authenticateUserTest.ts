@@ -1,8 +1,9 @@
-import { User } from '@prisma/client'
+import type { User } from '@prisma/client'
 import sinon from 'sinon'
 
 import { refreshTokenExample } from '../../models/RefreshToken.js'
-import { userExample, UserJWT } from '../../models/User.js'
+import type { UserJWT } from '../../models/User.js'
+import { userExample } from '../../models/User.js'
 import { userSettingsExample } from '../../models/UserSettings.js'
 import {
   generateAccessToken,

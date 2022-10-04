@@ -1,5 +1,6 @@
-import { Prisma } from '@prisma/client'
-import { Static, Type } from '@sinclair/typebox'
+import type { Prisma } from '@prisma/client'
+import type { Static } from '@sinclair/typebox'
+import { Type } from '@sinclair/typebox'
 
 export const queryPaginationSchema = {
   /** Maximum number of items to return */

@@ -1,5 +1,5 @@
 import { Type } from '@sinclair/typebox'
-import { Channel } from '@prisma/client'
+import type { Channel } from '@prisma/client'
 
 import { date, id } from './utils.js'
 import { guildExample } from './Guild.js'

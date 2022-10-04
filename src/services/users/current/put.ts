@@ -1,7 +1,8 @@
 import { randomUUID } from 'node:crypto'
 
-import { Static, Type } from '@sinclair/typebox'
-import { FastifyPluginAsync, FastifySchema } from 'fastify'
+import type { Static } from '@sinclair/typebox'
+import { Type } from '@sinclair/typebox'
+import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 
 import prisma from '../../../tools/database/prisma.js'
 import { fastifyErrors } from '../../../models/utils.js'
@@ -9,7 +10,7 @@ import authenticateUser from '../../../tools/plugins/authenticateUser.js'
 import { userCurrentSchema, userSchema } from '../../../models/User.js'
 import { sendEmail } from '../../../tools/email/sendEmail.js'
 import { API_URL } from '../../../tools/configurations/index.js'
-import { Language, Theme } from '../../../models/UserSettings.js'
+import type { Language, Theme } from '../../../models/UserSettings.js'
 import { parseStringNullish } from '../../../tools/utils/parseStringNullish.js'
 
 const bodyPutServiceSchema = Type.Object({
@@ -136,7 +137,9 @@ export const putCurrentUser: FastifyPluginAsync = async (fastify) => {
       })
       await fastify.io.emitToAuthorizedUsers({
         event: 'users',
-        isAuthorizedCallback: () => true,
+        isAuthorizedCallback: () => {
+          return true
+        },
         payload: {
           action: 'update',
           item: user

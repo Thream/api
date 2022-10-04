@@ -1,16 +1,14 @@
 import { randomUUID } from 'node:crypto'
 
-import { Static, Type } from '@sinclair/typebox'
+import type { Static } from '@sinclair/typebox'
+import { Type } from '@sinclair/typebox'
 import bcrypt from 'bcryptjs'
-import { FastifyPluginAsync, FastifySchema } from 'fastify'
+import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 
 import prisma from '../../../tools/database/prisma.js'
 import { fastifyErrors } from '../../../models/utils.js'
-import {
-  bodyUserSchema,
-  BodyUserSchemaType,
-  userPublicSchema
-} from '../../../models/User.js'
+import type { BodyUserSchemaType } from '../../../models/User.js'
+import { bodyUserSchema, userPublicSchema } from '../../../models/User.js'
 import { sendEmail } from '../../../tools/email/sendEmail.js'
 import { API_URL } from '../../../tools/configurations/index.js'
 

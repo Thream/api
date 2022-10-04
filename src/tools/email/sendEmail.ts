@@ -3,7 +3,7 @@ import { URL, fileURLToPath } from 'node:url'
 
 import ejs from 'ejs'
 
-import { Language, Theme } from '../../models/UserSettings.js'
+import type { Language, Theme } from '../../models/UserSettings.js'
 import {
   EMAIL_LOCALES_URL,
   EMAIL_TEMPLATE_URL

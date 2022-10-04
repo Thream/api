@@ -34,7 +34,7 @@ export const fastifyErrorsSchema = {
   404: {
     statusCode: Type.Literal(404),
     error: Type.Literal('Not Found'),
-    message: Type.Literal('Not Found')
+    message: Type.String()
   },
   431: {
     statusCode: Type.Literal(431),

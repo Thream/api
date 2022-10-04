@@ -1,5 +1,5 @@
 import { Type } from '@sinclair/typebox'
-import { FastifyPluginAsync, FastifySchema } from 'fastify'
+import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 import fastifyMultipart from '@fastify/multipart'
 
 import authenticateUser from '../../../../tools/plugins/authenticateUser.js'

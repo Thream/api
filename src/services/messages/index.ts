@@ -1,4 +1,4 @@
-import { FastifyPluginAsync } from 'fastify'
+import type { FastifyPluginAsync } from 'fastify'
 
 import { deleteMessageService } from './[messageId]/delete.js'
 import { putMessageService } from './[messageId]/put.js'

@@ -1,4 +1,4 @@
-import { FastifyPluginAsync } from 'fastify'
+import type { FastifyPluginAsync } from 'fastify'
 
 import { getGuilds } from './get.js'
 import { postGuilds } from './post.js'

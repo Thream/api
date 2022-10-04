@@ -1,4 +1,4 @@
-import { FastifyPluginAsync } from 'fastify'
+import type { FastifyPluginAsync } from 'fastify'
 
 import { postSignupUser } from './signup/post.js'
 import { getConfirmEmail } from './confirm-email/get.js'

@@ -1,5 +1,6 @@
-import { UserSetting } from '@prisma/client'
-import { Type, Static } from '@sinclair/typebox'
+import type { UserSetting } from '@prisma/client'
+import type { Static } from '@sinclair/typebox'
+import { Type } from '@sinclair/typebox'
 
 import { date, id } from './utils.js'
 

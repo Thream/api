@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 import { application } from '../../../../application.js'
 import prisma from '../../../../tools/database/prisma.js'
 import { refreshTokenExample } from '../../../../models/RefreshToken.js'
-import { UserRefreshJWT } from '../../../../models/User.js'
+import type { UserRefreshJWT } from '../../../../models/User.js'
 
 await tap.test('POST /users/signout', async (t) => {
   t.afterEach(() => {

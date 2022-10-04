@@ -1,4 +1,4 @@
-import { Guild } from '@prisma/client'
+import type { Guild } from '@prisma/client'
 import { Type } from '@sinclair/typebox'
 
 import { date, id } from './utils.js'

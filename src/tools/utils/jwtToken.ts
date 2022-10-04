@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 import ms from 'ms'
 
 import prisma from '../database/prisma.js'
-import { UserJWT } from '../../models/User.js'
+import type { UserJWT } from '../../models/User.js'
 import {
   JWT_ACCESS_EXPIRES_IN,
   JWT_ACCESS_SECRET,

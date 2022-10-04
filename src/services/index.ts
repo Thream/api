@@ -1,4 +1,4 @@
-import { FastifyPluginAsync } from 'fastify'
+import type { FastifyPluginAsync } from 'fastify'
 
 import { usersService } from './users/index.js'
 import { guildsService } from './guilds/index.js'

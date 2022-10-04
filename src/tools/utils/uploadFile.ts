@@ -2,8 +2,8 @@ import fs from 'node:fs'
 
 import axios from 'axios'
 import FormData from 'form-data'
-import { FastifyInstance, FastifyRequest } from 'fastify'
-import { Multipart } from '@fastify/multipart'
+import type { FastifyInstance, FastifyRequest } from 'fastify'
+import type { SavedMultipartFile } from '@fastify/multipart'
 
 import {
   FILE_UPLOADS_API_KEY,
@@ -35,7 +35,7 @@ export const uploadFile = async (
   options: UploadFileOptions
 ): Promise<UploadFileResult> => {
   const { fastify, request, folderInUploadsFolder } = options
-  let files: Multipart[] = []
+  let files: SavedMultipartFile[] = []
   try {
     files = await request.saveRequestFiles({
       limits: {

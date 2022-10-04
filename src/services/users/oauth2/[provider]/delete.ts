@@ -1,5 +1,6 @@
-import { Static, Type } from '@sinclair/typebox'
-import { FastifyPluginAsync, FastifySchema } from 'fastify'
+import type { Static } from '@sinclair/typebox'
+import { Type } from '@sinclair/typebox'
+import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 
 import prisma from '../../../../tools/database/prisma.js'
 import { fastifyErrors } from '../../../../models/utils.js'
@@ -55,7 +56,9 @@ export const deleteProviderService: FastifyPluginAsync = async (fastify) => {
       if (user.current.password != null) {
         strategies.push('Local')
       }
-      const oauthProvider = OAuths.find((oauth) => oauth.provider === provider)
+      const oauthProvider = OAuths.find((oauth) => {
+        return oauth.provider === provider
+      })
       if (oauthProvider == null) {
         throw fastify.httpErrors.notFound('You are not using this provider')
       }

@@ -1,4 +1,4 @@
-import { FastifyPluginAsync } from 'fastify'
+import type { FastifyPluginAsync } from 'fastify'
 
 import { deleteChannelService } from './[channelId]/delete.js'
 import { getChannelByIdService } from './[channelId]/get.js'

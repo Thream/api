@@ -1,5 +1,6 @@
-import { Type, Static } from '@sinclair/typebox'
-import { FastifyPluginAsync, FastifySchema } from 'fastify'
+import type { Static } from '@sinclair/typebox'
+import { Type } from '@sinclair/typebox'
+import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 
 import prisma from '../../tools/database/prisma.js'
 import { fastifyErrors, id } from '../../models/utils.js'

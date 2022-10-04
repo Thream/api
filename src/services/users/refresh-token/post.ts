@@ -1,5 +1,6 @@
-import { Static, Type } from '@sinclair/typebox'
-import { FastifyPluginAsync, FastifySchema } from 'fastify'
+import type { Static } from '@sinclair/typebox'
+import { Type } from '@sinclair/typebox'
+import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 import jwt from 'jsonwebtoken'
 
 import prisma from '../../../tools/database/prisma.js'
@@ -9,7 +10,7 @@ import {
   jwtSchema,
   expiresIn
 } from '../../../tools/utils/jwtToken.js'
-import { UserRefreshJWT } from '../../../models/User.js'
+import type { UserRefreshJWT } from '../../../models/User.js'
 import { JWT_REFRESH_SECRET } from '../../../tools/configurations/index.js'
 
 const bodyPostRefreshTokenSchema = Type.Object({

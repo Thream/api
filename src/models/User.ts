@@ -1,7 +1,9 @@
-import { User } from '@prisma/client'
-import { Static, Type } from '@sinclair/typebox'
+import type { User } from '@prisma/client'
+import type { Static } from '@sinclair/typebox'
+import { Type } from '@sinclair/typebox'
 
-import { AuthenticationStrategy, strategiesTypebox } from './OAuth.js'
+import type { AuthenticationStrategy } from './OAuth.js'
+import { strategiesTypebox } from './OAuth.js'
 import { userSettingsSchema } from './UserSettings.js'
 import { date, id } from './utils.js'
 

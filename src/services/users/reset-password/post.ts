@@ -1,14 +1,15 @@
 import { randomUUID } from 'node:crypto'
 
-import { Static, Type } from '@sinclair/typebox'
-import { FastifyPluginAsync, FastifySchema } from 'fastify'
+import type { Static } from '@sinclair/typebox'
+import { Type } from '@sinclair/typebox'
+import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 import ms from 'ms'
 
 import prisma from '../../../tools/database/prisma.js'
 import { fastifyErrors } from '../../../models/utils.js'
 import { userSchema } from '../../../models/User.js'
 import { sendEmail } from '../../../tools/email/sendEmail.js'
-import { Language, Theme } from '../../../models/UserSettings.js'
+import type { Language, Theme } from '../../../models/UserSettings.js'
 
 const queryPostResetPasswordSchema = Type.Object({
   redirectURI: Type.String({ format: 'uri-reference' })

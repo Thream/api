@@ -1,4 +1,4 @@
-import { RefreshToken } from '@prisma/client'
+import type { RefreshToken } from '@prisma/client'
 import { Type } from '@sinclair/typebox'
 
 import { userExample } from './User.js'

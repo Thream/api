@@ -1,5 +1,6 @@
 import fastifyPlugin from 'fastify-plugin'
-import { Server as SocketIoServer, ServerOptions } from 'socket.io'
+import type { ServerOptions } from 'socket.io'
+import { Server as SocketIoServer } from 'socket.io'
 import { authorize } from '@thream/socketio-jwt'
 
 import prisma from '../database/prisma.js'
