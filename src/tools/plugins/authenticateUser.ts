@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 
 import prisma from '../database/prisma.js'
 import type { UserJWT, UserRequest } from '../../models/User.js'
-import { JWT_ACCESS_SECRET } from '../configurations/index.js'
+import { JWT_ACCESS_SECRET } from '../configurations.js'
 
 const { Unauthorized, Forbidden, BadRequest } = httpErrors
 

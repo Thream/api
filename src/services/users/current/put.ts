@@ -9,7 +9,7 @@ import { fastifyErrors } from '../../../models/utils.js'
 import authenticateUser from '../../../tools/plugins/authenticateUser.js'
 import { userCurrentSchema, userSchema } from '../../../models/User.js'
 import { sendEmail } from '../../../tools/email/sendEmail.js'
-import { API_URL } from '../../../tools/configurations/index.js'
+import { API_URL } from '../../../tools/configurations.js'
 import type { Language, Theme } from '../../../models/UserSettings.js'
 import { parseStringNullish } from '../../../tools/utils/parseStringNullish.js'
 

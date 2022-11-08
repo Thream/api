@@ -8,7 +8,7 @@ import type { SavedMultipartFile } from '@fastify/multipart'
 import {
   FILE_UPLOADS_API_KEY,
   FILE_UPLOADS_API_URL
-} from '../configurations/index.js'
+} from '../configurations.js'
 
 export const fileUploadAPI = axios.create({
   baseURL: FILE_UPLOADS_API_URL,

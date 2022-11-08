@@ -12,7 +12,7 @@ services:
       - 'host.docker.internal:host-gateway'
 
   thream-database:
-    image: 'postgres:14.5'
+    image: 'postgres:15.0'
     environment:
       POSTGRES_USER: 'user'
       POSTGRES_PASSWORD: 'password'

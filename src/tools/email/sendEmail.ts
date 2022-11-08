@@ -4,10 +4,7 @@ import { URL, fileURLToPath } from 'node:url'
 import ejs from 'ejs'
 
 import type { Language, Theme } from '../../models/UserSettings.js'
-import {
-  EMAIL_LOCALES_URL,
-  EMAIL_TEMPLATE_URL
-} from '../configurations/index.js'
+import { EMAIL_LOCALES_URL, EMAIL_TEMPLATE_URL } from '../configurations.js'
 import { emailTransporter, EMAIL_INFO } from './emailTransporter.js'
 
 interface EmailTranslation {

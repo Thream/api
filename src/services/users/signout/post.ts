@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 
 import prisma from '../../../tools/database/prisma.js'
 import { fastifyErrors } from '../../../models/utils.js'
-import { JWT_REFRESH_SECRET } from '../../../tools/configurations/index.js'
+import { JWT_REFRESH_SECRET } from '../../../tools/configurations.js'
 import type { UserRefreshJWT } from '../../../models/User.js'
 import { jwtSchema } from '../../../tools/utils/jwtToken.js'
 

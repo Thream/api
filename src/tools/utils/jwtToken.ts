@@ -10,7 +10,7 @@ import {
   JWT_ACCESS_EXPIRES_IN,
   JWT_ACCESS_SECRET,
   JWT_REFRESH_SECRET
-} from '../configurations/index.js'
+} from '../configurations.js'
 
 export interface ResponseJWT {
   accessToken: string

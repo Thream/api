@@ -4,7 +4,7 @@ import { Server as SocketIoServer } from 'socket.io'
 import { authorize } from '@thream/socketio-jwt'
 
 import prisma from '../database/prisma.js'
-import { JWT_ACCESS_SECRET } from '../configurations/index.js'
+import { JWT_ACCESS_SECRET } from '../configurations.js'
 
 interface EmitEventOptions {
   event: string

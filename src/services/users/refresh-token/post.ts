@@ -11,7 +11,7 @@ import {
   expiresIn
 } from '../../../tools/utils/jwtToken.js'
 import type { UserRefreshJWT } from '../../../models/User.js'
-import { JWT_REFRESH_SECRET } from '../../../tools/configurations/index.js'
+import { JWT_REFRESH_SECRET } from '../../../tools/configurations.js'
 
 const bodyPostRefreshTokenSchema = Type.Object({
   refreshToken: jwtSchema.refreshToken

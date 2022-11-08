@@ -10,7 +10,7 @@ import { fastifyErrors } from '../../../models/utils.js'
 import type { BodyUserSchemaType } from '../../../models/User.js'
 import { bodyUserSchema, userPublicSchema } from '../../../models/User.js'
 import { sendEmail } from '../../../tools/email/sendEmail.js'
-import { API_URL } from '../../../tools/configurations/index.js'
+import { API_URL } from '../../../tools/configurations.js'
 
 const queryPostSignupSchema = Type.Object({
   redirectURI: Type.Optional(Type.String({ format: 'uri-reference' }))
