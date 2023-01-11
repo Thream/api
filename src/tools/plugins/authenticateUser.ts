@@ -20,10 +20,10 @@ export const getUserWithBearerToken = async (
     throw new Unauthorized()
   }
 
-  const token = tokenSplitted[1]
+  const token = tokenSplitted[1] ?? 'token'
   let payload: UserJWT
   try {
-    payload = jwt.verify(token, JWT_ACCESS_SECRET) as UserJWT
+    payload = jwt.verify(token, JWT_ACCESS_SECRET) as unknown as UserJWT
   } catch {
     throw new Forbidden()
   }

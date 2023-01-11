@@ -8,9 +8,9 @@ export const GITHUB_PROVIDER = 'GitHub'
 export const GITHUB_BASE_URL = 'https://github.com'
 export const GITHUB_API_BASE_URL = 'https://api.github.com'
 export const GITHUB_CLIENT_ID =
-  process.env.GITHUB_CLIENT_ID ?? 'GITHUB_CLIENT_ID'
+  process.env['GITHUB_CLIENT_ID'] ?? 'GITHUB_CLIENT_ID'
 export const GITHUB_CLIENT_SECRET =
-  process.env.GITHUB_CLIENT_SECRET ?? 'GITHUB_CLIENT_SECRET'
+  process.env['GITHUB_CLIENT_SECRET'] ?? 'GITHUB_CLIENT_SECRET'
 export const githubStrategy = new OAuthStrategy(GITHUB_PROVIDER)
 
 export interface GitHubUser {

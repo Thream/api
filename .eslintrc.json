@@ -10,7 +10,6 @@
   "rules": {
     "prettier/prettier": "error",
     "import/extensions": ["error", "always"],
-    "unicorn/prevent-abbreviations": "error",
-    "unicorn/prefer-node-protocol": "error"
+    "unicorn/prevent-abbreviations": "error"
   }
 }

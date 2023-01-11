@@ -14,7 +14,7 @@ import fastifySocketIo from './tools/plugins/socket-io.js'
 dotenv.config()
 const packageJSON = await readPackage()
 export const application = fastify({
-  logger: process.env.NODE_ENV === 'development',
+  logger: process.env['NODE_ENV'] === 'development',
   ajv: {
     customOptions: {
       strict: 'log',

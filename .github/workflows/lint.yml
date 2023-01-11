@@ -10,10 +10,10 @@ jobs:
   lint:
     runs-on: 'ubuntu-latest'
     steps:
-      - uses: 'actions/checkout@v3.1.0'
+      - uses: 'actions/checkout@v3.3.0'
 
       - name: 'Use Node.js'
-        uses: 'actions/setup-node@v3.5.1'
+        uses: 'actions/setup-node@v3.6.0'
         with:
           node-version: '18.x'
           cache: 'npm'
@@ -30,8 +30,8 @@ jobs:
       - name: 'lint:markdown'
         run: 'npm run lint:markdown'
 
-      - name: 'lint:typescript'
-        run: 'npm run lint:typescript'
+      - name: 'lint:eslint'
+        run: 'npm run lint:eslint'
 
       - name: 'lint:prettier'
         run: 'npm run lint:prettier'
@@ -40,11 +40,6 @@ jobs:
         uses: 'dotenv-linter/action-dotenv-linter@v2'
         with:
           github_token: ${{ secrets.github_token }}
-
-      - name: 'lint:docker'
-        uses: 'hadolint/hadolint-action@v1.6.0'
-        with:
-          dockerfile: './Dockerfile'
 
       - name: 'prisma:validate'
         run: 'cp .env.example .env && npm run prisma:validate'

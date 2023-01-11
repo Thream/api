@@ -48,10 +48,10 @@ export const uploadFile = async (
       `File should be less than ${MAXIMUM_FILE_SIZE}mb.`
     )
   }
-  if (files.length !== 1) {
+  const file = files[0]
+  if (files.length !== 1 || file == null) {
     throw fastify.httpErrors.badRequest('You must upload at most one file.')
   }
-  const file = files[0]
   const formData = new FormData()
   formData.append('file', fs.createReadStream(file.filepath))
   try {

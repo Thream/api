@@ -1,9 +1,6 @@
-.vscode
-.git
-.env
+.*
+!.npmrc
+!.swcrc
 build
 coverage
-.nyc_output
 node_modules
-tmp
-temp

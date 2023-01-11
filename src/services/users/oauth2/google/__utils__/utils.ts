@@ -10,9 +10,9 @@ export const GOOGLE_OAUTH2_TOKEN = 'https://oauth2.googleapis.com/token'
 export const GOOGLE_USERINFO =
   'https://www.googleapis.com/oauth2/v1/userinfo?alt=json'
 export const GOOGLE_CLIENT_ID =
-  process.env.GOOGLE_CLIENT_ID ?? 'GOOGLE_CLIENT_ID'
+  process.env['GOOGLE_CLIENT_ID'] ?? 'GOOGLE_CLIENT_ID'
 export const GOOGLE_CLIENT_SECRET =
-  process.env.GOOGLE_CLIENT_SECRET ?? 'GOOGLE_CLIENT_SECRET'
+  process.env['GOOGLE_CLIENT_SECRET'] ?? 'GOOGLE_CLIENT_SECRET'
 export const googleStrategy = new OAuthStrategy(GOOGLE_PROVIDER)
 
 export interface GoogleUser {

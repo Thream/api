@@ -54,7 +54,7 @@ export const getConfirmEmail: FastifyPluginAsync = async (fastify) => {
         reply.statusCode = 200
         return 'Success, your email has been confirmed, you can now signin!'
       }
-      await reply.redirect(redirectURI)
+      return await reply.redirect(redirectURI)
     }
   })
 }

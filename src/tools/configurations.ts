@@ -4,19 +4,19 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-export const PORT = parseInt(process.env.PORT ?? '8080', 10)
-export const HOST = process.env.HOST ?? '0.0.0.0'
-export const API_URL = process.env.API_URL ?? `http://${HOST}:${PORT}`
+export const PORT = parseInt(process.env['PORT'] ?? '8080', 10)
+export const HOST = process.env['HOST'] ?? '0.0.0.0'
+export const API_URL = process.env['API_URL'] ?? `http://${HOST}:${PORT}`
 export const FILE_UPLOADS_API_URL =
-  process.env.FILE_UPLOADS_API_URL ?? 'http://localhost:8000'
+  process.env['FILE_UPLOADS_API_URL'] ?? 'http://localhost:8000'
 export const FILE_UPLOADS_API_KEY =
-  process.env.FILE_UPLOADS_API_KEY ?? 'apiKeySecret'
+  process.env['FILE_UPLOADS_API_KEY'] ?? 'apiKeySecret'
 export const JWT_ACCESS_SECRET =
-  process.env.JWT_ACCESS_SECRET ?? 'accessTokenSecret'
+  process.env['JWT_ACCESS_SECRET'] ?? 'accessTokenSecret'
 export const JWT_REFRESH_SECRET =
-  process.env.JWT_REFRESH_SECRET ?? 'refreshTokenSecret'
+  process.env['JWT_REFRESH_SECRET'] ?? 'refreshTokenSecret'
 export const JWT_ACCESS_EXPIRES_IN =
-  process.env.JWT_ACCESS_EXPIRES_IN ?? '15 minutes'
+  process.env['JWT_ACCESS_EXPIRES_IN'] ?? '15 minutes'
 
 export const SRC_URL = new URL('../', import.meta.url)
 export const ROOT_URL = new URL('../', SRC_URL)

@@ -12,8 +12,8 @@ export const providersTypebox = providers.map((provider) => {
   return Type.Literal(provider)
 })
 
-export type ProviderOAuth = typeof providers[number]
-export type AuthenticationStrategy = typeof strategies[number]
+export type ProviderOAuth = (typeof providers)[number]
+export type AuthenticationStrategy = (typeof strategies)[number]
 
 export const oauthSchema = {
   id,
