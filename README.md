@@ -18,7 +18,7 @@
 
 Thream's Application Programming Interface (API) to stay close with your friends and communities.
 
-It uses [Thream/file-uploads-api](https://github.com/Thream/file-uploads-api) [v1.1.2](https://github.com/Thream/file-uploads-api/releases/tag/v1.1.2).
+It uses [Thream/file-uploads-api](https://github.com/Thream/file-uploads-api) [v1.1.3](https://github.com/Thream/file-uploads-api/releases/tag/v1.1.3).
 
 ## ⚙️ Getting Started
 

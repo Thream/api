@@ -1,5 +1,5 @@
 import { application } from './application.js'
-import { HOST, PORT } from './tools/configurations.js'
+import { HOST, PORT } from '#src/tools/configurations.js'
 
 const address = await application.listen({
   port: PORT,
