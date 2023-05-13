@@ -18,7 +18,7 @@
 
 Thream's Application Programming Interface (API) to stay close with your friends and communities.
 
-It uses [Thream/file-uploads-api](https://github.com/Thream/file-uploads-api) [v1.1.3](https://github.com/Thream/file-uploads-api/releases/tag/v1.1.3).
+It uses [Thream/file-uploads-api](https://github.com/Thream/file-uploads-api) [v1.1.4](https://github.com/Thream/file-uploads-api/releases/tag/v1.1.4).
 
 ## ⚙️ Getting Started
 
@@ -42,6 +42,7 @@ cp .env.example .env
 
 # Install
 npm install
+npm run prisma:generate
 ```
 
 You will need to configure the environment variables by creating an `.env` file at

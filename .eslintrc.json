@@ -4,9 +4,6 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "env": {
-    "node": true
-  },
   "rules": {
     "prettier/prettier": "error",
     "import/extensions": ["error", "always"],

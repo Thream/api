@@ -12,7 +12,7 @@ services:
       - 'host.docker.internal:host-gateway'
 
   thream-database:
-    image: 'postgres:15.0'
+    image: 'postgres:15.3'
     environment:
       POSTGRES_USER: 'user'
       POSTGRES_PASSWORD: 'password'
@@ -20,11 +20,6 @@ services:
     volumes:
       - 'postgres-data:/var/lib/postgresql/data'
     restart: 'unless-stopped'
-
-  thream-maildev:
-    image: 'maildev/maildev:1.1.0'
-    ports:
-      - '1080:80'
 
 volumes:
   postgres-data:
