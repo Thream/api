@@ -54,8 +54,8 @@ declare module 'fastify' {
 
 export default fastifyPlugin(
   async (fastify) => {
-    await fastify.decorateRequest('user', null)
-    await fastify.addHook('onRequest', async (request) => {
+    fastify.decorateRequest('user', undefined)
+    fastify.addHook('onRequest', async (request) => {
       const { authorization } = request.headers
       const user = await getUserWithBearerToken(authorization)
       request.user = user
