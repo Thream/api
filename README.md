@@ -32,7 +32,7 @@ It uses [Thream/file-uploads-api](https://github.com/Thream/file-uploads-api) [v
 
 ```sh
 # Clone the repository
-git clone https://github.com/Thream/api.git
+git clone git@github.com:Thream/api.git
 
 # Go to the project root
 cd api
