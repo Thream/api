@@ -2,11 +2,11 @@ import type { Static } from '@sinclair/typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import prisma from '../../../../tools/database/prisma.js'
-import { fastifyErrors } from '../../../../models/utils.js'
-import authenticateUser from '../../../../tools/plugins/authenticateUser.js'
-import { channelSchema } from '../../../../models/Channel.js'
-import { guildSchema } from '../../../../models/Guild.js'
+import prisma from '#src/tools/database/prisma.js'
+import { fastifyErrors } from '#src/models/utils.js'
+import authenticateUser from '#src/tools/plugins/authenticateUser.js'
+import { channelSchema } from '#src/models/Channel.js'
+import { guildSchema } from '#src/models/Guild.js'
 
 const bodyPostServiceSchema = Type.Object({
   name: channelSchema.name
@@ -57,9 +57,9 @@ export const postChannelService: FastifyPluginAsync = async (fastify) => {
       if (request.user == null) {
         throw fastify.httpErrors.forbidden()
       }
-      const { user } = request
-      const { guildId } = request.params
-      const { name } = request.body
+      const { user, params, body } = request
+      const { guildId } = params
+      const { name } = body
       const member = await prisma.member.findFirst({
         where: { guildId, userId: user.current.id }
       })

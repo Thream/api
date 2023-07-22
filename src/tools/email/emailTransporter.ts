@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer'
 import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js'
 
 dotenv.config()
-const EMAIL_PORT = parseInt(process.env['EMAIL_PORT'] ?? '465', 10)
+const EMAIL_PORT = Number.parseInt(process.env['EMAIL_PORT'] ?? '465', 10)
 
 export const EMAIL_INFO: SMTPTransport.Options = {
   host: process.env['EMAIL_HOST'],

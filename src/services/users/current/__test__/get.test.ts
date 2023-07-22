@@ -1,15 +1,17 @@
-import tap from 'tap'
+import test from 'node:test'
+import assert from 'node:assert/strict'
+
 import sinon from 'sinon'
 
-import { application } from '../../../../application.js'
-import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
+import { application } from '#src/application.js'
+import { authenticateUserTest } from '#src/__test__/utils/authenticateUserTest.js'
 
-await tap.test('GET /users/current', async (t) => {
+await test('GET /users/current', async (t) => {
   t.afterEach(() => {
     sinon.restore()
   })
 
-  await t.test('succeeds', async (t) => {
+  await t.test('succeeds', async () => {
     const { accessToken, user } = await authenticateUserTest()
     const response = await application.inject({
       method: 'GET',
@@ -19,16 +21,16 @@ await tap.test('GET /users/current', async (t) => {
       }
     })
     const responseJson = response.json()
-    t.equal(response.statusCode, 200)
-    t.equal(responseJson.user.name, user.name)
-    t.strictSame(responseJson.user.strategies, ['Local'])
+    assert.strictEqual(response.statusCode, 200)
+    assert.strictEqual(responseJson.user.name, user.name)
+    assert.deepStrictEqual(responseJson.user.strategies, ['Local'])
   })
 
-  await t.test('fails with unauthenticated user', async (t) => {
+  await t.test('fails with unauthenticated user', async () => {
     const response = await application.inject({
       method: 'GET',
       url: '/users/current'
     })
-    t.equal(response.statusCode, 401)
+    assert.strictEqual(response.statusCode, 401)
   })
 })

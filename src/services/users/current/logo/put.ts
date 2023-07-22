@@ -2,10 +2,10 @@ import { Type } from '@sinclair/typebox'
 import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 import fastifyMultipart from '@fastify/multipart'
 
-import authenticateUser from '../../../../tools/plugins/authenticateUser.js'
-import { fastifyErrors } from '../../../../models/utils.js'
-import prisma from '../../../../tools/database/prisma.js'
-import { uploadFile } from '../../../../tools/utils/uploadFile.js'
+import authenticateUser from '#src/tools/plugins/authenticateUser.js'
+import { fastifyErrors } from '#src/models/utils.js'
+import prisma from '#src/tools/database/prisma.js'
+import { uploadFile } from '#src/tools/utils/uploadFile.js'
 
 const putServiceSchema: FastifySchema = {
   description: 'Edit the current connected user logo',

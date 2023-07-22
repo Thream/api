@@ -1,9 +1,9 @@
 import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import prisma from '../../../tools/database/prisma.js'
-import { fastifyErrors } from '../../../models/utils.js'
-import authenticateUser from '../../../tools/plugins/authenticateUser.js'
-import { userCurrentSchema } from '../../../models/User.js'
+import prisma from '#src/tools/database/prisma.js'
+import { fastifyErrors } from '#src/models/utils.js'
+import authenticateUser from '#src/tools/plugins/authenticateUser.js'
+import { userCurrentSchema } from '#src/models/User.js'
 
 const getCurrentUserSchema: FastifySchema = {
   description: 'GET the current connected user',

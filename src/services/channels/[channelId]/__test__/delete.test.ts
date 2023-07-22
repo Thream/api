@@ -1,18 +1,20 @@
-import tap from 'tap'
+import test from 'node:test'
+import assert from 'node:assert/strict'
+
 import sinon from 'sinon'
 
-import { application } from '../../../../application.js'
-import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
-import prisma from '../../../../tools/database/prisma.js'
-import { channelExample } from '../../../../models/Channel.js'
-import { memberExample } from '../../../../models/Member.js'
+import { application } from '#src/application.js'
+import { authenticateUserTest } from '#src/__test__/utils/authenticateUserTest.js'
+import prisma from '#src/tools/database/prisma.js'
+import { channelExample } from '#src/models/Channel.js'
+import { memberExample } from '#src/models/Member.js'
 
-await tap.test('DELETE /channels/[channelId]', async (t) => {
+await test('DELETE /channels/[channelId]', async (t) => {
   t.afterEach(() => {
     sinon.restore()
   })
 
-  await t.test('succeeds', async (t) => {
+  await t.test('succeeds', async () => {
     const defaultChannelId = 5
     const { accessToken } = await authenticateUserTest()
     sinon.stub(prisma, 'channel').value({
@@ -45,14 +47,14 @@ await tap.test('DELETE /channels/[channelId]', async (t) => {
       }
     })
     const responseJson = response.json()
-    t.equal(response.statusCode, 200)
-    t.equal(responseJson.id, channelExample.id)
-    t.equal(responseJson.name, channelExample.name)
-    t.equal(responseJson.guildId, channelExample.guildId)
-    t.equal(responseJson.defaultChannelId, defaultChannelId)
+    assert.strictEqual(response.statusCode, 200)
+    assert.strictEqual(responseJson.id, channelExample.id)
+    assert.strictEqual(responseJson.name, channelExample.name)
+    assert.strictEqual(responseJson.guildId, channelExample.guildId)
+    assert.strictEqual(responseJson.defaultChannelId, defaultChannelId)
   })
 
-  await t.test('fails if there is only one channel', async (t) => {
+  await t.test('fails if there is only one channel', async () => {
     const { accessToken } = await authenticateUserTest()
     sinon.stub(prisma, 'channel').value({
       findUnique: async () => {
@@ -74,10 +76,10 @@ await tap.test('DELETE /channels/[channelId]', async (t) => {
         authorization: `Bearer ${accessToken}`
       }
     })
-    t.equal(response.statusCode, 400)
+    assert.strictEqual(response.statusCode, 400)
   })
 
-  await t.test('fails if the channel is not found', async (t) => {
+  await t.test('fails if the channel is not found', async () => {
     const { accessToken } = await authenticateUserTest()
     sinon.stub(prisma, 'channel').value({
       findUnique: async () => {
@@ -91,10 +93,10 @@ await tap.test('DELETE /channels/[channelId]', async (t) => {
         authorization: `Bearer ${accessToken}`
       }
     })
-    t.equal(response.statusCode, 404)
+    assert.strictEqual(response.statusCode, 404)
   })
 
-  await t.test('fails if the member is not found', async (t) => {
+  await t.test('fails if the member is not found', async () => {
     const { accessToken } = await authenticateUserTest()
     sinon.stub(prisma, 'channel').value({
       findUnique: async () => {
@@ -113,10 +115,10 @@ await tap.test('DELETE /channels/[channelId]', async (t) => {
         authorization: `Bearer ${accessToken}`
       }
     })
-    t.equal(response.statusCode, 404)
+    assert.strictEqual(response.statusCode, 404)
   })
 
-  await t.test('fails if the member is not owner', async (t) => {
+  await t.test('fails if the member is not owner', async () => {
     const { accessToken } = await authenticateUserTest()
     sinon.stub(prisma, 'channel').value({
       findUnique: async () => {
@@ -138,6 +140,6 @@ await tap.test('DELETE /channels/[channelId]', async (t) => {
         authorization: `Bearer ${accessToken}`
       }
     })
-    t.equal(response.statusCode, 400)
+    assert.strictEqual(response.statusCode, 400)
   })
 })

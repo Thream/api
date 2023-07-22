@@ -1,9 +1,9 @@
 import { Type } from '@sinclair/typebox'
 import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import prisma from '../../../tools/database/prisma.js'
-import { fastifyErrors } from '../../../models/utils.js'
-import authenticateUser from '../../../tools/plugins/authenticateUser.js'
+import prisma from '#src/tools/database/prisma.js'
+import { fastifyErrors } from '#src/models/utils.js'
+import authenticateUser from '#src/tools/plugins/authenticateUser.js'
 
 const deleteSignoutSchema: FastifySchema = {
   description: 'Signout the user to every connected devices',

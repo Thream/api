@@ -4,14 +4,14 @@ import type { Static } from '@sinclair/typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import prisma from '../../../tools/database/prisma.js'
-import { fastifyErrors } from '../../../models/utils.js'
-import authenticateUser from '../../../tools/plugins/authenticateUser.js'
-import { userCurrentSchema, userSchema } from '../../../models/User.js'
-import { sendEmail } from '../../../tools/email/sendEmail.js'
-import { API_URL } from '../../../tools/configurations.js'
-import type { Language, Theme } from '../../../models/UserSettings.js'
-import { parseStringNullish } from '../../../tools/utils/parseStringNullish.js'
+import prisma from '#src/tools/database/prisma.js'
+import { fastifyErrors } from '#src/models/utils.js'
+import authenticateUser from '#src/tools/plugins/authenticateUser.js'
+import { userCurrentSchema, userSchema } from '#src/models/User.js'
+import { sendEmail } from '#src/tools/email/sendEmail.js'
+import { API_URL } from '#src/tools/configurations.js'
+import type { Language, Theme } from '#src/models/UserSettings.js'
+import { parseStringNullish } from '#src/tools/utils/parseStringNullish.js'
 
 const bodyPutServiceSchema = Type.Object({
   name: Type.Optional(userSchema.name),

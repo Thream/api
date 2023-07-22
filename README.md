@@ -1,4 +1,4 @@
-<h1 align="center"><a href="https://api.thream.divlo.fr/documentation">Thream/api</a></h1>
+<h1 align="center"><a href="https://api.thream.theoludwig.fr/documentation">Thream/api</a></h1>
 
 <p align="center">
   <a href="./CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat" /></a>
@@ -18,7 +18,7 @@
 
 Thream's Application Programming Interface (API) to stay close with your friends and communities.
 
-It uses [Thream/file-uploads-api](https://github.com/Thream/file-uploads-api) [v1.1.5](https://github.com/Thream/file-uploads-api/releases/tag/v1.1.5).
+It uses [Thream/file-uploads-api](https://github.com/Thream/file-uploads-api) [v1.1.6](https://github.com/Thream/file-uploads-api/releases/tag/v1.1.6).
 
 ## ⚙️ Getting Started
 
@@ -37,46 +37,75 @@ git clone git@github.com:Thream/api.git
 # Go to the project root
 cd api
 
+# Install dependencies
+npm clean-install
+
 # Configure environment variables
 cp .env.example .env
 
-# Install
-npm install
+# Generate Prisma client types
 npm run prisma:generate
 ```
 
-You will need to configure the environment variables by creating an `.env` file at
-the root of the project (see `.env.example`).
+### Database Setup
+
+```sh
+# Create a new user and database
+psql
+CREATE DATABASE thream;
+CREATE USER thream_user with encrypted password 'password';
+ALTER USER thream_user WITH SUPERUSER;
+```
+
+### Database Production migration
+
+```sh
+npm run prisma:migrate:deploy
+```
 
 ### Local Development environment
 
 Recommended to use [VSCode: Remote development in Containers](https://code.visualstudio.com/docs/remote/containers-tutorial).
 
-#### Setup the database
-
-```sh
-# Create a new user and database
-psql
-create database thream_database;
-create user thream_user with encrypted password 'password';
-ALTER USER thream_user WITH SUPERUSER;
-```
-
-Replace `DATABASE_URL` inside `.env` with `postgresql://thream_user:password@localhost:5432/thream_database`
+#### Database Development migration
 
 ```sh
 # Run Prisma migrations
 npm run prisma:migrate:dev
+
+# Reset the database (WARNING: This will delete all data)
+npm run prisma:migrate:reset
 ```
 
 #### Usage
 
 ```sh
-# Run API
 npm run dev
+```
 
-# Run Prisma Studio
-npm run prisma:studio
+##### Services started
+
+- `api`: <http://127.0.0.1:8080>
+- [Maildev](https://maildev.github.io/maildev/): <http://127.0.0.1:1080>
+- [Prisma Studio](https://www.prisma.io/studio): <http://127.0.0.1:5555>
+
+##### Commands
+
+```sh
+# Build, Lint and Test
+npm run build
+npm run build:typescript
+npm run lint:editorconfig
+npm run lint:markdown
+npm run lint:eslint
+npm run lint:prettier
+npm run test
+```
+
+### Production environment (with [Docker](https://www.docker.com/))
+
+```sh
+docker compose up --build
 ```
 
 ## 💡 Contributing

@@ -1,18 +1,20 @@
-import tap from 'tap'
+import test from 'node:test'
+import assert from 'node:assert/strict'
+
 import sinon from 'sinon'
 
-import { application } from '../../../../application.js'
-import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
-import prisma from '../../../../tools/database/prisma.js'
-import { memberExample } from '../../../../models/Member.js'
-import { guildExample } from '../../../../models/Guild.js'
+import { application } from '#src/application.js'
+import { authenticateUserTest } from '#src/__test__/utils/authenticateUserTest.js'
+import prisma from '#src/tools/database/prisma.js'
+import { memberExample } from '#src/models/Member.js'
+import { guildExample } from '#src/models/Guild.js'
 
-await tap.test('DELETE /guilds/[guildId]', async (t) => {
+await test('DELETE /guilds/[guildId]', async (t) => {
   t.afterEach(() => {
     sinon.restore()
   })
 
-  await t.test('succeeds and delete the guild', async (t) => {
+  await t.test('succeeds and delete the guild', async () => {
     const { accessToken } = await authenticateUserTest()
     sinon.stub(prisma, 'member').value({
       findFirst: async () => {
@@ -36,13 +38,13 @@ await tap.test('DELETE /guilds/[guildId]', async (t) => {
       }
     })
     const responseJson = response.json()
-    t.equal(response.statusCode, 200)
-    t.equal(responseJson.id, guildExample.id)
-    t.equal(responseJson.name, guildExample.name)
-    t.equal(responseJson.description, guildExample.description)
+    assert.strictEqual(response.statusCode, 200)
+    assert.strictEqual(responseJson.id, guildExample.id)
+    assert.strictEqual(responseJson.name, guildExample.name)
+    assert.strictEqual(responseJson.description, guildExample.description)
   })
 
-  await t.test("fails if the guild doesn't exist", async (t) => {
+  await t.test("fails if the guild doesn't exist", async () => {
     const { accessToken } = await authenticateUserTest()
     sinon.stub(prisma, 'member').value({
       findFirst: async () => {
@@ -56,10 +58,10 @@ await tap.test('DELETE /guilds/[guildId]', async (t) => {
         authorization: `Bearer ${accessToken}`
       }
     })
-    t.equal(response.statusCode, 404)
+    assert.strictEqual(response.statusCode, 404)
   })
 
-  await t.test('fails if the user is not the owner', async (t) => {
+  await t.test('fails if the user is not the owner', async () => {
     const { accessToken } = await authenticateUserTest()
     sinon.stub(prisma, 'member').value({
       findFirst: async () => {
@@ -78,7 +80,10 @@ await tap.test('DELETE /guilds/[guildId]', async (t) => {
       }
     })
     const responseJson = response.json()
-    t.equal(response.statusCode, 400)
-    t.equal(responseJson.message, 'You should be an owner of the guild')
+    assert.strictEqual(response.statusCode, 400)
+    assert.strictEqual(
+      responseJson.message,
+      'You should be an owner of the guild'
+    )
   })
 })

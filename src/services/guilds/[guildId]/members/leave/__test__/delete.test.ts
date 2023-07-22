@@ -1,18 +1,20 @@
-import tap from 'tap'
+import test from 'node:test'
+import assert from 'node:assert/strict'
+
 import sinon from 'sinon'
 
-import { application } from '../../../../../../application.js'
-import { authenticateUserTest } from '../../../../../../__test__/utils/authenticateUserTest.js'
-import prisma from '../../../../../../tools/database/prisma.js'
-import { memberExample } from '../../../../../../models/Member.js'
-import { guildExample } from '../../../../../../models/Guild.js'
+import { application } from '#src/application.js'
+import { authenticateUserTest } from '#src/__test__/utils/authenticateUserTest.js'
+import prisma from '#src/tools/database/prisma.js'
+import { memberExample } from '#src/models/Member.js'
+import { guildExample } from '#src/models/Guild.js'
 
-await tap.test('DELETE /guilds/[guildId]/members/leave', async (t) => {
+await test('DELETE /guilds/[guildId]/members/leave', async (t) => {
   t.afterEach(() => {
     sinon.restore()
   })
 
-  await t.test('succeeds', async (t) => {
+  await t.test('succeeds', async () => {
     const { accessToken } = await authenticateUserTest()
     const member = {
       ...memberExample,
@@ -34,13 +36,13 @@ await tap.test('DELETE /guilds/[guildId]/members/leave', async (t) => {
       }
     })
     const responseJson = response.json()
-    t.equal(response.statusCode, 200)
-    t.equal(responseJson.id, member.id)
-    t.equal(responseJson.isOwner, member.isOwner)
-    t.equal(responseJson.userId, member.userId)
+    assert.strictEqual(response.statusCode, 200)
+    assert.strictEqual(responseJson.id, member.id)
+    assert.strictEqual(responseJson.isOwner, member.isOwner)
+    assert.strictEqual(responseJson.userId, member.userId)
   })
 
-  await t.test('fails if the member is not found', async (t) => {
+  await t.test('fails if the member is not found', async () => {
     const { accessToken } = await authenticateUserTest()
     sinon.stub(prisma, 'member').value({
       findFirst: async () => {
@@ -54,10 +56,10 @@ await tap.test('DELETE /guilds/[guildId]/members/leave', async (t) => {
         authorization: `Bearer ${accessToken}`
       }
     })
-    t.equal(response.statusCode, 404)
+    assert.strictEqual(response.statusCode, 404)
   })
 
-  await t.test('fails if the member is owner', async (t) => {
+  await t.test('fails if the member is owner', async () => {
     const { accessToken } = await authenticateUserTest()
     const member = {
       ...memberExample,
@@ -75,6 +77,6 @@ await tap.test('DELETE /guilds/[guildId]/members/leave', async (t) => {
         authorization: `Bearer ${accessToken}`
       }
     })
-    t.equal(response.statusCode, 400)
+    assert.strictEqual(response.statusCode, 400)
   })
 })

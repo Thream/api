@@ -1,6 +1,6 @@
 import { Type } from '@sinclair/typebox'
 
-import { date, id } from './utils.js'
+import { date, id } from '#src/models/utils.js'
 
 export const providers = ['Google', 'GitHub', 'Discord'] as const
 export const strategies = [...providers, 'Local'] as const

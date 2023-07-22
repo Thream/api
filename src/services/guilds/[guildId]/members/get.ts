@@ -2,16 +2,16 @@ import type { Static } from '@sinclair/typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import prisma from '../../../../tools/database/prisma.js'
-import { fastifyErrors } from '../../../../models/utils.js'
-import authenticateUser from '../../../../tools/plugins/authenticateUser.js'
-import { guildSchema } from '../../../../models/Guild.js'
+import prisma from '#src/tools/database/prisma.js'
+import { fastifyErrors } from '#src/models/utils.js'
+import authenticateUser from '#src/tools/plugins/authenticateUser.js'
+import { guildSchema } from '#src/models/Guild.js'
 import {
   getPaginationOptions,
   queryPaginationObjectSchema
-} from '../../../../tools/database/pagination.js'
-import { memberSchema } from '../../../../models/Member.js'
-import { userPublicWithoutSettingsSchema } from '../../../../models/User.js'
+} from '#src/tools/database/pagination.js'
+import { memberSchema } from '#src/models/Member.js'
+import { userPublicWithoutSettingsSchema } from '#src/models/User.js'
 
 type QuerySchemaType = Static<typeof queryPaginationObjectSchema>
 

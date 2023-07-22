@@ -2,9 +2,9 @@ import type { Static } from '@sinclair/typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import prisma from '../../../tools/database/prisma.js'
-import { fastifyErrors } from '../../../models/utils.js'
-import { userSchema } from '../../../models/User.js'
+import prisma from '#src/tools/database/prisma.js'
+import { fastifyErrors } from '#src/models/utils.js'
+import { userSchema } from '#src/models/User.js'
 
 const queryGetConfirmEmailSchema = Type.Object({
   redirectURI: Type.Optional(Type.String({ format: 'uri-reference' })),

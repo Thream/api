@@ -1,9 +1,9 @@
 import { Type } from '@sinclair/typebox'
 import type { Member } from '@prisma/client'
 
-import { date, id } from './utils.js'
-import { guildExample } from './Guild.js'
-import { userExample } from './User.js'
+import { date, id } from '#src/models/utils.js'
+import { guildExample } from '#src/models/Guild.js'
+import { userExample } from '#src/models/User.js'
 
 export const memberSchema = {
   id,

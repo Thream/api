@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-export const PORT = parseInt(process.env['PORT'] ?? '8080', 10)
+export const PORT = Number.parseInt(process.env['PORT'] ?? '8080', 10)
 export const HOST = process.env['HOST'] ?? '0.0.0.0'
 export const API_URL = process.env['API_URL'] ?? `http://${HOST}:${PORT}`
 export const FILE_UPLOADS_API_URL =

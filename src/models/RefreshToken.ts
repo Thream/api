@@ -1,8 +1,8 @@
 import type { RefreshToken } from '@prisma/client'
 import { Type } from '@sinclair/typebox'
 
-import { userExample } from './User.js'
-import { date, id } from './utils.js'
+import { userExample } from '#src/models/User.js'
+import { date, id } from '#src/models/utils.js'
 
 export const refreshTokensSchema = {
   id,

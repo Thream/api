@@ -1,18 +1,20 @@
-import tap from 'tap'
+import test from 'node:test'
+import assert from 'node:assert/strict'
+
 import sinon from 'sinon'
 
-import { application } from 'application.js'
+import { application } from '#src/application.js'
 {{#if shouldBeAuthenticated}}
-import { authenticateUserTest } from '__test__/utils/authenticateUserTest.js'
+import { authenticateUserTest } from '#src/__test__/utils/authenticateUserTest.js'
 {{/if}}
-import prisma from 'tools/database/prisma.js'
+import prisma from '#src/tools/database/prisma.js'
 
-await tap.test('{{httpMethod}} {{url}}', async (t) => {
+await test('{{httpMethod}} {{url}}', async (t) => {
   t.afterEach(() => {
     sinon.restore()
   })
 
-  await t.test('succeeds', async (t) => {
+  await t.test('succeeds', async () => {
     {{#if shouldBeAuthenticated}}
     const { accessToken } = await authenticateUserTest()
     {{/if}}
@@ -32,6 +34,6 @@ await tap.test('{{httpMethod}} {{url}}', async (t) => {
       payload: {}
     })
     // const responseJson = response.json()
-    t.equal(response.statusCode, 200)
+    assert.strictEqual(response.statusCode, 200)
   })
 })

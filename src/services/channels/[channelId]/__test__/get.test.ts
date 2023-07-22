@@ -1,18 +1,20 @@
-import tap from 'tap'
+import test from 'node:test'
+import assert from 'node:assert/strict'
+
 import sinon from 'sinon'
 
-import { application } from '../../../../application.js'
-import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
-import prisma from '../../../../tools/database/prisma.js'
-import { channelExample } from '../../../../models/Channel.js'
-import { memberExample } from '../../../../models/Member.js'
+import { application } from '#src/application.js'
+import { authenticateUserTest } from '#src/__test__/utils/authenticateUserTest.js'
+import prisma from '#src/tools/database/prisma.js'
+import { channelExample } from '#src/models/Channel.js'
+import { memberExample } from '#src/models/Member.js'
 
-await tap.test('GET /channels/[channelId]', async (t) => {
+await test('GET /channels/[channelId]', async (t) => {
   t.afterEach(() => {
     sinon.restore()
   })
 
-  await t.test('succeeds', async (t) => {
+  await t.test('succeeds', async () => {
     const { accessToken } = await authenticateUserTest()
     sinon.stub(prisma, 'channel').value({
       findUnique: async () => {
@@ -32,13 +34,13 @@ await tap.test('GET /channels/[channelId]', async (t) => {
       }
     })
     const responseJson = response.json()
-    t.equal(response.statusCode, 200)
-    t.equal(responseJson.channel.id, channelExample.id)
-    t.equal(responseJson.channel.name, channelExample.name)
-    t.equal(responseJson.channel.guildId, channelExample.guildId)
+    assert.strictEqual(response.statusCode, 200)
+    assert.strictEqual(responseJson.channel.id, channelExample.id)
+    assert.strictEqual(responseJson.channel.name, channelExample.name)
+    assert.strictEqual(responseJson.channel.guildId, channelExample.guildId)
   })
 
-  await t.test('fails with not found member', async (t) => {
+  await t.test('fails with not found member', async () => {
     const { accessToken } = await authenticateUserTest()
     sinon.stub(prisma, 'channel').value({
       findUnique: async () => {
@@ -58,11 +60,11 @@ await tap.test('GET /channels/[channelId]', async (t) => {
       }
     })
     const responseJson = response.json()
-    t.equal(response.statusCode, 404)
-    t.equal(responseJson.message, 'Channel not found')
+    assert.strictEqual(response.statusCode, 404)
+    assert.strictEqual(responseJson.message, 'Channel not found')
   })
 
-  await t.test('fails with not found channel', async (t) => {
+  await t.test('fails with not found channel', async () => {
     const { accessToken } = await authenticateUserTest()
     sinon.stub(prisma, 'channel').value({
       findUnique: async () => {
@@ -82,15 +84,15 @@ await tap.test('GET /channels/[channelId]', async (t) => {
       }
     })
     const responseJson = response.json()
-    t.equal(response.statusCode, 404)
-    t.equal(responseJson.message, 'Channel not found')
+    assert.strictEqual(response.statusCode, 404)
+    assert.strictEqual(responseJson.message, 'Channel not found')
   })
 
-  await t.test('fails with unauthenticated user', async (t) => {
+  await t.test('fails with unauthenticated user', async () => {
     const response = await application.inject({
       method: 'GET',
       url: '/channels/1'
     })
-    t.equal(response.statusCode, 401)
+    assert.strictEqual(response.statusCode, 401)
   })
 })

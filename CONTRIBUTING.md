@@ -67,7 +67,7 @@ git commit -m "fix: should emit events to connected users"
 
 We have API REST services for the `channels`.
 
-Here is what potentially look like a folder structure for this service :
+Here is what potentially look like a folder structure for this service:
 
 ```text
 └── src
@@ -86,7 +86,7 @@ Here is what potentially look like a folder structure for this service :
             └── index.ts
 ```
 
-This folder structure will map to these REST API routes :
+This folder structure will map to these REST API routes:
 
 - GET `/channels`
 - DELETE `/channels/:channelId`

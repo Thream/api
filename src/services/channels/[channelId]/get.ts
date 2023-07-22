@@ -2,10 +2,10 @@ import type { Static } from '@sinclair/typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import prisma from '../../../tools/database/prisma.js'
-import { fastifyErrors } from '../../../models/utils.js'
-import authenticateUser from '../../../tools/plugins/authenticateUser.js'
-import { channelSchema } from '../../../models/Channel.js'
+import prisma from '#src/tools/database/prisma.js'
+import { fastifyErrors } from '#src/models/utils.js'
+import authenticateUser from '#src/tools/plugins/authenticateUser.js'
+import { channelSchema } from '#src/models/Channel.js'
 
 const parametersSchema = Type.Object({
   channelId: channelSchema.id

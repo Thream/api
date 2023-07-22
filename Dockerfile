@@ -1,21 +1,22 @@
-FROM node:18.16.1 AS dependencies
+FROM node:20.5.0 AS dependencies
 WORKDIR /usr/src/app
 COPY ./package*.json ./
-RUN npm install
+RUN npm clean-install
 
-FROM node:18.16.1 AS builder
+FROM node:20.5.0 AS builder
 WORKDIR /usr/src/app
 COPY --from=dependencies /usr/src/app/node_modules ./node_modules
 COPY ./ ./
 RUN npm run prisma:generate && npm run build
 
-FROM node:18.16.1 AS runner
+FROM node:20.5.0 AS runner
 WORKDIR /usr/src/app
 ENV NODE_ENV=production
+ENV NODE_OPTIONS=--enable-source-maps
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/package.json ./package.json
 COPY --from=builder /usr/src/app/email ./email
 COPY --from=builder /usr/src/app/build ./build
 COPY --from=builder /usr/src/app/prisma ./prisma
 USER node
-CMD ["node", "build/index.js"]
+CMD npm run prisma:migrate:deploy && node build/index.js

@@ -1,8 +1,8 @@
-import { application } from './application.js'
+import { application } from '#src/application.js'
 import { HOST, PORT } from '#src/tools/configurations.js'
 
 const address = await application.listen({
   port: PORT,
   host: HOST
 })
-console.log('\u001B[36m%s\u001B[0m', `🚀  Server listening at ${address}`)
+console.log(`Server listening at ${address}`)

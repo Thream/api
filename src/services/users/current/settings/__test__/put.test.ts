@@ -1,19 +1,21 @@
-import tap from 'tap'
+import test from 'node:test'
+import assert from 'node:assert/strict'
+
 import sinon from 'sinon'
 
-import { application } from '../../../../../application.js'
-import { authenticateUserTest } from '../../../../../__test__/utils/authenticateUserTest.js'
-import prisma from '../../../../../tools/database/prisma.js'
-import { userSettingsExample } from '../../../../../models/UserSettings.js'
+import { application } from '#src/application.js'
+import { authenticateUserTest } from '#src/__test__/utils/authenticateUserTest.js'
+import prisma from '#src/tools/database/prisma.js'
+import { userSettingsExample } from '#src/models/UserSettings.js'
 
-await tap.test('PUT /users/current/settings', async (t) => {
+await test('PUT /users/current/settings', async (t) => {
   t.afterEach(() => {
     sinon.restore()
   })
 
   await t.test(
     'succeeds and edit the theme, language, isPublicEmail and isPublicGuilds',
-    async (t) => {
+    async () => {
       const newSettings = {
         theme: 'light',
         language: 'fr',
@@ -42,15 +44,21 @@ await tap.test('PUT /users/current/settings', async (t) => {
         payload: newSettings
       })
       const responseJson = response.json()
-      t.equal(response.statusCode, 200)
-      t.equal(responseJson.settings.theme, newSettings.theme)
-      t.equal(responseJson.settings.language, newSettings.language)
-      t.equal(responseJson.settings.isPublicEmail, newSettings.isPublicEmail)
-      t.equal(responseJson.settings.isPublicGuilds, newSettings.isPublicGuilds)
+      assert.strictEqual(response.statusCode, 200)
+      assert.strictEqual(responseJson.settings.theme, newSettings.theme)
+      assert.strictEqual(responseJson.settings.language, newSettings.language)
+      assert.strictEqual(
+        responseJson.settings.isPublicEmail,
+        newSettings.isPublicEmail
+      )
+      assert.strictEqual(
+        responseJson.settings.isPublicGuilds,
+        newSettings.isPublicGuilds
+      )
     }
   )
 
-  await t.test('fails with invalid language', async (t) => {
+  await t.test('fails with invalid language', async () => {
     const newSettings = {
       language: 'somerandomlanguage'
     }
@@ -75,6 +83,6 @@ await tap.test('PUT /users/current/settings', async (t) => {
       },
       payload: newSettings
     })
-    t.equal(response.statusCode, 400)
+    assert.strictEqual(response.statusCode, 400)
   })
 })

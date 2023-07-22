@@ -2,7 +2,7 @@ import querystring from 'node:querystring'
 
 import axios from 'axios'
 
-import { OAuthStrategy } from '../../../../../tools/utils/OAuthStrategy.js'
+import { OAuthStrategy } from '#src/tools/utils/OAuthStrategy.js'
 
 export const GOOGLE_PROVIDER = 'Google'
 export const GOOGLE_BASE_URL = 'https://accounts.google.com/o/oauth2/v2/auth'

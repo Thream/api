@@ -3,15 +3,15 @@ import { Type } from '@sinclair/typebox'
 import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 import bcrypt from 'bcryptjs'
 
-import prisma from '../../../tools/database/prisma.js'
-import { fastifyErrors } from '../../../models/utils.js'
-import { userSchema } from '../../../models/User.js'
+import prisma from '#src/tools/database/prisma.js'
+import { fastifyErrors } from '#src/models/utils.js'
+import { userSchema } from '#src/models/User.js'
 import {
   generateAccessToken,
   generateRefreshToken,
   jwtSchema,
   expiresIn
-} from '../../../tools/utils/jwtToken.js'
+} from '#src/tools/utils/jwtToken.js'
 
 const bodyPostSigninSchema = Type.Object({
   email: userSchema.email,

@@ -2,7 +2,7 @@ import querystring from 'node:querystring'
 
 import axios from 'axios'
 
-import { OAuthStrategy } from '../../../../../tools/utils/OAuthStrategy.js'
+import { OAuthStrategy } from '#src/tools/utils/OAuthStrategy.js'
 
 export const DISCORD_PROVIDER = 'Discord'
 export const DISCORD_BASE_URL = 'https://discord.com/api/v10'

@@ -2,17 +2,13 @@ import type { Static } from '@sinclair/typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import prisma from '../../../../../tools/database/prisma.js'
-import {
-  fastifyErrors,
-  fastifyErrorsSchema,
-  id
-} from '../../../../../models/utils.js'
-import authenticateUser from '../../../../../tools/plugins/authenticateUser.js'
-import { guildSchema } from '../../../../../models/Guild.js'
-import { memberSchema } from '../../../../../models/Member.js'
-import { userPublicWithoutSettingsSchema } from '../../../../../models/User.js'
-import { channelSchema } from '../../../../../models/Channel.js'
+import prisma from '#src/tools/database/prisma.js'
+import { fastifyErrors, fastifyErrorsSchema, id } from '#src/models/utils.js'
+import authenticateUser from '#src/tools/plugins/authenticateUser.js'
+import { guildSchema } from '#src/models/Guild.js'
+import { memberSchema } from '#src/models/Member.js'
+import { userPublicWithoutSettingsSchema } from '#src/models/User.js'
+import { channelSchema } from '#src/models/Channel.js'
 
 const parametersSchema = Type.Object({
   guildId: guildSchema.id
@@ -62,8 +58,8 @@ export const postMemberService: FastifyPluginAsync = async (fastify) => {
       if (request.user == null) {
         throw fastify.httpErrors.forbidden()
       }
-      const { user } = request
-      const { guildId } = request.params
+      const { user, params } = request
+      const { guildId } = params
       const guild = await prisma.guild.findUnique({
         where: {
           id: guildId

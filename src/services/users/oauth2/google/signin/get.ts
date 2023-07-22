@@ -2,8 +2,8 @@ import type { Static } from '@sinclair/typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import { API_URL } from '../../../../../tools/configurations.js'
-import { fastifyErrors } from '../../../../../models/utils.js'
+import { API_URL } from '#src/tools/configurations.js'
+import { fastifyErrors } from '#src/models/utils.js'
 import { GOOGLE_BASE_URL, GOOGLE_CLIENT_ID } from '../__utils__/utils.js'
 
 const querySchema = Type.Object({

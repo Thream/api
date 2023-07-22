@@ -1,20 +1,22 @@
-import tap from 'tap'
+import test from 'node:test'
+import assert from 'node:assert/strict'
+
 import sinon from 'sinon'
 
-import { application } from '../../../../application.js'
-import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
-import prisma from '../../../../tools/database/prisma.js'
-import { messageExample } from '../../../../models/Message.js'
-import { memberExample } from '../../../../models/Member.js'
-import { userExample } from '../../../../models/User.js'
-import { channelExample } from '../../../../models/Channel.js'
+import { application } from '#src/application.js'
+import { authenticateUserTest } from '#src/__test__/utils/authenticateUserTest.js'
+import prisma from '#src/tools/database/prisma.js'
+import { messageExample } from '#src/models/Message.js'
+import { memberExample } from '#src/models/Member.js'
+import { userExample } from '#src/models/User.js'
+import { channelExample } from '#src/models/Channel.js'
 
-await tap.test('PUT /messsages/[messageId]', async (t) => {
+await test('PUT /messsages/[messageId]', async (t) => {
   t.afterEach(() => {
     sinon.restore()
   })
 
-  await t.test('succeeds', async (t) => {
+  await t.test('succeeds', async () => {
     const { accessToken } = await authenticateUserTest()
     const newValue = 'some message'
     sinon.stub(prisma, 'message').value({
@@ -48,18 +50,18 @@ await tap.test('PUT /messsages/[messageId]', async (t) => {
       payload: { value: newValue }
     })
     const responseJson = response.json()
-    t.equal(response.statusCode, 200)
-    t.equal(responseJson.id, messageExample.id)
-    t.equal(responseJson.value, newValue)
-    t.equal(responseJson.type, messageExample.type)
-    t.equal(responseJson.mimetype, messageExample.mimetype)
-    t.equal(responseJson.member.id, memberExample.id)
-    t.equal(responseJson.member.isOwner, memberExample.isOwner)
-    t.equal(responseJson.member.user.id, userExample.id)
-    t.equal(responseJson.member.user.name, userExample.name)
+    assert.strictEqual(response.statusCode, 200)
+    assert.strictEqual(responseJson.id, messageExample.id)
+    assert.strictEqual(responseJson.value, newValue)
+    assert.strictEqual(responseJson.type, messageExample.type)
+    assert.strictEqual(responseJson.mimetype, messageExample.mimetype)
+    assert.strictEqual(responseJson.member.id, memberExample.id)
+    assert.strictEqual(responseJson.member.isOwner, memberExample.isOwner)
+    assert.strictEqual(responseJson.member.user.id, userExample.id)
+    assert.strictEqual(responseJson.member.user.name, userExample.name)
   })
 
-  await t.test('fails if the message is not found', async (t) => {
+  await t.test('fails if the message is not found', async () => {
     const { accessToken } = await authenticateUserTest()
     const newValue = 'some message'
     sinon.stub(prisma, 'message').value({
@@ -75,10 +77,10 @@ await tap.test('PUT /messsages/[messageId]', async (t) => {
       },
       payload: { value: newValue }
     })
-    t.equal(response.statusCode, 404)
+    assert.strictEqual(response.statusCode, 404)
   })
 
-  await t.test('fails if the member is not found', async (t) => {
+  await t.test('fails if the member is not found', async () => {
     const { accessToken } = await authenticateUserTest()
     const newValue = 'some message'
     sinon.stub(prisma, 'message').value({
@@ -102,12 +104,12 @@ await tap.test('PUT /messsages/[messageId]', async (t) => {
       },
       payload: { value: newValue }
     })
-    t.equal(response.statusCode, 404)
+    assert.strictEqual(response.statusCode, 404)
   })
 
   await t.test(
     'fails if the member is not the owner of the message',
-    async (t) => {
+    async () => {
       const { accessToken } = await authenticateUserTest()
       const newValue = 'some message'
       const randomUserIdOwnerOfMessage = 14
@@ -135,7 +137,7 @@ await tap.test('PUT /messsages/[messageId]', async (t) => {
         },
         payload: { value: newValue }
       })
-      t.equal(response.statusCode, 400)
+      assert.strictEqual(response.statusCode, 400)
     }
   )
 })

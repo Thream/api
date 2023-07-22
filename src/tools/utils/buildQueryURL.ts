@@ -9,8 +9,8 @@ export const buildQueryURL = (
   queryObject: ObjectAny
 ): string => {
   const url = new URL(baseURL)
-  Object.entries(queryObject).forEach(([query, value]) => {
+  for (const [query, value] of Object.entries(queryObject)) {
     url.searchParams.append(query, value)
-  })
+  }
   return url.href
 }

@@ -1,22 +1,24 @@
-import tap from 'tap'
+import test from 'node:test'
+import assert from 'node:assert/strict'
+
 import sinon from 'sinon'
 
-import { application } from '../../../../../../application.js'
-import { authenticateUserTest } from '../../../../../../__test__/utils/authenticateUserTest.js'
-import prisma from '../../../../../../tools/database/prisma.js'
-import { memberExample } from '../../../../../../models/Member.js'
-import { guildExample } from '../../../../../../models/Guild.js'
-import { userExample } from '../../../../../../models/User.js'
-import { channelExample } from '../../../../../../models/Channel.js'
+import { application } from '#src/application.js'
+import { authenticateUserTest } from '#src/__test__/utils/authenticateUserTest.js'
+import prisma from '#src/tools/database/prisma.js'
+import { memberExample } from '#src/models/Member.js'
+import { guildExample } from '#src/models/Guild.js'
+import { userExample } from '#src/models/User.js'
+import { channelExample } from '#src/models/Channel.js'
 
 const defaultChannelId = 5
 
-await tap.test('POST /guilds/[guildId]/members/join', async (t) => {
+await test('POST /guilds/[guildId]/members/join', async (t) => {
   t.afterEach(() => {
     sinon.restore()
   })
 
-  await t.test('succeeds', async (t) => {
+  await t.test('succeeds', async () => {
     const { accessToken } = await authenticateUserTest()
     sinon.stub(prisma, 'member').value({
       findFirst: async () => {
@@ -44,17 +46,17 @@ await tap.test('POST /guilds/[guildId]/members/join', async (t) => {
       }
     })
     const responseJson = response.json()
-    t.equal(response.statusCode, 201)
-    t.equal(responseJson.id, memberExample.id)
-    t.equal(responseJson.userId, memberExample.userId)
-    t.equal(responseJson.user.name, userExample.name)
-    t.equal(responseJson.user.email, null)
-    t.equal(responseJson.guild.id, guildExample.id)
-    t.equal(responseJson.guild.name, guildExample.name)
-    t.equal(responseJson.guild.defaultChannelId, channelExample.id)
+    assert.strictEqual(response.statusCode, 201)
+    assert.strictEqual(responseJson.id, memberExample.id)
+    assert.strictEqual(responseJson.userId, memberExample.userId)
+    assert.strictEqual(responseJson.user.name, userExample.name)
+    assert.strictEqual(responseJson.user.email, null)
+    assert.strictEqual(responseJson.guild.id, guildExample.id)
+    assert.strictEqual(responseJson.guild.name, guildExample.name)
+    assert.strictEqual(responseJson.guild.defaultChannelId, channelExample.id)
   })
 
-  await t.test('fails if the guild is not found', async (t) => {
+  await t.test('fails if the guild is not found', async () => {
     const { accessToken } = await authenticateUserTest()
     sinon.stub(prisma, 'member').value({
       findFirst: async () => {
@@ -78,10 +80,10 @@ await tap.test('POST /guilds/[guildId]/members/join', async (t) => {
         authorization: `Bearer ${accessToken}`
       }
     })
-    t.equal(response.statusCode, 404)
+    assert.strictEqual(response.statusCode, 404)
   })
 
-  await t.test('fails if the user is already in the guild', async (t) => {
+  await t.test('fails if the user is already in the guild', async () => {
     const { accessToken } = await authenticateUserTest()
     sinon.stub(prisma, 'member').value({
       findFirst: async () => {
@@ -109,7 +111,7 @@ await tap.test('POST /guilds/[guildId]/members/join', async (t) => {
       }
     })
     const responseJson = response.json()
-    t.equal(response.statusCode, 400)
-    t.equal(responseJson.defaultChannelId, defaultChannelId)
+    assert.strictEqual(response.statusCode, 400)
+    assert.strictEqual(responseJson.defaultChannelId, defaultChannelId)
   })
 })

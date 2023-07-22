@@ -2,11 +2,11 @@ import type { Static } from '@sinclair/typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import prisma from '../../../../../tools/database/prisma.js'
-import { fastifyErrors } from '../../../../../models/utils.js'
-import authenticateUser from '../../../../../tools/plugins/authenticateUser.js'
-import { guildSchema } from '../../../../../models/Guild.js'
-import { memberSchema } from '../../../../../models/Member.js'
+import prisma from '#src/tools/database/prisma.js'
+import { fastifyErrors } from '#src/models/utils.js'
+import authenticateUser from '#src/tools/plugins/authenticateUser.js'
+import { guildSchema } from '#src/models/Guild.js'
+import { memberSchema } from '#src/models/Member.js'
 
 const parametersSchema = Type.Object({
   guildId: guildSchema.id
@@ -46,8 +46,8 @@ export const deleteMemberService: FastifyPluginAsync = async (fastify) => {
       if (request.user == null) {
         throw fastify.httpErrors.forbidden()
       }
-      const { user } = request
-      const { guildId } = request.params
+      const { user, params } = request
+      const { guildId } = params
       const member = await prisma.member.findFirst({
         where: { guildId, userId: user.current.id }
       })

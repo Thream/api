@@ -4,13 +4,13 @@ import { Type } from '@sinclair/typebox'
 import jwt from 'jsonwebtoken'
 import ms from 'ms'
 
-import prisma from '../database/prisma.js'
-import type { UserJWT } from '../../models/User.js'
+import prisma from '#src/tools/database/prisma.js'
+import type { UserJWT } from '#src/models/User.js'
 import {
   JWT_ACCESS_EXPIRES_IN,
   JWT_ACCESS_SECRET,
   JWT_REFRESH_SECRET
-} from '../configurations.js'
+} from '#src/tools/configurations.js'
 
 export interface ResponseJWT {
   accessToken: string

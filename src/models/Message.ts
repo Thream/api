@@ -1,7 +1,7 @@
 import type { Message } from '@prisma/client'
 import { Type } from '@sinclair/typebox'
 
-import { date, id } from './utils.js'
+import { date, id } from '#src/models/utils.js'
 
 export const types = [Type.Literal('text'), Type.Literal('file')]
 

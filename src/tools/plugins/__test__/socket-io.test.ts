@@ -1,17 +1,19 @@
-import tap from 'tap'
+import test from 'node:test'
+import assert from 'node:assert/strict'
+
 import fastify from 'fastify'
 
-import fastifySocketIo from '../socket-io.js'
+import fastifySocketIo from '#src/tools/plugins/socket-io.js'
 
-await tap.test('tools/plugins/socket-io', async (t) => {
-  await t.test('should close socket server on fastify close', async (t) => {
+await test('tools/plugins/socket-io', async (t) => {
+  await t.test('should close socket server on fastify close', async () => {
     const PORT = 3030
     const application = fastify()
     await application.register(fastifySocketIo)
     await application.listen({
       port: PORT
     })
-    t.not(application.io, null)
+    assert.notStrictEqual(application.io, null)
     await application.close()
   })
 })

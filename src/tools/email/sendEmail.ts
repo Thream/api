@@ -3,9 +3,15 @@ import { URL, fileURLToPath } from 'node:url'
 
 import ejs from 'ejs'
 
-import type { Language, Theme } from '../../models/UserSettings.js'
-import { EMAIL_LOCALES_URL, EMAIL_TEMPLATE_URL } from '../configurations.js'
-import { emailTransporter, EMAIL_INFO } from './emailTransporter.js'
+import type { Language, Theme } from '#src/models/UserSettings.js'
+import {
+  EMAIL_LOCALES_URL,
+  EMAIL_TEMPLATE_URL
+} from '#src/tools/configurations.js'
+import {
+  emailTransporter,
+  EMAIL_INFO
+} from '#src/tools/email/emailTransporter.js'
 
 interface EmailTranslation {
   subject: string

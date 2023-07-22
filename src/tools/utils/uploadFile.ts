@@ -8,7 +8,7 @@ import type { SavedMultipartFile } from '@fastify/multipart'
 import {
   FILE_UPLOADS_API_KEY,
   FILE_UPLOADS_API_URL
-} from '../configurations.js'
+} from '#src/tools/configurations.js'
 
 export const fileUploadAPI = axios.create({
   baseURL: FILE_UPLOADS_API_URL,
@@ -44,6 +44,7 @@ export const uploadFile = async (
       }
     })
   } catch (error) {
+    console.error(error)
     throw fastify.httpErrors.requestHeaderFieldsTooLarge(
       `File should be less than ${MAXIMUM_FILE_SIZE}mb.`
     )

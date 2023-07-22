@@ -1,20 +1,22 @@
-import tap from 'tap'
+import test from 'node:test'
+import assert from 'node:assert/strict'
+
 import sinon from 'sinon'
 
-import { application } from '../../../application.js'
-import { authenticateUserTest } from '../../../__test__/utils/authenticateUserTest.js'
-import prisma from '../../../tools/database/prisma.js'
-import { memberExample } from '../../../models/Member.js'
-import { guildExample } from '../../../models/Guild.js'
-import { channelExample } from '../../../models/Channel.js'
-import { userExample } from '../../../models/User.js'
+import { application } from '#src/application.js'
+import { authenticateUserTest } from '#src/__test__/utils/authenticateUserTest.js'
+import prisma from '#src/tools/database/prisma.js'
+import { memberExample } from '#src/models/Member.js'
+import { guildExample } from '#src/models/Guild.js'
+import { channelExample } from '#src/models/Channel.js'
+import { userExample } from '#src/models/User.js'
 
-await tap.test('POST /guilds', async (t) => {
+await test('POST /guilds', async (t) => {
   t.afterEach(() => {
     sinon.restore()
   })
 
-  await t.test('succeeds', async (t) => {
+  await t.test('succeeds', async () => {
     const { accessToken, user } = await authenticateUserTest()
     sinon.stub(prisma, 'guild').value({
       create: async () => {
@@ -49,21 +51,24 @@ await tap.test('POST /guilds', async (t) => {
       }
     })
     const responseJson = response.json()
-    t.equal(response.statusCode, 201)
-    t.equal(responseJson.guild.id, guildExample.id)
-    t.equal(responseJson.guild.name, guildExample.name)
-    t.equal(responseJson.guild.description, guildExample.description)
-    t.equal(responseJson.guild.members.length, 1)
-    t.equal(responseJson.guild.members[0].userId, user.id)
-    t.equal(responseJson.guild.members[0].user.name, user.name)
-    t.equal(responseJson.guild.members[0].guildId, guildExample.id)
-    t.equal(responseJson.guild.members[0].isOwner, memberExample.isOwner)
-    t.equal(responseJson.guild.channels.length, 1)
-    t.equal(responseJson.guild.channels[0].id, channelExample.id)
-    t.equal(responseJson.guild.channels[0].guildId, guildExample.id)
+    assert.strictEqual(response.statusCode, 201)
+    assert.strictEqual(responseJson.guild.id, guildExample.id)
+    assert.strictEqual(responseJson.guild.name, guildExample.name)
+    assert.strictEqual(responseJson.guild.description, guildExample.description)
+    assert.strictEqual(responseJson.guild.members.length, 1)
+    assert.strictEqual(responseJson.guild.members[0].userId, user.id)
+    assert.strictEqual(responseJson.guild.members[0].user.name, user.name)
+    assert.strictEqual(responseJson.guild.members[0].guildId, guildExample.id)
+    assert.strictEqual(
+      responseJson.guild.members[0].isOwner,
+      memberExample.isOwner
+    )
+    assert.strictEqual(responseJson.guild.channels.length, 1)
+    assert.strictEqual(responseJson.guild.channels[0].id, channelExample.id)
+    assert.strictEqual(responseJson.guild.channels[0].guildId, guildExample.id)
   })
 
-  await t.test('fails with empty name and description', async (t) => {
+  await t.test('fails with empty name and description', async () => {
     const { accessToken } = await authenticateUserTest()
     const response = await application.inject({
       method: 'POST',
@@ -72,6 +77,6 @@ await tap.test('POST /guilds', async (t) => {
         authorization: `Bearer ${accessToken}`
       }
     })
-    t.equal(response.statusCode, 400)
+    assert.strictEqual(response.statusCode, 400)
   })
 })

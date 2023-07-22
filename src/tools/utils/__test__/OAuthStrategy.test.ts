@@ -1,21 +1,23 @@
-import tap from 'tap'
+import test from 'node:test'
+import assert from 'node:assert/strict'
+
 import sinon from 'sinon'
 
-import { userExample } from '../../../models/User.js'
-import { userSettingsExample } from '../../../models/UserSettings.js'
-import { OAuthStrategy } from '../OAuthStrategy.js'
-import prisma from '../../database/prisma.js'
-import { refreshTokenExample } from '../../../models/RefreshToken.js'
+import { userExample } from '#src/models/User.js'
+import { userSettingsExample } from '#src/models/UserSettings.js'
+import { OAuthStrategy } from '#src/tools/utils/OAuthStrategy.js'
+import prisma from '#src/tools/database/prisma.js'
+import { refreshTokenExample } from '#src/models/RefreshToken.js'
 
 const oauthStrategy = new OAuthStrategy('Discord')
 
-await tap.test('tools/utils/OAuthStrategy', async (t) => {
+await test('tools/utils/OAuthStrategy', async (t) => {
   await t.test('callbackSignin', async (t) => {
     t.afterEach(() => {
       sinon.restore()
     })
 
-    await t.test('should signup the user', async (t) => {
+    await t.test('should signup the user', async () => {
       const name = 'Martin'
       const id = '12345'
       sinon.stub(prisma, 'user').value({
@@ -60,7 +62,7 @@ await tap.test('tools/utils/OAuthStrategy', async (t) => {
       const userCreateSpy = sinon.spy(prisma.user, 'create')
       const userSettingCreateSpy = sinon.spy(prisma.userSetting, 'create')
       await oauthStrategy.callbackSignin({ id, name })
-      t.equal(
+      assert.strictEqual(
         oAuthCreateSpy.calledWith({
           data: {
             userId: userExample.id,
@@ -70,7 +72,7 @@ await tap.test('tools/utils/OAuthStrategy', async (t) => {
         }),
         true
       )
-      t.equal(
+      assert.strictEqual(
         oAuthFindFirstSpy.calledWith({
           where: {
             provider: 'Discord',
@@ -79,9 +81,9 @@ await tap.test('tools/utils/OAuthStrategy', async (t) => {
         }),
         true
       )
-      t.equal(userCountSpy.calledWith({ where: { name } }), true)
-      t.equal(userCreateSpy.calledWith({ data: { name } }), true)
-      t.equal(
+      assert.strictEqual(userCountSpy.calledWith({ where: { name } }), true)
+      assert.strictEqual(userCreateSpy.calledWith({ data: { name } }), true)
+      assert.strictEqual(
         userSettingCreateSpy.calledWith({
           data: {
             userId: userExample.id
@@ -97,7 +99,7 @@ await tap.test('tools/utils/OAuthStrategy', async (t) => {
       sinon.restore()
     })
 
-    await t.test('should add the strategy to the user', async (t) => {
+    await t.test('should add the strategy to the user', async () => {
       const name = userExample.name
       const id = '12345'
       sinon.stub(prisma, 'oAuth').value({
@@ -121,8 +123,8 @@ await tap.test('tools/utils/OAuthStrategy', async (t) => {
         { id, name },
         { accessToken: '123', current: userExample, currentStrategy: 'Local' }
       )
-      t.equal(result, 'success')
-      t.equal(
+      assert.strictEqual(result, 'success')
+      assert.strictEqual(
         oAuthCreateSpy.calledWith({
           data: {
             userId: userExample.id,
@@ -132,7 +134,7 @@ await tap.test('tools/utils/OAuthStrategy', async (t) => {
         }),
         true
       )
-      t.equal(
+      assert.strictEqual(
         oAuthFindFirstSpy.calledWith({
           where: {
             provider: 'Discord',
@@ -145,7 +147,7 @@ await tap.test('tools/utils/OAuthStrategy', async (t) => {
 
     await t.test(
       'should not add the strategy if the account of the provider is already used',
-      async (t) => {
+      async () => {
         const name = userExample.name
         const id = '12345'
         sinon.stub(prisma, 'oAuth').value({
@@ -165,8 +167,11 @@ await tap.test('tools/utils/OAuthStrategy', async (t) => {
           { id, name },
           { accessToken: '123', current: userExample, currentStrategy: 'Local' }
         )
-        t.equal(result, 'This account is already used by someone else')
-        t.equal(
+        assert.strictEqual(
+          result,
+          'This account is already used by someone else'
+        )
+        assert.strictEqual(
           oAuthFindFirstSpy.calledWith({
             where: {
               provider: 'Discord',
@@ -180,7 +185,7 @@ await tap.test('tools/utils/OAuthStrategy', async (t) => {
 
     await t.test(
       'should not add the strategy if the user is already connected with it',
-      async (t) => {
+      async () => {
         const name = userExample.name
         const id = '12345'
         sinon.stub(prisma, 'oAuth').value({
@@ -200,8 +205,8 @@ await tap.test('tools/utils/OAuthStrategy', async (t) => {
           { id, name },
           { accessToken: '123', current: userExample, currentStrategy: 'Local' }
         )
-        t.equal(result, 'You are already using this account')
-        t.equal(
+        assert.strictEqual(result, 'You are already using this account')
+        assert.strictEqual(
           oAuthFindFirstSpy.calledWith({
             where: {
               provider: 'Discord',

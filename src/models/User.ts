@@ -2,10 +2,10 @@ import type { User } from '@prisma/client'
 import type { Static } from '@sinclair/typebox'
 import { Type } from '@sinclair/typebox'
 
-import type { AuthenticationStrategy } from './OAuth.js'
-import { strategiesTypebox } from './OAuth.js'
-import { userSettingsSchema } from './UserSettings.js'
-import { date, id } from './utils.js'
+import type { AuthenticationStrategy } from '#src/models/OAuth.js'
+import { strategiesTypebox } from '#src/models/OAuth.js'
+import { userSettingsSchema } from '#src/models/UserSettings.js'
+import { date, id } from '#src/models/utils.js'
 
 export interface UserJWT {
   id: number

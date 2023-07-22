@@ -1,20 +1,22 @@
-import tap from 'tap'
+import test from 'node:test'
+import assert from 'node:assert/strict'
+
 import sinon from 'sinon'
 
-import { application } from '../../../../../application.js'
-import { authenticateUserTest } from '../../../../../__test__/utils/authenticateUserTest.js'
-import prisma from '../../../../../tools/database/prisma.js'
-import { channelExample } from '../../../../../models/Channel.js'
-import { memberExample } from '../../../../../models/Member.js'
-import { userExample } from '../../../../../models/User.js'
-import { messageExample } from '../../../../../models/Message.js'
+import { application } from '#src/application.js'
+import { authenticateUserTest } from '#src/__test__/utils/authenticateUserTest.js'
+import prisma from '#src/tools/database/prisma.js'
+import { channelExample } from '#src/models/Channel.js'
+import { memberExample } from '#src/models/Member.js'
+import { userExample } from '#src/models/User.js'
+import { messageExample } from '#src/models/Message.js'
 
-await tap.test('POST /channels/[channelId]/messages', async (t) => {
+await test('POST /channels/[channelId]/messages', async (t) => {
   t.afterEach(() => {
     sinon.restore()
   })
 
-  await t.test('succeeds', async (t) => {
+  await t.test('succeeds', async () => {
     const { accessToken } = await authenticateUserTest()
     sinon.stub(prisma, 'channel').value({
       findUnique: async () => {
@@ -43,18 +45,18 @@ await tap.test('POST /channels/[channelId]/messages', async (t) => {
       payload: { value: messageExample.value }
     })
     const responseJson = response.json()
-    t.equal(response.statusCode, 201)
-    t.equal(responseJson.id, messageExample.id)
-    t.equal(responseJson.value, messageExample.value)
-    t.equal(responseJson.type, messageExample.type)
-    t.equal(responseJson.mimetype, messageExample.mimetype)
-    t.equal(responseJson.member.id, memberExample.id)
-    t.equal(responseJson.member.isOwner, memberExample.isOwner)
-    t.equal(responseJson.member.user.id, userExample.id)
-    t.equal(responseJson.member.user.name, userExample.name)
+    assert.strictEqual(response.statusCode, 201)
+    assert.strictEqual(responseJson.id, messageExample.id)
+    assert.strictEqual(responseJson.value, messageExample.value)
+    assert.strictEqual(responseJson.type, messageExample.type)
+    assert.strictEqual(responseJson.mimetype, messageExample.mimetype)
+    assert.strictEqual(responseJson.member.id, memberExample.id)
+    assert.strictEqual(responseJson.member.isOwner, memberExample.isOwner)
+    assert.strictEqual(responseJson.member.user.id, userExample.id)
+    assert.strictEqual(responseJson.member.user.name, userExample.name)
   })
 
-  await t.test('fails with no message value', async (t) => {
+  await t.test('fails with no message value', async () => {
     const { accessToken } = await authenticateUserTest()
     sinon.stub(prisma, 'channel').value({
       findUnique: async () => {
@@ -77,10 +79,10 @@ await tap.test('POST /channels/[channelId]/messages', async (t) => {
       },
       payload: {}
     })
-    t.equal(response.statusCode, 400)
+    assert.strictEqual(response.statusCode, 400)
   })
 
-  await t.test('fails with not found channel', async (t) => {
+  await t.test('fails with not found channel', async () => {
     const { accessToken } = await authenticateUserTest()
     sinon.stub(prisma, 'channel').value({
       findUnique: async () => {
@@ -104,11 +106,11 @@ await tap.test('POST /channels/[channelId]/messages', async (t) => {
       payload: { value: messageExample.value }
     })
     const responseJson = response.json()
-    t.equal(response.statusCode, 404)
-    t.equal(responseJson.message, 'Channel not found')
+    assert.strictEqual(response.statusCode, 404)
+    assert.strictEqual(responseJson.message, 'Channel not found')
   })
 
-  await t.test('fails with not found member', async (t) => {
+  await t.test('fails with not found member', async () => {
     const { accessToken } = await authenticateUserTest()
     sinon.stub(prisma, 'channel').value({
       findUnique: async () => {
@@ -129,7 +131,7 @@ await tap.test('POST /channels/[channelId]/messages', async (t) => {
       payload: { value: messageExample.value }
     })
     const responseJson = response.json()
-    t.equal(response.statusCode, 404)
-    t.equal(responseJson.message, 'Channel not found')
+    assert.strictEqual(response.statusCode, 404)
+    assert.strictEqual(responseJson.message, 'Channel not found')
   })
 })

@@ -1,16 +1,18 @@
-import tap from 'tap'
+import test from 'node:test'
+import assert from 'node:assert/strict'
+
 import sinon from 'sinon'
 
-import { application } from '../../../../application.js'
-import prisma from '../../../../tools/database/prisma.js'
-import { userExample } from '../../../../models/User.js'
+import { application } from '#src/application.js'
+import prisma from '#src/tools/database/prisma.js'
+import { userExample } from '#src/models/User.js'
 
-await tap.test('GET /users/confirm-email', async (t) => {
+await test('GET /users/confirm-email', async (t) => {
   t.afterEach(() => {
     sinon.restore()
   })
 
-  await t.test('succeeds', async (t) => {
+  await t.test('succeeds', async () => {
     sinon.stub(prisma, 'user').value({
       findFirst: async () => {
         return userExample
@@ -26,10 +28,10 @@ await tap.test('GET /users/confirm-email', async (t) => {
         temporaryToken: userExample.temporaryToken ?? ''
       }
     })
-    t.equal(response.statusCode, 200)
+    assert.strictEqual(response.statusCode, 200)
   })
 
-  await t.test('should fails with invalid `temporaryToken`', async (t) => {
+  await t.test('should fails with invalid `temporaryToken`', async () => {
     sinon.stub(prisma, 'user').value({
       findFirst: async () => {
         return null
@@ -45,6 +47,6 @@ await tap.test('GET /users/confirm-email', async (t) => {
         temporaryToken: userExample.temporaryToken ?? ''
       }
     })
-    t.equal(response.statusCode, 403)
+    assert.strictEqual(response.statusCode, 403)
   })
 })

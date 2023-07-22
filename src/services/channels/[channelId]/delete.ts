@@ -2,10 +2,10 @@ import type { Static } from '@sinclair/typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import prisma from '../../../tools/database/prisma.js'
-import { fastifyErrors } from '../../../models/utils.js'
-import authenticateUser from '../../../tools/plugins/authenticateUser.js'
-import { channelSchema } from '../../../models/Channel.js'
+import prisma from '#src/tools/database/prisma.js'
+import { fastifyErrors } from '#src/models/utils.js'
+import authenticateUser from '#src/tools/plugins/authenticateUser.js'
+import { channelSchema } from '#src/models/Channel.js'
 
 const parametersSchema = Type.Object({
   channelId: channelSchema.id
@@ -48,8 +48,8 @@ export const deleteChannelService: FastifyPluginAsync = async (fastify) => {
       if (request.user == null) {
         throw fastify.httpErrors.forbidden()
       }
-      const { user } = request
-      const { channelId } = request.params
+      const { user, params } = request
+      const { channelId } = params
       const channelCheck = await prisma.channel.findUnique({
         where: { id: channelId }
       })

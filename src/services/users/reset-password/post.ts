@@ -5,11 +5,11 @@ import { Type } from '@sinclair/typebox'
 import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 import ms from 'ms'
 
-import prisma from '../../../tools/database/prisma.js'
-import { fastifyErrors } from '../../../models/utils.js'
-import { userSchema } from '../../../models/User.js'
-import { sendEmail } from '../../../tools/email/sendEmail.js'
-import type { Language, Theme } from '../../../models/UserSettings.js'
+import prisma from '#src/tools/database/prisma.js'
+import { fastifyErrors } from '#src/models/utils.js'
+import { userSchema } from '#src/models/User.js'
+import { sendEmail } from '#src/tools/email/sendEmail.js'
+import type { Language, Theme } from '#src/models/UserSettings.js'
 
 const queryPostResetPasswordSchema = Type.Object({
   redirectURI: Type.String({ format: 'uri-reference' })

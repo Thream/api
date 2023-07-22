@@ -3,11 +3,11 @@ import { Type } from '@sinclair/typebox'
 import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 import jwt from 'jsonwebtoken'
 
-import prisma from '../../../tools/database/prisma.js'
-import { fastifyErrors } from '../../../models/utils.js'
-import { JWT_REFRESH_SECRET } from '../../../tools/configurations.js'
-import type { UserRefreshJWT } from '../../../models/User.js'
-import { jwtSchema } from '../../../tools/utils/jwtToken.js'
+import prisma from '#src/tools/database/prisma.js'
+import { fastifyErrors } from '#src/models/utils.js'
+import { JWT_REFRESH_SECRET } from '#src/tools/configurations.js'
+import type { UserRefreshJWT } from '#src/models/User.js'
+import { jwtSchema } from '#src/tools/utils/jwtToken.js'
 
 const bodyPostSignoutSchema = Type.Object({
   refreshToken: jwtSchema.refreshToken

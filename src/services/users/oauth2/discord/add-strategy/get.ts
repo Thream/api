@@ -2,10 +2,10 @@ import type { Static } from '@sinclair/typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import { API_URL } from '../../../../../tools/configurations.js'
-import { fastifyErrors } from '../../../../../models/utils.js'
+import { API_URL } from '#src/tools/configurations.js'
+import { fastifyErrors } from '#src/models/utils.js'
 import { DISCORD_BASE_URL, DISCORD_CLIENT_ID } from '../__utils__/utils.js'
-import authenticateUser from '../../../../../tools/plugins/authenticateUser.js'
+import authenticateUser from '#src/tools/plugins/authenticateUser.js'
 
 const querySchema = Type.Object({
   redirectURI: Type.String({ format: 'uri-reference' })

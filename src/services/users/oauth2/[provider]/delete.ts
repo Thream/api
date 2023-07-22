@@ -2,10 +2,10 @@ import type { Static } from '@sinclair/typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import prisma from '../../../../tools/database/prisma.js'
-import { fastifyErrors } from '../../../../models/utils.js'
-import authenticateUser from '../../../../tools/plugins/authenticateUser.js'
-import { oauthSchema } from '../../../../models/OAuth.js'
+import prisma from '#src/tools/database/prisma.js'
+import { fastifyErrors } from '#src/models/utils.js'
+import authenticateUser from '#src/tools/plugins/authenticateUser.js'
+import { oauthSchema } from '#src/models/OAuth.js'
 
 const parametersSchema = Type.Object({
   provider: oauthSchema.provider
@@ -45,8 +45,8 @@ export const deleteProviderService: FastifyPluginAsync = async (fastify) => {
       if (request.user == null) {
         throw fastify.httpErrors.forbidden()
       }
-      const { user } = request
-      const { provider } = request.params
+      const { user, params } = request
+      const { provider } = params
       const OAuths = await prisma.oAuth.findMany({
         where: { userId: user.current.id }
       })

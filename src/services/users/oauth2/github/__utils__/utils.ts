@@ -2,7 +2,7 @@ import querystring from 'node:querystring'
 
 import axios from 'axios'
 
-import { OAuthStrategy } from '../../../../../tools/utils/OAuthStrategy.js'
+import { OAuthStrategy } from '#src/tools/utils/OAuthStrategy.js'
 
 export const GITHUB_PROVIDER = 'GitHub'
 export const GITHUB_BASE_URL = 'https://github.com'

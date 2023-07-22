@@ -1,16 +1,18 @@
-import tap from 'tap'
+import test from 'node:test'
+import assert from 'node:assert/strict'
+
 import sinon from 'sinon'
 
-import { application } from '../../../../application.js'
-import prisma from '../../../../tools/database/prisma.js'
-import { authenticateUserTest } from '../../../../__test__/utils/authenticateUserTest.js'
+import { application } from '#src/application.js'
+import prisma from '#src/tools/database/prisma.js'
+import { authenticateUserTest } from '#src/__test__/utils/authenticateUserTest.js'
 
-await tap.test('PUT /users/current', async (t) => {
+await test('PUT /users/current', async (t) => {
   t.afterEach(() => {
     sinon.restore()
   })
 
-  await t.test('succeeds with valid accessToken and valid name', async (t) => {
+  await t.test('succeeds with valid accessToken and valid name', async () => {
     const newName = 'John Doe'
     const { accessToken, user, userStubValue } = await authenticateUserTest()
     sinon.stub(prisma, 'user').value({
@@ -36,11 +38,11 @@ await tap.test('PUT /users/current', async (t) => {
       }
     })
     const responseJson = response.json()
-    t.equal(response.statusCode, 200)
-    t.equal(responseJson.user.name, newName)
+    assert.strictEqual(response.statusCode, 200)
+    assert.strictEqual(responseJson.user.name, newName)
   })
 
-  await t.test('succeeds and only update the status', async (t) => {
+  await t.test('succeeds and only update the status', async () => {
     const newStatus = '👀 Working on secret projects...'
     const { accessToken, user, userStubValue } = await authenticateUserTest()
     sinon.stub(prisma, 'user').value({
@@ -66,12 +68,12 @@ await tap.test('PUT /users/current', async (t) => {
       }
     })
     const responseJson = response.json()
-    t.equal(response.statusCode, 200)
-    t.equal(responseJson.user.name, user.name)
-    t.equal(responseJson.user.status, newStatus)
+    assert.strictEqual(response.statusCode, 200)
+    assert.strictEqual(responseJson.user.name, user.name)
+    assert.strictEqual(responseJson.user.status, newStatus)
   })
 
-  await t.test('fails with name already used', async (t) => {
+  await t.test('fails with name already used', async () => {
     const newName = 'John Doe'
     const { accessToken, user, userStubValue } = await authenticateUserTest()
     sinon.stub(prisma, 'user').value({
@@ -90,10 +92,10 @@ await tap.test('PUT /users/current', async (t) => {
         name: newName
       }
     })
-    t.equal(response.statusCode, 400)
+    assert.strictEqual(response.statusCode, 400)
   })
 
-  await t.test('fails with invalid website url', async (t) => {
+  await t.test('fails with invalid website url', async () => {
     const newWebsite = 'invalid website url'
     const { accessToken } = await authenticateUserTest()
     const response = await application.inject({
@@ -106,10 +108,10 @@ await tap.test('PUT /users/current', async (t) => {
         website: newWebsite
       }
     })
-    t.equal(response.statusCode, 400)
+    assert.strictEqual(response.statusCode, 400)
   })
 
-  await t.test('succeeds with valid website url', async (t) => {
+  await t.test('succeeds with valid website url', async () => {
     const newWebsite = 'https://somerandomwebsite.com'
     const { accessToken, user, userStubValue } = await authenticateUserTest()
     sinon.stub(prisma, 'user').value({
@@ -135,8 +137,8 @@ await tap.test('PUT /users/current', async (t) => {
       }
     })
     const responseJson = response.json()
-    t.equal(response.statusCode, 200)
-    t.equal(responseJson.user.name, user.name)
-    t.equal(responseJson.user.website, newWebsite)
+    assert.strictEqual(response.statusCode, 200)
+    assert.strictEqual(responseJson.user.name, user.name)
+    assert.strictEqual(responseJson.user.website, newWebsite)
   })
 })

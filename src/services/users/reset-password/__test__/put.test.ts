@@ -1,17 +1,19 @@
-import tap from 'tap'
+import test from 'node:test'
+import assert from 'node:assert/strict'
+
 import sinon from 'sinon'
 import ms from 'ms'
 
-import { application } from '../../../../application.js'
-import prisma from '../../../../tools/database/prisma.js'
-import { userExample } from '../../../../models/User.js'
+import { application } from '#src/application.js'
+import prisma from '#src/tools/database/prisma.js'
+import { userExample } from '#src/models/User.js'
 
-await tap.test('PUT /users/reset-password', async (t) => {
+await test('PUT /users/reset-password', async (t) => {
   t.afterEach(() => {
     sinon.restore()
   })
 
-  await t.test('succeeds', async (t) => {
+  await t.test('succeeds', async () => {
     const temporaryToken = 'random-token'
     sinon.stub(prisma, 'user').value({
       findFirst: async () => {
@@ -38,10 +40,10 @@ await tap.test('PUT /users/reset-password', async (t) => {
         temporaryToken: userExample.temporaryToken
       }
     })
-    t.equal(response.statusCode, 200)
+    assert.strictEqual(response.statusCode, 200)
   })
 
-  await t.test('fails with expired temporaryToken', async (t) => {
+  await t.test('fails with expired temporaryToken', async () => {
     const temporaryToken = 'random-token'
     sinon.stub(prisma, 'user').value({
       findFirst: async () => {
@@ -63,6 +65,6 @@ await tap.test('PUT /users/reset-password', async (t) => {
         temporaryToken: userExample.temporaryToken
       }
     })
-    t.equal(response.statusCode, 400)
+    assert.strictEqual(response.statusCode, 400)
   })
 })

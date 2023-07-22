@@ -3,9 +3,9 @@ import { Type } from '@sinclair/typebox'
 import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 import bcrypt from 'bcryptjs'
 
-import prisma from '../../../tools/database/prisma.js'
-import { fastifyErrors } from '../../../models/utils.js'
-import { userSchema } from '../../../models/User.js'
+import prisma from '#src/tools/database/prisma.js'
+import { fastifyErrors } from '#src/models/utils.js'
+import { userSchema } from '#src/models/User.js'
 
 const bodyPutResetPasswordSchema = Type.Object({
   password: userSchema.password,

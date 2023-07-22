@@ -2,7 +2,7 @@ import type { UserSetting } from '@prisma/client'
 import type { Static } from '@sinclair/typebox'
 import { Type } from '@sinclair/typebox'
 
-import { date, id } from './utils.js'
+import { date, id } from '#src/models/utils.js'
 
 export const languages = [Type.Literal('fr'), Type.Literal('en')]
 export const themes = [Type.Literal('light'), Type.Literal('dark')]

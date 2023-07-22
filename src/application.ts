@@ -8,8 +8,8 @@ import fastifyRateLimit from '@fastify/rate-limit'
 import fastifySensible from '@fastify/sensible'
 import { readPackage } from 'read-pkg'
 
-import { services } from './services/index.js'
-import fastifySocketIo from './tools/plugins/socket-io.js'
+import { services } from '#src/services/index.js'
+import fastifySocketIo from '#src/tools/plugins/socket-io.js'
 
 dotenv.config()
 const packageJSON = await readPackage()

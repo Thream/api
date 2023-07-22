@@ -2,12 +2,12 @@ import type { Static } from '@sinclair/typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import prisma from '../../../tools/database/prisma.js'
-import { fastifyErrors } from '../../../models/utils.js'
-import authenticateUser from '../../../tools/plugins/authenticateUser.js'
-import { messageSchema } from '../../../models/Message.js'
-import { memberSchema } from '../../../models/Member.js'
-import { userPublicWithoutSettingsSchema } from '../../../models/User.js'
+import prisma from '#src/tools/database/prisma.js'
+import { fastifyErrors } from '#src/models/utils.js'
+import authenticateUser from '#src/tools/plugins/authenticateUser.js'
+import { messageSchema } from '#src/models/Message.js'
+import { memberSchema } from '#src/models/Member.js'
+import { userPublicWithoutSettingsSchema } from '#src/models/User.js'
 
 const parametersSchema = Type.Object({
   messageId: messageSchema.id
@@ -53,8 +53,8 @@ export const deleteMessageService: FastifyPluginAsync = async (fastify) => {
       if (request.user == null) {
         throw fastify.httpErrors.forbidden()
       }
-      const { user } = request
-      const { messageId } = request.params
+      const { user, params } = request
+      const { messageId } = params
       const messageCheck = await prisma.message.findFirst({
         where: { id: messageId },
         include: {

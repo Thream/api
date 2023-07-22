@@ -5,12 +5,12 @@ import { Type } from '@sinclair/typebox'
 import bcrypt from 'bcryptjs'
 import type { FastifyPluginAsync, FastifySchema } from 'fastify'
 
-import prisma from '../../../tools/database/prisma.js'
-import { fastifyErrors } from '../../../models/utils.js'
-import type { BodyUserSchemaType } from '../../../models/User.js'
-import { bodyUserSchema, userPublicSchema } from '../../../models/User.js'
-import { sendEmail } from '../../../tools/email/sendEmail.js'
-import { API_URL } from '../../../tools/configurations.js'
+import prisma from '#src/tools/database/prisma.js'
+import { fastifyErrors } from '#src/models/utils.js'
+import type { BodyUserSchemaType } from '#src/models/User.js'
+import { bodyUserSchema, userPublicSchema } from '#src/models/User.js'
+import { sendEmail } from '#src/tools/email/sendEmail.js'
+import { API_URL } from '#src/tools/configurations.js'
 
 const queryPostSignupSchema = Type.Object({
   redirectURI: Type.Optional(Type.String({ format: 'uri-reference' }))

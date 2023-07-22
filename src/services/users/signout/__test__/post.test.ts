@@ -1,18 +1,20 @@
-import tap from 'tap'
+import test from 'node:test'
+import assert from 'node:assert/strict'
+
 import sinon from 'sinon'
 import jwt from 'jsonwebtoken'
 
-import { application } from '../../../../application.js'
-import prisma from '../../../../tools/database/prisma.js'
-import { refreshTokenExample } from '../../../../models/RefreshToken.js'
-import type { UserRefreshJWT } from '../../../../models/User.js'
+import { application } from '#src/application.js'
+import prisma from '#src/tools/database/prisma.js'
+import { refreshTokenExample } from '#src/models/RefreshToken.js'
+import type { UserRefreshJWT } from '#src/models/User.js'
 
-await tap.test('POST /users/signout', async (t) => {
+await test('POST /users/signout', async (t) => {
   t.afterEach(() => {
     sinon.restore()
   })
 
-  await t.test('succeeds', async (t) => {
+  await t.test('succeeds', async () => {
     sinon.stub(prisma, 'refreshToken').value({
       findFirst: async () => {
         return refreshTokenExample
@@ -32,10 +34,10 @@ await tap.test('POST /users/signout', async (t) => {
       url: '/users/signout',
       payload: { refreshToken: 'jwt token' }
     })
-    t.equal(response.statusCode, 200)
+    assert.strictEqual(response.statusCode, 200)
   })
 
-  await t.test('fails with invalid refreshToken', async (t) => {
+  await t.test('fails with invalid refreshToken', async () => {
     sinon.stub(prisma, 'refreshToken').value({
       findFirst: async () => {
         return null
@@ -46,6 +48,6 @@ await tap.test('POST /users/signout', async (t) => {
       url: '/users/signout',
       payload: { refreshToken: 'somerandomtoken' }
     })
-    t.equal(response.statusCode, 404)
+    assert.strictEqual(response.statusCode, 404)
   })
 })

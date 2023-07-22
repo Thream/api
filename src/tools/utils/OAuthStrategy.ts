@@ -3,10 +3,10 @@ import {
   expiresIn,
   generateAccessToken,
   generateRefreshToken
-} from './jwtToken.js'
-import prisma from '../database/prisma.js'
-import type { ProviderOAuth } from '../../models/OAuth.js'
-import type { UserRequest } from '../../models/User.js'
+} from '#src/tools/utils/jwtToken.js'
+import prisma from '#src/tools/database/prisma.js'
+import type { ProviderOAuth } from '#src/models/OAuth.js'
+import type { UserRequest } from '#src/models/User.js'
 
 interface ProviderData {
   name: string

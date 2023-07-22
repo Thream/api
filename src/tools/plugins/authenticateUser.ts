@@ -2,9 +2,9 @@ import fastifyPlugin from 'fastify-plugin'
 import httpErrors from 'http-errors'
 import jwt from 'jsonwebtoken'
 
-import prisma from '../database/prisma.js'
-import type { UserJWT, UserRequest } from '../../models/User.js'
-import { JWT_ACCESS_SECRET } from '../configurations.js'
+import prisma from '#src/tools/database/prisma.js'
+import type { UserJWT, UserRequest } from '#src/models/User.js'
+import { JWT_ACCESS_SECRET } from '#src/tools/configurations.js'
 
 const { Unauthorized, Forbidden, BadRequest } = httpErrors
 

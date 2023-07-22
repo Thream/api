@@ -1,8 +1,8 @@
 import { Type } from '@sinclair/typebox'
 import type { Channel } from '@prisma/client'
 
-import { date, id } from './utils.js'
-import { guildExample } from './Guild.js'
+import { date, id } from '#src/models/utils.js'
+import { guildExample } from '#src/models/Guild.js'
 
 export const types = [Type.Literal('text')]
 
