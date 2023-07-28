@@ -1,6 +1,6 @@
 {
   "name": "@thream/api",
-  "dockerComposeFile": "./docker-compose.yml",
+  "dockerComposeFile": "./compose.yaml",
   "service": "workspace",
   "workspaceFolder": "/workspace",
   "customizations": {
