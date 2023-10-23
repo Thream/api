@@ -1,9 +1,9 @@
-import type { FastifyPluginAsync } from 'fastify'
+import type { FastifyPluginAsync } from "fastify"
 
-import { usersService } from './users/index.js'
-import { guildsService } from './guilds/index.js'
-import { channelsService } from './channels/index.js'
-import { messagesService } from './messages/index.js'
+import { usersService } from "./users/index.js"
+import { guildsService } from "./guilds/index.js"
+import { channelsService } from "./channels/index.js"
+import { messagesService } from "./messages/index.js"
 
 export const services: FastifyPluginAsync = async (fastify) => {
   await fastify.register(channelsService)

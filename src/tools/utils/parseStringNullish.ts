@@ -10,7 +10,7 @@
  */
 export const parseStringNullish = (
   defaultString: string | null,
-  string?: string | null
+  string?: string | null,
 ): string | null => {
   if (string === undefined) {
     return defaultString

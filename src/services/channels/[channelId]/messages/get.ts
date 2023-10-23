@@ -1,34 +1,34 @@
-import type { Static } from '@sinclair/typebox'
-import { Type } from '@sinclair/typebox'
-import type { FastifyPluginAsync, FastifySchema } from 'fastify'
+import type { Static } from "@sinclair/typebox"
+import { Type } from "@sinclair/typebox"
+import type { FastifyPluginAsync, FastifySchema } from "fastify"
 
-import prisma from '#src/tools/database/prisma.js'
-import { fastifyErrors } from '#src/models/utils.js'
-import authenticateUser from '#src/tools/plugins/authenticateUser.js'
-import { messageSchema } from '#src/models/Message.js'
-import { memberSchema } from '#src/models/Member.js'
-import { userPublicWithoutSettingsSchema } from '#src/models/User.js'
+import prisma from "#src/tools/database/prisma.js"
+import { fastifyErrors } from "#src/models/utils.js"
+import authenticateUser from "#src/tools/plugins/authenticateUser.js"
+import { messageSchema } from "#src/models/Message.js"
+import { memberSchema } from "#src/models/Member.js"
+import { userPublicWithoutSettingsSchema } from "#src/models/User.js"
 import {
   getPaginationOptions,
-  queryPaginationObjectSchema
-} from '#src/tools/database/pagination.js'
-import { channelSchema } from '#src/models/Channel.js'
+  queryPaginationObjectSchema,
+} from "#src/tools/database/pagination.js"
+import { channelSchema } from "#src/models/Channel.js"
 
 type QuerySchemaType = Static<typeof queryPaginationObjectSchema>
 
 const parametersSchema = Type.Object({
-  channelId: channelSchema.id
+  channelId: channelSchema.id,
 })
 
 type Parameters = Static<typeof parametersSchema>
 
 const getServiceSchema: FastifySchema = {
-  description: 'GET all the messages of a channel by its id.',
-  tags: ['messages'] as string[],
+  description: "GET all the messages of a channel by its id.",
+  tags: ["messages"] as string[],
   security: [
     {
-      bearerAuth: []
-    }
+      bearerAuth: [],
+    },
   ] as Array<{ [key: string]: [] }>,
   params: parametersSchema,
   querystring: queryPaginationObjectSchema,
@@ -38,20 +38,20 @@ const getServiceSchema: FastifySchema = {
         ...messageSchema,
         member: Type.Object({
           ...memberSchema,
-          user: Type.Object(userPublicWithoutSettingsSchema)
-        })
-      })
+          user: Type.Object(userPublicWithoutSettingsSchema),
+        }),
+      }),
     ),
     400: fastifyErrors[400],
     401: fastifyErrors[401],
     403: fastifyErrors[403],
     404: fastifyErrors[404],
-    500: fastifyErrors[500]
-  }
+    500: fastifyErrors[500],
+  },
 } as const
 
 export const getMessagesByChannelIdService: FastifyPluginAsync = async (
-  fastify
+  fastify,
 ) => {
   await fastify.register(authenticateUser)
 
@@ -59,8 +59,8 @@ export const getMessagesByChannelIdService: FastifyPluginAsync = async (
     Params: Parameters
     Querystring: QuerySchemaType
   }>({
-    method: 'GET',
-    url: '/channels/:channelId/messages',
+    method: "GET",
+    url: "/channels/:channelId/messages",
     schema: getServiceSchema,
     handler: async (request, reply) => {
       if (request.user == null) {
@@ -68,21 +68,21 @@ export const getMessagesByChannelIdService: FastifyPluginAsync = async (
       }
       const { channelId } = request.params
       const channel = await prisma.channel.findUnique({
-        where: { id: channelId }
+        where: { id: channelId },
       })
       if (channel == null) {
-        throw fastify.httpErrors.notFound('Channel not found')
+        throw fastify.httpErrors.notFound("Channel not found")
       }
       const memberCheck = await prisma.member.findFirst({
-        where: { guildId: channel.guildId, userId: request.user.current.id }
+        where: { guildId: channel.guildId, userId: request.user.current.id },
       })
       if (memberCheck == null) {
-        throw fastify.httpErrors.notFound('Channel not found')
+        throw fastify.httpErrors.notFound("Channel not found")
       }
       const messagesRequest = await prisma.message.findMany({
         ...getPaginationOptions(request.query),
-        orderBy: { createdAt: 'desc' },
-        where: { channelId }
+        orderBy: { createdAt: "desc" },
+        where: { channelId },
       })
       const messages = await Promise.all(
         messagesRequest.reverse().map(async (message) => {
@@ -98,10 +98,10 @@ export const getMessagesByChannelIdService: FastifyPluginAsync = async (
                   biography: true,
                   website: true,
                   createdAt: true,
-                  updatedAt: true
-                }
-              }
-            }
+                  updatedAt: true,
+                },
+              },
+            },
           })
           return {
             ...message,
@@ -109,14 +109,14 @@ export const getMessagesByChannelIdService: FastifyPluginAsync = async (
               ...member,
               user: {
                 ...member?.user,
-                email: null
-              }
-            }
+                email: null,
+              },
+            },
           }
-        })
+        }),
       )
       reply.statusCode = 200
       return messages
-    }
+    },
   })
 }

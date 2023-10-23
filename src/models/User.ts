@@ -1,11 +1,11 @@
-import type { User } from '@prisma/client'
-import type { Static } from '@sinclair/typebox'
-import { Type } from '@sinclair/typebox'
+import type { User } from "@prisma/client"
+import type { Static } from "@sinclair/typebox"
+import { Type } from "@sinclair/typebox"
 
-import type { AuthenticationStrategy } from '#src/models/OAuth.js'
-import { strategiesTypebox } from '#src/models/OAuth.js'
-import { userSettingsSchema } from '#src/models/UserSettings.js'
-import { date, id } from '#src/models/utils.js'
+import type { AuthenticationStrategy } from "#src/models/OAuth.js"
+import { strategiesTypebox } from "#src/models/OAuth.js"
+import { userSettingsSchema } from "#src/models/UserSettings.js"
+import { date, id } from "#src/models/utils.js"
 
 export interface UserJWT {
   id: number
@@ -25,21 +25,21 @@ export interface UserRequest {
 export const userSchema = {
   id,
   name: Type.String({ minLength: 1, maxLength: 30 }),
-  email: Type.String({ minLength: 1, maxLength: 254, format: 'email' }),
+  email: Type.String({ minLength: 1, maxLength: 254, format: "email" }),
   password: Type.String({ minLength: 1 }),
-  logo: Type.String({ minLength: 1, format: 'uri-reference' }),
+  logo: Type.String({ minLength: 1, format: "uri-reference" }),
   status: Type.String({ minLength: 1, maxLength: 50 }),
   biography: Type.String({ minLength: 1, maxLength: 160 }),
   website: Type.String({
     minLength: 1,
     maxLength: 255,
-    format: 'uri'
+    format: "uri",
   }),
   isConfirmed: Type.Boolean({ default: false }),
   temporaryToken: Type.String(),
-  temporaryExpirationToken: Type.String({ format: 'date-time' }),
+  temporaryExpirationToken: Type.String({ format: "date-time" }),
   createdAt: date.createdAt,
-  updatedAt: date.updatedAt
+  updatedAt: date.updatedAt,
 }
 
 export const userPublicWithoutSettingsSchema = {
@@ -52,20 +52,20 @@ export const userPublicWithoutSettingsSchema = {
   website: Type.Union([userSchema.website, Type.Null()]),
   isConfirmed: userSchema.isConfirmed,
   createdAt: date.createdAt,
-  updatedAt: date.updatedAt
+  updatedAt: date.updatedAt,
 }
 
 export const userPublicSchema = {
   ...userPublicWithoutSettingsSchema,
-  settings: Type.Object(userSettingsSchema)
+  settings: Type.Object(userSettingsSchema),
 }
 
 export const userCurrentSchema = Type.Object({
   user: Type.Object({
     ...userPublicSchema,
     currentStrategy: Type.Union([...strategiesTypebox]),
-    strategies: Type.Array(Type.Union([...strategiesTypebox]))
-  })
+    strategies: Type.Array(Type.Union([...strategiesTypebox])),
+  }),
 })
 
 export const bodyUserSchema = Type.Object({
@@ -73,23 +73,23 @@ export const bodyUserSchema = Type.Object({
   name: userSchema.name,
   password: userSchema.password,
   theme: userSettingsSchema.theme,
-  language: userSettingsSchema.language
+  language: userSettingsSchema.language,
 })
 
 export type BodyUserSchemaType = Static<typeof bodyUserSchema>
 
 export const userExample: User = {
   id: 1,
-  name: 'Divlo',
-  email: 'contact@divlo.fr',
-  password: 'somepassword',
+  name: "Divlo",
+  email: "contact@divlo.fr",
+  password: "somepassword",
   logo: null,
   status: null,
   biography: null,
   website: null,
   isConfirmed: true,
-  temporaryToken: 'temporaryUUIDtoken',
+  temporaryToken: "temporaryUUIDtoken",
   temporaryExpirationToken: new Date(),
   createdAt: new Date(),
-  updatedAt: new Date()
+  updatedAt: new Date(),
 }

@@ -1,32 +1,32 @@
-import type { Static } from '@sinclair/typebox'
-import { Type } from '@sinclair/typebox'
-import type { FastifyPluginAsync, FastifySchema } from 'fastify'
+import type { Static } from "@sinclair/typebox"
+import { Type } from "@sinclair/typebox"
+import type { FastifyPluginAsync, FastifySchema } from "fastify"
 
-import prisma from '#src/tools/database/prisma.js'
-import { fastifyErrors } from '#src/models/utils.js'
-import authenticateUser from '#src/tools/plugins/authenticateUser.js'
-import { guildSchema } from '#src/models/Guild.js'
-import { channelSchema } from '#src/models/Channel.js'
+import prisma from "#src/tools/database/prisma.js"
+import { fastifyErrors } from "#src/models/utils.js"
+import authenticateUser from "#src/tools/plugins/authenticateUser.js"
+import { guildSchema } from "#src/models/Guild.js"
+import { channelSchema } from "#src/models/Channel.js"
 import {
   getPaginationOptions,
-  queryPaginationObjectSchema
-} from '#src/tools/database/pagination.js'
+  queryPaginationObjectSchema,
+} from "#src/tools/database/pagination.js"
 
 type QuerySchemaType = Static<typeof queryPaginationObjectSchema>
 
 const parametersSchema = Type.Object({
-  guildId: guildSchema.id
+  guildId: guildSchema.id,
 })
 
 type Parameters = Static<typeof parametersSchema>
 
 const getServiceSchema: FastifySchema = {
-  description: 'GET all the channels of a guild with its id.',
-  tags: ['channels'] as string[],
+  description: "GET all the channels of a guild with its id.",
+  tags: ["channels"] as string[],
   security: [
     {
-      bearerAuth: []
-    }
+      bearerAuth: [],
+    },
   ] as Array<{ [key: string]: [] }>,
   params: parametersSchema,
   querystring: queryPaginationObjectSchema,
@@ -36,12 +36,12 @@ const getServiceSchema: FastifySchema = {
     401: fastifyErrors[401],
     403: fastifyErrors[403],
     404: fastifyErrors[404],
-    500: fastifyErrors[500]
-  }
+    500: fastifyErrors[500],
+  },
 } as const
 
 export const getChannelsByGuildIdService: FastifyPluginAsync = async (
-  fastify
+  fastify,
 ) => {
   await fastify.register(authenticateUser)
 
@@ -49,8 +49,8 @@ export const getChannelsByGuildIdService: FastifyPluginAsync = async (
     Params: Parameters
     Querystring: QuerySchemaType
   }>({
-    method: 'GET',
-    url: '/guilds/:guildId/channels',
+    method: "GET",
+    url: "/guilds/:guildId/channels",
     schema: getServiceSchema,
     handler: async (request, reply) => {
       if (request.user == null) {
@@ -58,19 +58,19 @@ export const getChannelsByGuildIdService: FastifyPluginAsync = async (
       }
       const { guildId } = request.params
       const member = await prisma.member.findFirst({
-        where: { guildId, userId: request.user.current.id }
+        where: { guildId, userId: request.user.current.id },
       })
       if (member == null) {
-        throw fastify.httpErrors.notFound('Member not found')
+        throw fastify.httpErrors.notFound("Member not found")
       }
       const channels = await prisma.channel.findMany({
         ...getPaginationOptions(request.query),
         where: {
-          guildId
-        }
+          guildId,
+        },
       })
       reply.statusCode = 200
       return channels
-    }
+    },
   })
 }

@@ -1,30 +1,30 @@
-import type { Static } from '@sinclair/typebox'
-import { Type } from '@sinclair/typebox'
-import type { FastifyPluginAsync, FastifySchema } from 'fastify'
+import type { Static } from "@sinclair/typebox"
+import { Type } from "@sinclair/typebox"
+import type { FastifyPluginAsync, FastifySchema } from "fastify"
 
-import prisma from '#src/tools/database/prisma.js'
-import { fastifyErrors } from '#src/models/utils.js'
-import authenticateUser from '#src/tools/plugins/authenticateUser.js'
-import { guildSchema } from '#src/models/Guild.js'
-import { channelSchema } from '#src/models/Channel.js'
-import { memberSchema } from '#src/models/Member.js'
-import { userPublicWithoutSettingsSchema } from '#src/models/User.js'
-import { parseStringNullish } from '#src/tools/utils/parseStringNullish.js'
+import prisma from "#src/tools/database/prisma.js"
+import { fastifyErrors } from "#src/models/utils.js"
+import authenticateUser from "#src/tools/plugins/authenticateUser.js"
+import { guildSchema } from "#src/models/Guild.js"
+import { channelSchema } from "#src/models/Channel.js"
+import { memberSchema } from "#src/models/Member.js"
+import { userPublicWithoutSettingsSchema } from "#src/models/User.js"
+import { parseStringNullish } from "#src/tools/utils/parseStringNullish.js"
 
 const bodyPostServiceSchema = Type.Object({
   name: guildSchema.name,
-  description: guildSchema.description
+  description: guildSchema.description,
 })
 
 type BodyPostServiceSchemaType = Static<typeof bodyPostServiceSchema>
 
 const postServiceSchema: FastifySchema = {
-  description: 'Create a guild.',
-  tags: ['guilds'] as string[],
+  description: "Create a guild.",
+  tags: ["guilds"] as string[],
   security: [
     {
-      bearerAuth: []
-    }
+      bearerAuth: [],
+    },
   ] as Array<{ [key: string]: [] }>,
   body: bodyPostServiceSchema,
   response: {
@@ -35,16 +35,16 @@ const postServiceSchema: FastifySchema = {
         members: Type.Array(
           Type.Object({
             ...memberSchema,
-            user: Type.Object(userPublicWithoutSettingsSchema)
-          })
-        )
-      })
+            user: Type.Object(userPublicWithoutSettingsSchema),
+          }),
+        ),
+      }),
     }),
     400: fastifyErrors[400],
     401: fastifyErrors[401],
     403: fastifyErrors[403],
-    500: fastifyErrors[500]
-  }
+    500: fastifyErrors[500],
+  },
 } as const
 
 export const postGuilds: FastifyPluginAsync = async (fastify) => {
@@ -53,8 +53,8 @@ export const postGuilds: FastifyPluginAsync = async (fastify) => {
   fastify.route<{
     Body: BodyPostServiceSchemaType
   }>({
-    method: 'POST',
-    url: '/guilds',
+    method: "POST",
+    url: "/guilds",
     schema: postServiceSchema,
     handler: async (request, reply) => {
       if (request.user == null) {
@@ -62,37 +62,37 @@ export const postGuilds: FastifyPluginAsync = async (fastify) => {
       }
       const { name, description } = request.body
       const guild = await prisma.guild.create({
-        data: { name, description: parseStringNullish(description) }
+        data: { name, description: parseStringNullish(description) },
       })
       const channel = await prisma.channel.create({
-        data: { name: 'general', guildId: guild.id }
+        data: { name: "general", guildId: guild.id },
       })
       const memberCreated = await prisma.member.create({
         data: {
           userId: request.user.current.id,
           isOwner: true,
-          guildId: guild.id
-        }
+          guildId: guild.id,
+        },
       })
       const members = await Promise.all(
         [memberCreated].map(async (member) => {
           const user = await prisma.user.findUnique({
-            where: { id: member?.userId }
+            where: { id: member?.userId },
           })
           return {
             ...member,
-            user
+            user,
           }
-        })
+        }),
       )
       reply.statusCode = 201
       return {
         guild: {
           ...guild,
           channels: [channel],
-          members
-        }
+          members,
+        },
       }
-    }
+    },
   })
 }

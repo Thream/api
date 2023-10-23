@@ -1,49 +1,49 @@
-import test from 'node:test'
-import assert from 'node:assert/strict'
+import test from "node:test"
+import assert from "node:assert/strict"
 
-import sinon from 'sinon'
+import sinon from "sinon"
 
-import { application } from '#src/application.js'
-import { authenticateUserTest } from '#src/__test__/utils/authenticateUserTest.js'
-import prisma from '#src/tools/database/prisma.js'
-import { memberExample } from '#src/models/Member.js'
-import { guildExample } from '#src/models/Guild.js'
-import { userExample } from '#src/models/User.js'
-import { channelExample } from '#src/models/Channel.js'
+import { application } from "#src/application.js"
+import { authenticateUserTest } from "#src/__test__/utils/authenticateUserTest.js"
+import prisma from "#src/tools/database/prisma.js"
+import { memberExample } from "#src/models/Member.js"
+import { guildExample } from "#src/models/Guild.js"
+import { userExample } from "#src/models/User.js"
+import { channelExample } from "#src/models/Channel.js"
 
 const defaultChannelId = 5
 
-await test('POST /guilds/[guildId]/members/join', async (t) => {
+await test("POST /guilds/[guildId]/members/join", async (t) => {
   t.afterEach(() => {
     sinon.restore()
   })
 
-  await t.test('succeeds', async () => {
+  await t.test("succeeds", async () => {
     const { accessToken } = await authenticateUserTest()
-    sinon.stub(prisma, 'member').value({
+    sinon.stub(prisma, "member").value({
       findFirst: async () => {
         return null
       },
       create: async () => {
         return { ...memberExample, user: userExample }
-      }
+      },
     })
-    sinon.stub(prisma, 'channel').value({
+    sinon.stub(prisma, "channel").value({
       findFirst: async () => {
         return channelExample
-      }
+      },
     })
-    sinon.stub(prisma, 'guild').value({
+    sinon.stub(prisma, "guild").value({
       findUnique: async () => {
         return guildExample
-      }
+      },
     })
     const response = await application.inject({
-      method: 'POST',
+      method: "POST",
       url: `/guilds/${guildExample.id}/members/join`,
       headers: {
-        authorization: `Bearer ${accessToken}`
-      }
+        authorization: `Bearer ${accessToken}`,
+      },
     })
     const responseJson = response.json()
     assert.strictEqual(response.statusCode, 201)
@@ -56,59 +56,59 @@ await test('POST /guilds/[guildId]/members/join', async (t) => {
     assert.strictEqual(responseJson.guild.defaultChannelId, channelExample.id)
   })
 
-  await t.test('fails if the guild is not found', async () => {
+  await t.test("fails if the guild is not found", async () => {
     const { accessToken } = await authenticateUserTest()
-    sinon.stub(prisma, 'member').value({
+    sinon.stub(prisma, "member").value({
       findFirst: async () => {
         return null
-      }
+      },
     })
-    sinon.stub(prisma, 'channel').value({
+    sinon.stub(prisma, "channel").value({
       findFirst: async () => {
         return null
-      }
+      },
     })
-    sinon.stub(prisma, 'guild').value({
+    sinon.stub(prisma, "guild").value({
       findUnique: async () => {
         return null
-      }
+      },
     })
     const response = await application.inject({
-      method: 'POST',
+      method: "POST",
       url: `/guilds/${guildExample.id}/members/join`,
       headers: {
-        authorization: `Bearer ${accessToken}`
-      }
+        authorization: `Bearer ${accessToken}`,
+      },
     })
     assert.strictEqual(response.statusCode, 404)
   })
 
-  await t.test('fails if the user is already in the guild', async () => {
+  await t.test("fails if the user is already in the guild", async () => {
     const { accessToken } = await authenticateUserTest()
-    sinon.stub(prisma, 'member').value({
+    sinon.stub(prisma, "member").value({
       findFirst: async () => {
         return memberExample
-      }
+      },
     })
-    sinon.stub(prisma, 'channel').value({
+    sinon.stub(prisma, "channel").value({
       findFirst: async () => {
         return {
           ...channelExample,
-          id: defaultChannelId
+          id: defaultChannelId,
         }
-      }
+      },
     })
-    sinon.stub(prisma, 'guild').value({
+    sinon.stub(prisma, "guild").value({
       findUnique: async () => {
         return guildExample
-      }
+      },
     })
     const response = await application.inject({
-      method: 'POST',
+      method: "POST",
       url: `/guilds/${guildExample.id}/members/join`,
       headers: {
-        authorization: `Bearer ${accessToken}`
-      }
+        authorization: `Bearer ${accessToken}`,
+      },
     })
     const responseJson = response.json()
     assert.strictEqual(response.statusCode, 400)

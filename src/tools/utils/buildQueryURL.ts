@@ -1,4 +1,4 @@
-import { URL } from 'node:url'
+import { URL } from "node:url"
 
 export interface ObjectAny {
   [key: string]: any
@@ -6,7 +6,7 @@ export interface ObjectAny {
 
 export const buildQueryURL = (
   baseURL: string,
-  queryObject: ObjectAny
+  queryObject: ObjectAny,
 ): string => {
   const url = new URL(baseURL)
   for (const [query, value] of Object.entries(queryObject)) {

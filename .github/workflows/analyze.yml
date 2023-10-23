@@ -1,4 +1,4 @@
-name: 'Analyze'
+name: "Analyze"
 
 on:
   push:
@@ -8,20 +8,20 @@ on:
 
 jobs:
   analyze:
-    runs-on: 'ubuntu-latest'
+    runs-on: "ubuntu-latest"
 
     strategy:
       fail-fast: false
       matrix:
-        language: ['javascript']
+        language: ["javascript"]
 
     steps:
-      - uses: 'actions/checkout@v4.0.0'
+      - uses: "actions/checkout@v4.0.0"
 
-      - name: 'Initialize CodeQL'
-        uses: 'github/codeql-action/init@v2'
+      - name: "Initialize CodeQL"
+        uses: "github/codeql-action/init@v2"
         with:
           languages: ${{ matrix.language }}
 
-      - name: 'Perform CodeQL Analysis'
-        uses: 'github/codeql-action/analyze@v1'
+      - name: "Perform CodeQL Analysis"
+        uses: "github/codeql-action/analyze@v1"

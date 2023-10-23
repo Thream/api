@@ -1,46 +1,46 @@
-import type { Static } from '@sinclair/typebox'
-import { Type } from '@sinclair/typebox'
-import type { FastifyPluginAsync, FastifySchema } from 'fastify'
+import type { Static } from "@sinclair/typebox"
+import { Type } from "@sinclair/typebox"
+import type { FastifyPluginAsync, FastifySchema } from "fastify"
 
-import prisma from '#src/tools/database/prisma.js'
-import { fastifyErrors } from '#src/models/utils.js'
-import authenticateUser from '#src/tools/plugins/authenticateUser.js'
-import { channelSchema } from '#src/models/Channel.js'
-import { guildSchema } from '#src/models/Guild.js'
+import prisma from "#src/tools/database/prisma.js"
+import { fastifyErrors } from "#src/models/utils.js"
+import authenticateUser from "#src/tools/plugins/authenticateUser.js"
+import { channelSchema } from "#src/models/Channel.js"
+import { guildSchema } from "#src/models/Guild.js"
 
 const bodyPostServiceSchema = Type.Object({
-  name: channelSchema.name
+  name: channelSchema.name,
 })
 
 type BodyPostServiceSchemaType = Static<typeof bodyPostServiceSchema>
 
 const parametersSchema = Type.Object({
-  guildId: guildSchema.id
+  guildId: guildSchema.id,
 })
 
 type Parameters = Static<typeof parametersSchema>
 
 const postChannelServiceSchema: FastifySchema = {
-  description: 'Create a channel.',
-  tags: ['channels'] as string[],
+  description: "Create a channel.",
+  tags: ["channels"] as string[],
   security: [
     {
-      bearerAuth: []
-    }
+      bearerAuth: [],
+    },
   ] as Array<{ [key: string]: [] }>,
   body: bodyPostServiceSchema,
   params: parametersSchema,
   response: {
     201: Type.Object({
       ...channelSchema,
-      defaultChannelId: channelSchema.id
+      defaultChannelId: channelSchema.id,
     }),
     400: fastifyErrors[400],
     401: fastifyErrors[401],
     403: fastifyErrors[403],
     404: fastifyErrors[404],
-    500: fastifyErrors[500]
-  }
+    500: fastifyErrors[500],
+  },
 } as const
 
 export const postChannelService: FastifyPluginAsync = async (fastify) => {
@@ -50,8 +50,8 @@ export const postChannelService: FastifyPluginAsync = async (fastify) => {
     Body: BodyPostServiceSchemaType
     Params: Parameters
   }>({
-    method: 'POST',
-    url: '/guilds/:guildId/channels',
+    method: "POST",
+    url: "/guilds/:guildId/channels",
     schema: postChannelServiceSchema,
     handler: async (request, reply) => {
       if (request.user == null) {
@@ -61,40 +61,40 @@ export const postChannelService: FastifyPluginAsync = async (fastify) => {
       const { guildId } = params
       const { name } = body
       const member = await prisma.member.findFirst({
-        where: { guildId, userId: user.current.id }
+        where: { guildId, userId: user.current.id },
       })
       if (member == null) {
-        throw fastify.httpErrors.notFound('Member not found')
+        throw fastify.httpErrors.notFound("Member not found")
       }
       if (!member.isOwner) {
-        throw fastify.httpErrors.badRequest('You should be a member owner')
+        throw fastify.httpErrors.badRequest("You should be a member owner")
       }
       const channel = await prisma.channel.create({
         data: {
           name,
-          guildId
-        }
+          guildId,
+        },
       })
       const defaultChannel = await prisma.channel.findFirst({
-        where: { guildId: member.guildId }
+        where: { guildId: member.guildId },
       })
       if (defaultChannel == null) {
         throw fastify.httpErrors.internalServerError()
       }
       const item = {
         ...channel,
-        defaultChannelId: defaultChannel.id
+        defaultChannelId: defaultChannel.id,
       }
       await fastify.io.emitToMembers({
-        event: 'channels',
+        event: "channels",
         guildId,
         payload: {
-          action: 'create',
-          item
-        }
+          action: "create",
+          item,
+        },
       })
       reply.statusCode = 201
       return item
-    }
+    },
   })
 }

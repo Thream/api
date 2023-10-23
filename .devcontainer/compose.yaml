@@ -1,23 +1,23 @@
 services:
   workspace:
     build:
-      context: './'
-      dockerfile: './Dockerfile'
+      context: "./"
+      dockerfile: "./Dockerfile"
     volumes:
-      - '..:/workspace:cached'
-    command: 'sleep infinity'
-    network_mode: 'host'
+      - "..:/workspace:cached"
+    command: "sleep infinity"
+    network_mode: "host"
 
   thream-database:
-    image: 'postgres:15.4'
+    image: "postgres:15.4"
     environment:
-      POSTGRES_USER: 'thream_user'
-      POSTGRES_PASSWORD: 'password'
-      POSTGRES_DB: 'thream'
+      POSTGRES_USER: "thream_user"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "thream"
     volumes:
-      - 'thream-postgres-data:/var/lib/postgresql/data'
-    restart: 'unless-stopped'
-    network_mode: 'host'
+      - "thream-postgres-data:/var/lib/postgresql/data"
+    restart: "unless-stopped"
+    network_mode: "host"
 
 volumes:
   thream-postgres-data:

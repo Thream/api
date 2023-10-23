@@ -1,12 +1,12 @@
-import type { ResponseJWT } from './jwtToken.js'
+import type { ResponseJWT } from "./jwtToken.js"
 import {
   expiresIn,
   generateAccessToken,
-  generateRefreshToken
-} from '#src/tools/utils/jwtToken.js'
-import prisma from '#src/tools/database/prisma.js'
-import type { ProviderOAuth } from '#src/models/OAuth.js'
-import type { UserRequest } from '#src/models/User.js'
+  generateRefreshToken,
+} from "#src/tools/utils/jwtToken.js"
+import prisma from "#src/tools/database/prisma.js"
+import type { ProviderOAuth } from "#src/models/OAuth.js"
+import type { UserRequest } from "#src/models/User.js"
 
 interface ProviderData {
   name: string
@@ -14,40 +14,46 @@ interface ProviderData {
 }
 
 type ResponseCallbackAddStrategy =
-  | 'success'
-  | 'This account is already used by someone else'
-  | 'You are already using this account'
+  | "success"
+  | "This account is already used by someone else"
+  | "You are already using this account"
 
 export class OAuthStrategy {
   constructor(public provider: ProviderOAuth) {}
 
   async callbackAddStrategy(
     providerData: ProviderData,
-    userRequest: UserRequest
+    userRequest: UserRequest,
   ): Promise<ResponseCallbackAddStrategy> {
     const OAuthUser = await prisma.oAuth.findFirst({
-      where: { providerId: providerData.id.toString(), provider: this.provider }
+      where: {
+        providerId: providerData.id.toString(),
+        provider: this.provider,
+      },
     })
-    let message: ResponseCallbackAddStrategy = 'success'
+    let message: ResponseCallbackAddStrategy = "success"
     if (OAuthUser == null) {
       await prisma.oAuth.create({
         data: {
           provider: this.provider,
           providerId: providerData.id.toString(),
-          userId: userRequest.current.id
-        }
+          userId: userRequest.current.id,
+        },
       })
     } else if (OAuthUser.userId !== userRequest.current.id) {
-      message = 'This account is already used by someone else'
+      message = "This account is already used by someone else"
     } else {
-      message = 'You are already using this account'
+      message = "You are already using this account"
     }
     return message
   }
 
   async callbackSignin(providerData: ProviderData): Promise<ResponseJWT> {
     const OAuthUser = await prisma.oAuth.findFirst({
-      where: { providerId: providerData.id.toString(), provider: this.provider }
+      where: {
+        providerId: providerData.id.toString(),
+        provider: this.provider,
+      },
     })
     let userId: number = OAuthUser?.userId ?? 0
     if (OAuthUser == null) {
@@ -65,31 +71,31 @@ export class OAuthStrategy {
       const user = await prisma.user.create({ data: { name } })
       await prisma.userSetting.create({
         data: {
-          userId: user.id
-        }
+          userId: user.id,
+        },
       })
       userId = user.id
       await prisma.oAuth.create({
         data: {
           provider: this.provider,
           providerId: providerData.id.toString(),
-          userId
-        }
+          userId,
+        },
       })
     }
     const accessToken = generateAccessToken({
       currentStrategy: this.provider,
-      id: userId
+      id: userId,
     })
     const refreshToken = await generateRefreshToken({
       currentStrategy: this.provider,
-      id: userId
+      id: userId,
     })
     return {
       accessToken,
       refreshToken,
       expiresIn,
-      type: 'Bearer'
+      type: "Bearer",
     }
   }
 }

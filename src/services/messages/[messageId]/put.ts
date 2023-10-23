@@ -1,33 +1,33 @@
-import type { Static } from '@sinclair/typebox'
-import { Type } from '@sinclair/typebox'
-import type { FastifyPluginAsync, FastifySchema } from 'fastify'
+import type { Static } from "@sinclair/typebox"
+import { Type } from "@sinclair/typebox"
+import type { FastifyPluginAsync, FastifySchema } from "fastify"
 
-import prisma from '#src/tools/database/prisma.js'
-import { fastifyErrors } from '#src/models/utils.js'
-import authenticateUser from '#src/tools/plugins/authenticateUser.js'
-import { messageSchema } from '#src/models/Message.js'
-import { memberSchema } from '#src/models/Member.js'
-import { userPublicWithoutSettingsSchema } from '#src/models/User.js'
+import prisma from "#src/tools/database/prisma.js"
+import { fastifyErrors } from "#src/models/utils.js"
+import authenticateUser from "#src/tools/plugins/authenticateUser.js"
+import { messageSchema } from "#src/models/Message.js"
+import { memberSchema } from "#src/models/Member.js"
+import { userPublicWithoutSettingsSchema } from "#src/models/User.js"
 
 const bodyPutServiceSchema = Type.Object({
-  value: messageSchema.value
+  value: messageSchema.value,
 })
 
 type BodyPutServiceSchemaType = Static<typeof bodyPutServiceSchema>
 
 const parametersSchema = Type.Object({
-  messageId: messageSchema.id
+  messageId: messageSchema.id,
 })
 
 type Parameters = Static<typeof parametersSchema>
 
 const putServiceSchema: FastifySchema = {
-  description: 'UPDATE a message with its id.',
-  tags: ['messages'] as string[],
+  description: "UPDATE a message with its id.",
+  tags: ["messages"] as string[],
   security: [
     {
-      bearerAuth: []
-    }
+      bearerAuth: [],
+    },
   ] as Array<{ [key: string]: [] }>,
   body: bodyPutServiceSchema,
   params: parametersSchema,
@@ -36,15 +36,15 @@ const putServiceSchema: FastifySchema = {
       ...messageSchema,
       member: Type.Object({
         ...memberSchema,
-        user: Type.Object(userPublicWithoutSettingsSchema)
-      })
+        user: Type.Object(userPublicWithoutSettingsSchema),
+      }),
     }),
     400: fastifyErrors[400],
     401: fastifyErrors[401],
     403: fastifyErrors[403],
     404: fastifyErrors[404],
-    500: fastifyErrors[500]
-  }
+    500: fastifyErrors[500],
+  },
 } as const
 
 export const putMessageService: FastifyPluginAsync = async (fastify) => {
@@ -54,8 +54,8 @@ export const putMessageService: FastifyPluginAsync = async (fastify) => {
     Body: BodyPutServiceSchemaType
     Params: Parameters
   }>({
-    method: 'PUT',
-    url: '/messages/:messageId',
+    method: "PUT",
+    url: "/messages/:messageId",
     schema: putServiceSchema,
     handler: async (request, reply) => {
       if (request.user == null) {
@@ -65,18 +65,18 @@ export const putMessageService: FastifyPluginAsync = async (fastify) => {
       const { messageId } = params
       const { value } = body
       const messageCheck = await prisma.message.findFirst({
-        where: { id: messageId, type: 'text' },
+        where: { id: messageId, type: "text" },
         include: {
-          channel: true
-        }
+          channel: true,
+        },
       })
       if (messageCheck == null || messageCheck.channel == null) {
-        throw fastify.httpErrors.notFound('Message not found')
+        throw fastify.httpErrors.notFound("Message not found")
       }
       const member = await prisma.member.findFirst({
         where: {
           guildId: messageCheck.channel.guildId,
-          userId: user.current.id
+          userId: user.current.id,
         },
         include: {
           user: {
@@ -88,26 +88,26 @@ export const putMessageService: FastifyPluginAsync = async (fastify) => {
               biography: true,
               website: true,
               createdAt: true,
-              updatedAt: true
-            }
-          }
-        }
+              updatedAt: true,
+            },
+          },
+        },
       })
       if (member == null) {
-        throw fastify.httpErrors.notFound('Member not found')
+        throw fastify.httpErrors.notFound("Member not found")
       }
       if (member.userId !== user.current.id) {
         throw fastify.httpErrors.badRequest(
-          'You should be the owner of the message'
+          "You should be the owner of the message",
         )
       }
       const message = await prisma.message.update({
         where: {
-          id: messageCheck.id
+          id: messageCheck.id,
         },
         data: {
-          value
-        }
+          value,
+        },
       })
       const item = {
         ...message,
@@ -115,17 +115,17 @@ export const putMessageService: FastifyPluginAsync = async (fastify) => {
           ...member,
           user: {
             ...member.user,
-            email: null
-          }
-        }
+            email: null,
+          },
+        },
       }
       await fastify.io.emitToMembers({
-        event: 'messages',
+        event: "messages",
         guildId: item.member.guildId,
-        payload: { action: 'update', item }
+        payload: { action: "update", item },
       })
       reply.statusCode = 200
       return item
-    }
+    },
   })
 }

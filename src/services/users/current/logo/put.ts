@@ -1,34 +1,34 @@
-import { Type } from '@sinclair/typebox'
-import type { FastifyPluginAsync, FastifySchema } from 'fastify'
-import fastifyMultipart from '@fastify/multipart'
+import { Type } from "@sinclair/typebox"
+import type { FastifyPluginAsync, FastifySchema } from "fastify"
+import fastifyMultipart from "@fastify/multipart"
 
-import authenticateUser from '#src/tools/plugins/authenticateUser.js'
-import { fastifyErrors } from '#src/models/utils.js'
-import prisma from '#src/tools/database/prisma.js'
-import { uploadFile } from '#src/tools/utils/uploadFile.js'
+import authenticateUser from "#src/tools/plugins/authenticateUser.js"
+import { fastifyErrors } from "#src/models/utils.js"
+import prisma from "#src/tools/database/prisma.js"
+import { uploadFile } from "#src/tools/utils/uploadFile.js"
 
 const putServiceSchema: FastifySchema = {
-  description: 'Edit the current connected user logo',
-  tags: ['users'] as string[],
-  consumes: ['multipart/form-data'] as string[],
-  produces: ['application/json'] as string[],
+  description: "Edit the current connected user logo",
+  tags: ["users"] as string[],
+  consumes: ["multipart/form-data"] as string[],
+  produces: ["application/json"] as string[],
   security: [
     {
-      bearerAuth: []
-    }
+      bearerAuth: [],
+    },
   ] as Array<{ [key: string]: [] }>,
   response: {
     200: Type.Object({
       user: Type.Object({
-        logo: Type.String()
-      })
+        logo: Type.String(),
+      }),
     }),
     400: fastifyErrors[400],
     401: fastifyErrors[401],
     403: fastifyErrors[403],
     431: fastifyErrors[431],
-    500: fastifyErrors[500]
-  }
+    500: fastifyErrors[500],
+  },
 } as const
 
 export const putCurrentUserLogo: FastifyPluginAsync = async (fastify) => {
@@ -37,8 +37,8 @@ export const putCurrentUserLogo: FastifyPluginAsync = async (fastify) => {
   await fastify.register(fastifyMultipart)
 
   fastify.route({
-    method: 'PUT',
-    url: '/users/current/logo',
+    method: "PUT",
+    url: "/users/current/logo",
     schema: putServiceSchema,
     handler: async (request, reply) => {
       if (request.user == null) {
@@ -47,18 +47,18 @@ export const putCurrentUserLogo: FastifyPluginAsync = async (fastify) => {
       const file = await uploadFile({
         fastify,
         request,
-        folderInUploadsFolder: 'users'
+        folderInUploadsFolder: "users",
       })
       await prisma.user.update({
         where: { id: request.user.current.id },
-        data: { logo: file.pathToStoreInDatabase }
+        data: { logo: file.pathToStoreInDatabase },
       })
       reply.statusCode = 200
       return {
         user: {
-          logo: file.pathToStoreInDatabase
-        }
+          logo: file.pathToStoreInDatabase,
+        },
       }
-    }
+    },
   })
 }

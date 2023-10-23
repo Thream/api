@@ -1,59 +1,59 @@
-import type { Static } from '@sinclair/typebox'
-import { Type } from '@sinclair/typebox'
-import type { FastifyPluginAsync, FastifySchema } from 'fastify'
+import type { Static } from "@sinclair/typebox"
+import { Type } from "@sinclair/typebox"
+import type { FastifyPluginAsync, FastifySchema } from "fastify"
 
-import prisma from '#src/tools/database/prisma.js'
-import { fastifyErrors } from '#src/models/utils.js'
-import authenticateUser from '#src/tools/plugins/authenticateUser.js'
-import { guildSchema } from '#src/models/Guild.js'
-import { memberSchema } from '#src/models/Member.js'
-import { userPublicWithoutSettingsSchema } from '#src/models/User.js'
-import { channelSchema } from '#src/models/Channel.js'
+import prisma from "#src/tools/database/prisma.js"
+import { fastifyErrors } from "#src/models/utils.js"
+import authenticateUser from "#src/tools/plugins/authenticateUser.js"
+import { guildSchema } from "#src/models/Guild.js"
+import { memberSchema } from "#src/models/Member.js"
+import { userPublicWithoutSettingsSchema } from "#src/models/User.js"
+import { channelSchema } from "#src/models/Channel.js"
 
 const parametersSchema = Type.Object({
-  guildId: guildSchema.id
+  guildId: guildSchema.id,
 })
 
 type Parameters = Static<typeof parametersSchema>
 
 const getServiceSchema: FastifySchema = {
-  description: 'GET a guild member with the guildId.',
-  tags: ['guilds'] as string[],
+  description: "GET a guild member with the guildId.",
+  tags: ["guilds"] as string[],
   security: [
     {
-      bearerAuth: []
-    }
+      bearerAuth: [],
+    },
   ] as Array<{ [key: string]: [] }>,
   params: parametersSchema,
   response: {
     200: Type.Object({
       guild: Type.Object({
         ...guildSchema,
-        defaultChannelId: channelSchema.id
+        defaultChannelId: channelSchema.id,
       }),
       member: Type.Object({
         ...memberSchema,
-        user: Type.Object(userPublicWithoutSettingsSchema)
-      })
+        user: Type.Object(userPublicWithoutSettingsSchema),
+      }),
     }),
     400: fastifyErrors[400],
     401: fastifyErrors[401],
     403: fastifyErrors[403],
     404: fastifyErrors[404],
-    500: fastifyErrors[500]
-  }
+    500: fastifyErrors[500],
+  },
 } as const
 
 export const getGuildMemberByIdService: FastifyPluginAsync = async (
-  fastify
+  fastify,
 ) => {
   await fastify.register(authenticateUser)
 
   fastify.route<{
     Params: Parameters
   }>({
-    method: 'GET',
-    url: '/guilds/:guildId',
+    method: "GET",
+    url: "/guilds/:guildId",
     schema: getServiceSchema,
     handler: async (request, reply) => {
       if (request.user == null) {
@@ -72,17 +72,17 @@ export const getGuildMemberByIdService: FastifyPluginAsync = async (
               biography: true,
               website: true,
               createdAt: true,
-              updatedAt: true
-            }
+              updatedAt: true,
+            },
           },
-          guild: true
-        }
+          guild: true,
+        },
       })
       if (member == null) {
-        throw fastify.httpErrors.notFound('Member not found')
+        throw fastify.httpErrors.notFound("Member not found")
       }
       const defaultChannel = await prisma.channel.findFirst({
-        where: { guildId: member.guildId }
+        where: { guildId: member.guildId },
       })
       if (defaultChannel == null) {
         throw fastify.httpErrors.internalServerError()
@@ -90,18 +90,18 @@ export const getGuildMemberByIdService: FastifyPluginAsync = async (
       const item = {
         guild: {
           ...member.guild,
-          defaultChannelId: defaultChannel.id
+          defaultChannelId: defaultChannel.id,
         },
         member: {
           ...member,
           user: {
             ...member.user,
-            email: null
-          }
-        }
+            email: null,
+          },
+        },
       }
       reply.statusCode = 200
       return item
-    }
+    },
   })
 }

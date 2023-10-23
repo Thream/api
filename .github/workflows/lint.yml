@@ -1,4 +1,4 @@
-name: 'Lint'
+name: "Lint"
 
 on:
   push:
@@ -8,33 +8,33 @@ on:
 
 jobs:
   lint:
-    runs-on: 'ubuntu-latest'
+    runs-on: "ubuntu-latest"
     steps:
-      - uses: 'actions/checkout@v4.0.0'
+      - uses: "actions/checkout@v4.0.0"
 
-      - name: 'Setup Node.js'
-        uses: 'actions/setup-node@v3.8.1'
+      - name: "Setup Node.js"
+        uses: "actions/setup-node@v3.8.1"
         with:
-          node-version: '20.x'
-          cache: 'npm'
+          node-version: "20.x"
+          cache: "npm"
 
-      - name: 'Install dependencies'
-        run: 'npm clean-install'
+      - name: "Install dependencies"
+        run: "npm clean-install"
 
-      - name: 'lint:commit'
+      - name: "lint:commit"
         run: 'npm run lint:commit -- --to "${{ github.sha }}"'
 
-      - name: 'lint:editorconfig'
-        run: 'npm run lint:editorconfig'
+      - name: "lint:editorconfig"
+        run: "npm run lint:editorconfig"
 
-      - name: 'lint:markdown'
-        run: 'npm run lint:markdown'
+      - name: "lint:markdown"
+        run: "npm run lint:markdown"
 
-      - name: 'lint:eslint'
-        run: 'npm run lint:eslint'
+      - name: "lint:eslint"
+        run: "npm run lint:eslint"
 
-      - name: 'lint:prettier'
-        run: 'npm run lint:prettier'
+      - name: "lint:prettier"
+        run: "npm run lint:prettier"
 
-      - name: 'prisma:validate'
-        run: 'cp .env.example .env && npm run prisma:validate'
+      - name: "prisma:validate"
+        run: "cp .env.example .env && npm run prisma:validate"

@@ -1,22 +1,22 @@
-import { randomUUID } from 'node:crypto'
+import { randomUUID } from "node:crypto"
 
-import { Type } from '@sinclair/typebox'
-import jwt from 'jsonwebtoken'
-import ms from 'ms'
+import { Type } from "@sinclair/typebox"
+import jwt from "jsonwebtoken"
+import ms from "ms"
 
-import prisma from '#src/tools/database/prisma.js'
-import type { UserJWT } from '#src/models/User.js'
+import prisma from "#src/tools/database/prisma.js"
+import type { UserJWT } from "#src/models/User.js"
 import {
   JWT_ACCESS_EXPIRES_IN,
   JWT_ACCESS_SECRET,
-  JWT_REFRESH_SECRET
-} from '#src/tools/configurations.js'
+  JWT_REFRESH_SECRET,
+} from "#src/tools/configurations.js"
 
 export interface ResponseJWT {
   accessToken: string
   refreshToken?: string
   expiresIn: number
-  type: 'Bearer'
+  type: "Bearer"
 }
 
 export const jwtSchema = {
@@ -24,9 +24,9 @@ export const jwtSchema = {
   refreshToken: Type.String(),
   expiresIn: Type.Integer({
     description:
-      'expiresIn is how long, in milliseconds, until the accessToken expires'
+      "expiresIn is how long, in milliseconds, until the accessToken expires",
   }),
-  type: Type.Literal('Bearer')
+  type: Type.Literal("Bearer"),
 }
 
 export const expiresIn = ms(JWT_ACCESS_EXPIRES_IN)
@@ -40,12 +40,12 @@ export const generateRefreshToken = async (user: UserJWT): Promise<string> => {
   const refreshToken = jwt.sign(
     {
       ...user,
-      tokenUUID
+      tokenUUID,
     },
-    JWT_REFRESH_SECRET
+    JWT_REFRESH_SECRET,
   )
   await prisma.refreshToken.create({
-    data: { token: tokenUUID, userId: user.id }
+    data: { token: tokenUUID, userId: user.id },
   })
   return refreshToken
 }

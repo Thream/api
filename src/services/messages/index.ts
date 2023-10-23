@@ -1,7 +1,7 @@
-import type { FastifyPluginAsync } from 'fastify'
+import type { FastifyPluginAsync } from "fastify"
 
-import { deleteMessageService } from './[messageId]/delete.js'
-import { putMessageService } from './[messageId]/put.js'
+import { deleteMessageService } from "./[messageId]/delete.js"
+import { putMessageService } from "./[messageId]/put.js"
 
 export const messagesService: FastifyPluginAsync = async (fastify) => {
   await fastify.register(putMessageService)

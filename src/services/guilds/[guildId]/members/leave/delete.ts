@@ -1,26 +1,26 @@
-import type { Static } from '@sinclair/typebox'
-import { Type } from '@sinclair/typebox'
-import type { FastifyPluginAsync, FastifySchema } from 'fastify'
+import type { Static } from "@sinclair/typebox"
+import { Type } from "@sinclair/typebox"
+import type { FastifyPluginAsync, FastifySchema } from "fastify"
 
-import prisma from '#src/tools/database/prisma.js'
-import { fastifyErrors } from '#src/models/utils.js'
-import authenticateUser from '#src/tools/plugins/authenticateUser.js'
-import { guildSchema } from '#src/models/Guild.js'
-import { memberSchema } from '#src/models/Member.js'
+import prisma from "#src/tools/database/prisma.js"
+import { fastifyErrors } from "#src/models/utils.js"
+import authenticateUser from "#src/tools/plugins/authenticateUser.js"
+import { guildSchema } from "#src/models/Guild.js"
+import { memberSchema } from "#src/models/Member.js"
 
 const parametersSchema = Type.Object({
-  guildId: guildSchema.id
+  guildId: guildSchema.id,
 })
 
 type Parameters = Static<typeof parametersSchema>
 
 const deleteServiceSchema: FastifySchema = {
-  description: 'Leave a guild (delete a member).',
-  tags: ['members'] as string[],
+  description: "Leave a guild (delete a member).",
+  tags: ["members"] as string[],
   security: [
     {
-      bearerAuth: []
-    }
+      bearerAuth: [],
+    },
   ] as Array<{ [key: string]: [] }>,
   params: parametersSchema,
   response: {
@@ -29,8 +29,8 @@ const deleteServiceSchema: FastifySchema = {
     401: fastifyErrors[401],
     403: fastifyErrors[403],
     404: fastifyErrors[404],
-    500: fastifyErrors[500]
-  }
+    500: fastifyErrors[500],
+  },
 } as const
 
 export const deleteMemberService: FastifyPluginAsync = async (fastify) => {
@@ -39,8 +39,8 @@ export const deleteMemberService: FastifyPluginAsync = async (fastify) => {
   fastify.route<{
     Params: Parameters
   }>({
-    method: 'DELETE',
-    url: '/guilds/:guildId/members/leave',
+    method: "DELETE",
+    url: "/guilds/:guildId/members/leave",
     schema: deleteServiceSchema,
     handler: async (request, reply) => {
       if (request.user == null) {
@@ -49,27 +49,27 @@ export const deleteMemberService: FastifyPluginAsync = async (fastify) => {
       const { user, params } = request
       const { guildId } = params
       const member = await prisma.member.findFirst({
-        where: { guildId, userId: user.current.id }
+        where: { guildId, userId: user.current.id },
       })
       if (member == null) {
-        throw fastify.httpErrors.notFound('Member not found')
+        throw fastify.httpErrors.notFound("Member not found")
       }
       if (member.isOwner) {
         throw fastify.httpErrors.badRequest(
-          "The member owner can't leave the guild (you can delete it instead)"
+          "The member owner can't leave the guild (you can delete it instead)",
         )
       }
       await prisma.member.delete({ where: { id: member.id } })
       await fastify.io.emitToMembers({
-        event: 'members',
+        event: "members",
         guildId,
         payload: {
-          action: 'delete',
-          item: member
-        }
+          action: "delete",
+          item: member,
+        },
       })
       reply.statusCode = 200
       return member
-    }
+    },
   })
 }

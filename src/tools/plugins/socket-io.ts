@@ -1,15 +1,15 @@
-import fastifyPlugin from 'fastify-plugin'
-import type { ServerOptions } from 'socket.io'
-import { Server as SocketIoServer } from 'socket.io'
-import { authorize } from '@thream/socketio-jwt'
+import fastifyPlugin from "fastify-plugin"
+import type { ServerOptions } from "socket.io"
+import { Server as SocketIoServer } from "socket.io"
+import { authorize } from "@thream/socketio-jwt"
 
-import prisma from '#src/tools/database/prisma.js'
-import { JWT_ACCESS_SECRET } from '#src/tools/configurations.js'
+import prisma from "#src/tools/database/prisma.js"
+import { JWT_ACCESS_SECRET } from "#src/tools/configurations.js"
 
 interface EmitEventOptions {
   event: string
   payload: {
-    action: 'create' | 'delete' | 'update'
+    action: "create" | "delete" | "update"
     item: object
   }
 }
@@ -20,7 +20,7 @@ interface EmitToAuthorizedUsersOptions extends EmitEventOptions {
 }
 
 type EmitToAuthorizedUsers = (
-  options: EmitToAuthorizedUsersOptions
+  options: EmitToAuthorizedUsersOptions,
 ) => Promise<void>
 
 interface EmitToMembersOptions extends EmitEventOptions {
@@ -35,7 +35,7 @@ interface FastifyIo {
   emitToMembers: EmitToMembers
 }
 
-declare module 'fastify' {
+declare module "fastify" {
   export interface FastifyInstance {
     io: FastifyIo
   }
@@ -46,8 +46,8 @@ export default fastifyPlugin(
     const instance = new SocketIoServer(fastify.server, options)
     instance.use(
       authorize({
-        secret: JWT_ACCESS_SECRET
-      })
+        secret: JWT_ACCESS_SECRET,
+      }),
     )
     const emitToAuthorizedUsers: EmitToAuthorizedUsers = async (options) => {
       const { event, payload, isAuthorizedCallback } = options
@@ -70,21 +70,21 @@ export default fastifyPlugin(
         payload,
         isAuthorizedCallback: async (userId) => {
           const memberCount = await prisma.member.count({
-            where: { userId, guildId }
+            where: { userId, guildId },
           })
           return memberCount > 0
-        }
+        },
       })
     }
     const io: FastifyIo = {
       instance,
       emitToAuthorizedUsers,
-      emitToMembers
+      emitToMembers,
     }
-    fastify.decorate('io', io)
-    fastify.addHook('onClose', (fastify) => {
+    fastify.decorate("io", io)
+    fastify.addHook("onClose", (fastify) => {
       fastify.io.instance.close()
     })
   },
-  { fastify: '4.x' }
+  { fastify: "4.x" },
 )

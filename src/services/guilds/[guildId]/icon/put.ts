@@ -1,44 +1,44 @@
-import type { Static } from '@sinclair/typebox'
-import { Type } from '@sinclair/typebox'
-import type { FastifyPluginAsync, FastifySchema } from 'fastify'
-import fastifyMultipart from '@fastify/multipart'
+import type { Static } from "@sinclair/typebox"
+import { Type } from "@sinclair/typebox"
+import type { FastifyPluginAsync, FastifySchema } from "fastify"
+import fastifyMultipart from "@fastify/multipart"
 
-import authenticateUser from '#src/tools/plugins/authenticateUser.js'
-import { fastifyErrors } from '#src/models/utils.js'
-import prisma from '#src/tools/database/prisma.js'
-import { uploadFile } from '#src/tools/utils/uploadFile.js'
-import { guildSchema } from '#src/models/Guild.js'
-import { channelSchema } from '#src/models/Channel.js'
+import authenticateUser from "#src/tools/plugins/authenticateUser.js"
+import { fastifyErrors } from "#src/models/utils.js"
+import prisma from "#src/tools/database/prisma.js"
+import { uploadFile } from "#src/tools/utils/uploadFile.js"
+import { guildSchema } from "#src/models/Guild.js"
+import { channelSchema } from "#src/models/Channel.js"
 
 const parametersSchema = Type.Object({
-  guildId: guildSchema.id
+  guildId: guildSchema.id,
 })
 
 type Parameters = Static<typeof parametersSchema>
 
 const putServiceSchema: FastifySchema = {
-  description: 'Edit the icon of the guild with its id',
-  tags: ['guilds'] as string[],
-  consumes: ['multipart/form-data'] as string[],
-  produces: ['application/json'] as string[],
+  description: "Edit the icon of the guild with its id",
+  tags: ["guilds"] as string[],
+  consumes: ["multipart/form-data"] as string[],
+  produces: ["application/json"] as string[],
   security: [
     {
-      bearerAuth: []
-    }
+      bearerAuth: [],
+    },
   ] as Array<{ [key: string]: [] }>,
   params: parametersSchema,
   response: {
     200: Type.Object({
       ...guildSchema,
-      defaultChannelId: channelSchema.id
+      defaultChannelId: channelSchema.id,
     }),
     400: fastifyErrors[400],
     401: fastifyErrors[401],
     403: fastifyErrors[403],
     404: fastifyErrors[404],
     431: fastifyErrors[431],
-    500: fastifyErrors[500]
-  }
+    500: fastifyErrors[500],
+  },
 } as const
 
 export const putGuildIconById: FastifyPluginAsync = async (fastify) => {
@@ -49,8 +49,8 @@ export const putGuildIconById: FastifyPluginAsync = async (fastify) => {
   fastify.route<{
     Params: Parameters
   }>({
-    method: 'PUT',
-    url: '/guilds/:guildId/icon',
+    method: "PUT",
+    url: "/guilds/:guildId/icon",
     schema: putServiceSchema,
     handler: async (request, reply) => {
       if (request.user == null) {
@@ -64,14 +64,14 @@ export const putGuildIconById: FastifyPluginAsync = async (fastify) => {
       const file = await uploadFile({
         fastify,
         request,
-        folderInUploadsFolder: 'guilds'
+        folderInUploadsFolder: "guilds",
       })
       await prisma.guild.update({
         where: { id: guildId },
-        data: { icon: file.pathToStoreInDatabase }
+        data: { icon: file.pathToStoreInDatabase },
       })
       const defaultChannel = await prisma.channel.findFirst({
-        where: { guildId: guild.id }
+        where: { guildId: guild.id },
       })
       if (defaultChannel == null) {
         throw fastify.httpErrors.internalServerError()
@@ -79,15 +79,15 @@ export const putGuildIconById: FastifyPluginAsync = async (fastify) => {
       const item = {
         ...guild,
         icon: file.pathToStoreInDatabase,
-        defaultChannelId: defaultChannel.id
+        defaultChannelId: defaultChannel.id,
       }
       await fastify.io.emitToMembers({
-        event: 'guilds',
+        event: "guilds",
         guildId: guild.id,
-        payload: { action: 'update', item }
+        payload: { action: "update", item },
       })
       reply.statusCode = 200
       return item
-    }
+    },
   })
 }

@@ -1,27 +1,27 @@
 services:
   thream-api:
-    container_name: 'thream-api'
-    image: 'thream-api'
-    restart: 'unless-stopped'
-    network_mode: 'host'
+    container_name: "thream-api"
+    image: "thream-api"
+    restart: "unless-stopped"
+    network_mode: "host"
     build:
-      context: './'
-    env_file: '.env'
+      context: "./"
+    env_file: ".env"
     depends_on:
-      - 'thream-database'
+      - "thream-database"
 
   thream-database:
-    container_name: 'thream-database'
-    image: 'postgres:15.4'
-    restart: 'unless-stopped'
-    network_mode: 'host'
-    env_file: '.env'
+    container_name: "thream-database"
+    image: "postgres:15.4"
+    restart: "unless-stopped"
+    network_mode: "host"
+    env_file: ".env"
     environment:
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       POSTGRES_DB: ${DATABASE_NAME}
     volumes:
-      - 'thream-postgres-data:/var/lib/postgresql/data'
+      - "thream-postgres-data:/var/lib/postgresql/data"
 
 volumes:
   thream-postgres-data:
