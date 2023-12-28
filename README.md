@@ -1,6 +1,10 @@
 <h1 align="center"><a href="https://api.thream.theoludwig.fr/documentation">Thream/api</a></h1>
 
 <p align="center">
+  <strong>⚠️ This project is not maintained anymore, you can still use the code as you wish and fork it to maintain it yourself.</strong>
+</p>
+
+<p align="center">
   <a href="./CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/licence-MIT-blue.svg" alt="Licence MIT"/></a>
   <a href="./CODE_OF_CONDUCT.md"><img src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg" alt="Contributor Covenant" /></a>
@@ -18,7 +22,7 @@
 
 Thream's Application Programming Interface (API) to stay close with your friends and communities.
 
-It uses [Thream/file-uploads-api](https://github.com/Thream/file-uploads-api) [v1.1.7](https://github.com/Thream/file-uploads-api/releases/tag/v1.1.7).
+It uses [Thream/file-uploads-api](https://github.com/Thream/file-uploads-api) [v1.1.8](https://github.com/Thream/file-uploads-api/releases/tag/v1.1.8).
 
 ## ⚙️ Getting Started
 
